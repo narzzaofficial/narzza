@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Feed } from "@/data/content";
+import type { Feed } from "@/types/content";
 import { RelativeTime } from "@/components/relative-time";
 
 type FeedTitleCardProps = {

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import type { Feed, Story, Book } from "@/data/content";
+import type { Feed, Story, Book } from "@/types/content";
 import { Category, Product } from "@/types/products";
 import { Roadmap } from "@/types/roadmaps";
 

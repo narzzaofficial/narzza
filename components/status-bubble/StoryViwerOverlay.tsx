@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Story } from "@/data/content";
+import type { Story } from "@/types/content";
 import { StoryContent } from "@/hooks/useStoryViwer";
 // Sesuaikan path
 

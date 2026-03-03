@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
-import type { Story } from "@/data/content";
+import type { Story } from "@/types/content";
 import {
   dbUnavailableResponse,
   invalidIdResponse,

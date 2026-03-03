@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getProducts } from "@/lib/data";
+import { getTokoPageData } from "@/lib/data";
 import { ProductCard } from "@/components/toko/product-card";
 
 export const revalidate = 300;
@@ -10,8 +10,7 @@ export const metadata: Metadata = {
     "Belanja produk premium untuk developer dan tech enthusiast. Kaos, hoodie, stiker, dan merchandise digital berkualitas.",
   openGraph: {
     title: "Toko Merchandise — Narzza Media Digital",
-    description:
-      "Produk premium untuk developer dan tech enthusiast.",
+    description: "Produk premium untuk developer dan tech enthusiast.",
     url: "https://narzza.com/toko",
     type: "website",
   },
@@ -19,9 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default async function TokoPage() {
-  const products = await getProducts();
-  const featuredProducts = products.filter((p) => p.featured);
-  const categories = Array.from(new Set(products.map((p) => p.category)));
+  const { products, featuredProducts, categories } = await getTokoPageData();
 
   return (
     <div className="space-y-6">

@@ -5,7 +5,7 @@ import { BookCard } from "@/components/books/book-card";
 import { FeedTitleCard } from "@/components/feedpages/FeedTitleCard";
 import { GlobalSearchForm } from "@/components/GlobalSearchForm";
 import { TutorialCard } from "@/components/tutorial-card";
-import type { Book, Feed, Story } from "@/data/content";
+import type { Book, Feed, Story } from "@/types/content";
 import { useGlobalSearchFocus } from "@/hooks/useGlobalSearchFocus";
 import { StatusViralSection } from "../status-bubble/StatusViralSection";
 import { CategoryTabs } from "./CategoryTabs";

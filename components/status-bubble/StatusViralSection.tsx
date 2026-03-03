@@ -3,7 +3,7 @@
 import { createPortal } from "react-dom";
 import { StoryBubble } from "@/components/status-bubble/StoryBubble";
 import { EmptyStoryOverlay } from "./EmptyStoryOverlay"; // Sesuaikan path
-import type { Book, Feed, Story } from "@/data/content";
+import type { Book, Feed, Story } from "@/types/content";
 import { useStoryViewer } from "@/hooks/useStoryViwer";
 import { StoryViewerOverlay } from "./StoryViwerOverlay";
 

@@ -4,7 +4,7 @@ import { FeedTitleCard } from "@/components/feedpages/FeedTitleCard";
 import { BookCard } from "@/components/books/book-card";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useRef, Suspense } from "react";
-import type { Feed, Book } from "@/data/content";
+import type { Feed, Book } from "@/types/content";
 
 function SearchPageContent() {
   const searchParams = useSearchParams();

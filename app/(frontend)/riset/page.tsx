@@ -1,7 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { FeedPage } from "@/components/feedpages/FeedPage";
-import { getFeeds, getStories, getBooks } from "@/lib/data";
+import { getFeedPageData } from "@/lib/data";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Riset & Eksperimen Koding",
@@ -17,27 +19,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/riset" },
 };
 
-async function getInternalData(endpoint: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  try {
-    const res = await fetch(`${baseUrl}/api/${endpoint}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return [];
-    return await res.json();
-  } catch (error) {
-    return [];
-  }
-}
-
 export default async function RisetPage() {
-  const [feeds, stories, books, roadmaps, products] = await Promise.all([
-    getFeeds("Riset"),
-    getStories(),
-    getBooks(),
-    getInternalData("roadmaps"),
-    getInternalData("products"),
-  ]);
+  const { feeds, stories, books, roadmaps, products } =
+    await getFeedPageData("Riset");
 
   return (
     <Suspense fallback={<div className="min-h-screen bg-canvas" />}>

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
 import { BookForm as BookFormType, emptyBookForm } from "@/app/admin/_types";
-import type { Book } from "@/data/content";
+import type { Book } from "@/types/content";
 
 interface Props {
   initialData?: Book | null;

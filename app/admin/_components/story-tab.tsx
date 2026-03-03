@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import type { Story } from "@/data/content";
+import type { Story } from "@/types/content";
 import { StoryForm } from "./story-form";
 import { useAdminTab } from "@/hooks/useAdminTab";
 import { JsonImportModal } from "@/components/JsonImportModal";

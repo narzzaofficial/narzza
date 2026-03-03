@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import type { Book, ChatLine, Feed, Story } from "@/data/content";
+import type { Book, ChatLine, Feed, Story } from "@/types/content";
 
 export type StoryContent = {
   kind: "feed" | "book";

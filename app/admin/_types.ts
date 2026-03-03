@@ -1,4 +1,4 @@
-import type { ChatLine, Feed, Story, Book, BookChapter } from "@/data/content";
+import type { ChatLine, Feed, Story, Book, BookChapter } from "@/types/content";
 import type { Product, Category } from "@/types/products";
 
 export type AdminTab =

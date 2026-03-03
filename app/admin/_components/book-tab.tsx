@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import type { Book } from "@/data/content";
+import type { Book } from "@/types/content";
 import { BookForm } from "./book-form";
 import { useAdminTab } from "@/hooks/useAdminTab";
 import { JsonImportModal } from "@/components/JsonImportModal";

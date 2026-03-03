@@ -1,6 +1,6 @@
 "use client";
 
-import type { Story } from "@/data/content";
+import type { Story } from "@/types/content";
 
 type StoryBubbleProps = {
   story: Story;

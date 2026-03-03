@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Book } from "@/data/content";
+import type { Book } from "@/types/content";
 
 type BookCardProps = {
   book: Book;

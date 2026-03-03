@@ -2,15 +2,11 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { requireSeedAuth } from "@/lib/api-auth";
 import { rateLimit } from "@/lib/rate-limit";
+import type { Book, BookChapter, ChatLine, Feed, Story } from "@/types/content";
 import {
   books as seedBooks,
   feeds as seedFeeds,
   stories as seedStories,
-  type Book,
-  type BookChapter,
-  type ChatLine,
-  type Feed,
-  type Story,
 } from "@/data/content";
 import {
   roadmaps as seedRoadmaps,

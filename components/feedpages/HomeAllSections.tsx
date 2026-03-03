@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FeedTitleCard } from "@/components/feedpages/FeedTitleCard";
 import { TutorialCard } from "@/components/tutorial-card";
 import { BookCard } from "@/components/books/book-card";
-import type { Book, Feed } from "@/data/content";
+import type { Book, Feed } from "@/types/content";
 import { Roadmap } from "@/types/roadmaps";
 import { Product } from "@/types/products";
 import Image from "next/image";

@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { getDb } from "@/lib/mongodb";
-import { feeds as dummyFeeds, Feed } from "@/data/content";
+import type { Feed } from "@/types/content";
+import { feeds as dummyFeeds } from "@/data/content";
 import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
 import { slugify, parseSlugId } from "@/lib/slugify";
 
@@ -78,10 +79,6 @@ export const getFeedById = unstable_cache(
   { revalidate: CONTENT_REVALIDATE_SECONDS, tags: [CACHE_TAGS.feeds] }
 );
 
-export async function getFeedIds(): Promise<number[]> {
-  const feeds = await getFeeds();
-  return feeds.map((f) => f.id);
-}
 
 export async function getFeedBySlug(slug: string): Promise<Feed | null> {
   const feeds = await getFeeds();

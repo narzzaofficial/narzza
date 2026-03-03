@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { Book } from "@/types/content";
 import { ShareButton } from "@/components/share-button";
 import { BookCard } from "@/components/books/book-card";
-import { getBookIds, getBooks, getBookById } from "@/lib/data";
+import { getBookPageData, getBookStaticIds } from "@/lib/data";
 import { BookHero } from "@/components/books/book-hero";
 import { ChapterView } from "@/components/books/chapter-view";
 import { TableOfContents } from "@/components/books/table-of-content";
@@ -15,7 +14,7 @@ export const revalidate = 300;
 type PageProps = { params: Promise<{ id: string }> };
 
 export async function generateStaticParams() {
-  const ids = await getBookIds();
+  const ids = await getBookStaticIds();
   return ids.map((id) => ({ id: String(id) }));
 }
 
@@ -23,8 +22,9 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const book = await getBookById(Number(id));
-  if (!book) return { title: "Buku tidak ditemukan" };
+  const data = await getBookPageData(Number(id));
+  if (!data) return { title: "Buku tidak ditemukan" };
+  const { book } = data;
   return {
     title: book.title,
     description: `${book.description.slice(0, 155)}...`,
@@ -50,11 +50,9 @@ export default async function ReadBookPage({ params }: PageProps) {
 
   if (isNaN(bookId)) notFound();
 
-  const [book, allBooks] = await Promise.all([getBookById(bookId), getBooks()]);
-  if (!book) notFound();
-
-  const otherBooks = allBooks.filter((item: Book) => item.id !== book.id).slice(0, 3);
-  
+  const data = await getBookPageData(bookId);
+  if (!data) notFound();
+  const { book, otherBooks } = data;
 
   return (
     <div className="bg-canvas min-h-screen px-3 py-4 text-slate-100 md:px-5 md:py-6">

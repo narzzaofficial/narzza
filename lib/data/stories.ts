@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { getDb } from "@/lib/mongodb";
-import { stories as dummyStories, Story } from "@/data/content";
+import type { Story } from "@/types/content";
+import { stories as dummyStories } from "@/data/content";
 import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
 
 async function loadStories(): Promise<Story[]> {

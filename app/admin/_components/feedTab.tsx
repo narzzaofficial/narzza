@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { RelativeTime } from "@/components/relative-time";
-import type { Feed } from "@/data/content";
+import type { Feed } from "@/types/content";
 import { FeedForm } from "./feed-form";
 import { useAdminTab } from "@/hooks/useAdminTab";
 import { JsonImportModal } from "@/components/JsonImportModal";

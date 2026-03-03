@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { FeedPage } from "@/components/feedpages/FeedPage";
+import { getFeedPageData } from "@/lib/data";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Berita, Tutorial & Eksperimen Teknologi | Narzza Media Digital",
@@ -15,27 +18,9 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/" },
 };
-// Import semua dari centralized data layer
-import {
-  getFeeds,
-  getStories,
-  getBooks,
-  getRoadmaps,
-  getProducts,
-} from "@/lib/data";
-
-// Revalidate data setiap 5 menit (ISR)
-export const revalidate = 300;
 
 export default async function HomePage() {
-  // 🚀 Parallel Fetching langsung ke Database
-  const [feeds, stories, books, roadmaps, products] = await Promise.all([
-    getFeeds(),
-    getStories(),
-    getBooks(),
-    getRoadmaps(),
-    getProducts(),
-  ]);
+  const { feeds, stories, books, roadmaps, products } = await getFeedPageData();
 
   return (
     <Suspense fallback={<div className="min-h-screen bg-canvas" />}>

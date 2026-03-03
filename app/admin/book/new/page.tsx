@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { BookChapter, ChatLine, Story } from "@/data/content";
+import type { BookChapter, ChatLine, Story } from "@/types/content";
 import { ImageUpload } from "@/components/ImageUpload";
 
 type BookForm = {

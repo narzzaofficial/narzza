@@ -6,7 +6,7 @@ import {
   emptyStoryForm,
   paletteOptions,
 } from "@/app/admin/_types";
-import type { Story } from "@/data/content";
+import type { Story } from "@/types/content";
 
 interface Props {
   initialData?: Story | null;
