@@ -6,6 +6,7 @@ import NavigationSection from "./NavigationSection";
 import QuickAccessSection from "./QuickAccessSection";
 import TrendingSection from "./TrendingSection";
 import { MobileNavDrawer } from "./MobileNavDrawer";
+import { DetailShell } from "./DetailShell";
 
 export {
   AdminLink,
@@ -15,5 +16,6 @@ export {
   NavigationSection,
   QuickAccessSection,
   TrendingSection,
-  MobileNavDrawer
+  MobileNavDrawer,
+  DetailShell,
 };

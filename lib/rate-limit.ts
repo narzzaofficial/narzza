@@ -1,9 +1,3 @@
-/**
- * Simple in-memory rate limiter untuk API routes.
- * Cocok untuk single-instance / dev. Production: gunakan Redis/Upstash
- * agar limit konsisten across serverless instances.
- */
-
 type Entry = { count: number; resetAt: number };
 
 const store = new Map<string, Entry>();

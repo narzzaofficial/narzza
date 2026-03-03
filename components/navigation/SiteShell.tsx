@@ -15,8 +15,25 @@ type SiteShellProps = {
   children: React.ReactNode;
 };
 
+/** Rute detail konten — shell-nya dihandle oleh layout masing-masing */
+const DETAIL_PATTERNS = [
+  /^\/read\/\d+$/,
+  /^\/buku\/\d+$/,
+  /^\/roadmap\/.+$/,
+  /^\/toko\/.+$/,
+];
+
+function isDetailPage(path: string) {
+  return DETAIL_PATTERNS.some((pattern) => pattern.test(path));
+}
+
 export function SiteShell({ children }: SiteShellProps) {
   const activePath = usePathname();
+
+  // Halaman detail punya shell sendiri (DetailShell) — cukup render children
+  if (isDetailPage(activePath)) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="page-shell">
