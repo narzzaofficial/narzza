@@ -101,23 +101,21 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
 
           {/* Bottom row */}
           <div className="mt-3 flex items-center justify-between border-t border-slate-700/50 pt-2 sm:mt-4 sm:pt-3">
-            <div className="hidden items-center gap-3 sm:flex">
-              {/* Step indicators */}
-              <div className="flex items-center gap-1">
-                {Array.from({ length: Math.min(stepCount, 5) }).map((_, i) => (
-                  <div
-                    key={i}
-                    className={`h-1.5 rounded-full bg-cyan-400/60 transition-all group-hover:bg-cyan-400 ${
-                      i === 0 ? "w-4" : "w-2"
-                    }`}
-                  />
-                ))}
-                {stepCount > 5 ? (
-                  <span className="ml-1 text-[10px] text-slate-500">
-                    +{stepCount - 5}
-                  </span>
-                ) : null}
-              </div>
+            {/* Step indicators — visible on all screen sizes */}
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(stepCount, 5) }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 rounded-full bg-cyan-400/60 transition-all group-hover:bg-cyan-400 ${
+                    i === 0 ? "w-4" : "w-2"
+                  }`}
+                />
+              ))}
+              {stepCount > 5 ? (
+                <span className="ml-1 text-[10px] text-slate-500">
+                  +{stepCount - 5}
+                </span>
+              ) : null}
             </div>
 
             <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-cyan-300 transition-colors group-hover:text-cyan-200 sm:gap-1.5">

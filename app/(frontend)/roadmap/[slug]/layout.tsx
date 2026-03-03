@@ -1,33 +1,19 @@
-import { Suspense } from "react";
-import { DetailShell } from "@/components/navigation/DetailShell";
-import {
-  RoadmapRecommendSidebarLeft,
-  RoadmapRecommendSidebarRight,
-} from "@/components/navigation/RoadmapRecommendSidebar";
+import { MobileNavDrawer } from "@/components/navigation/MobileNavDrawer";
 
 type Props = {
   children: React.ReactNode;
-  params: Promise<{ slug: string }>;
 };
 
-export default async function RoadmapDetailLayout({ children, params }: Props) {
-  const { slug } = await params;
-
+export default function RoadmapDetailLayout({ children }: Props) {
   return (
-    <DetailShell
-      leftSidebar={
-        <Suspense fallback={<div className="sidebar-widget animate-pulse h-64" />}>
-          <RoadmapRecommendSidebarLeft currentSlug={slug} />
-        </Suspense>
-      }
-      rightSidebar={
-        <Suspense fallback={<div className="sidebar-widget animate-pulse h-64" />}>
-          <RoadmapRecommendSidebarRight currentSlug={slug} />
-        </Suspense>
-      }
-    >
-      {children}
-    </DetailShell>
+    <>
+      {/* Full-width Coursera-style — no sidebars */}
+      <div className="min-h-screen" style={{ background: "var(--background)" }}>
+        <main className="mx-auto w-full max-w-[1400px] px-4 py-4 md:px-6 md:py-6">
+          {children}
+        </main>
+      </div>
+      <MobileNavDrawer activePath={`/roadmap`} />
+    </>
   );
 }
-

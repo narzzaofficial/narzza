@@ -69,13 +69,22 @@ export function StatusViralSection({
   return (
     <>
       <div
-        className={standalone ? "" : "mt-6 border-t border-slate-700/70 pt-5"}
+        className={standalone ? "" : "mt-6 border-t pt-5"}
+        style={{ borderColor: "var(--surface-border)" }}
       >
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-slate-100">
+          <h2
+            className="text-sm font-semibold"
+            style={{ color: "var(--text-primary)" }}
+          >
             Status Viral Hari Ini
           </h2>
-          <span className="text-xs text-slate-400">klik status</span>
+          <span
+            className="text-xs"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            klik status
+          </span>
         </div>
 
         {/* Render List Story Bubble */}

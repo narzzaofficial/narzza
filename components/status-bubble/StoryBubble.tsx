@@ -22,9 +22,19 @@ export function StoryBubble({
     <button
       type="button"
       onClick={onClick}
-      className={`flex w-19.5 shrink-0 flex-col items-center gap-2 rounded-xl p-1 text-left transition ${
-        active ? "bg-cyan-500/10" : "hover:bg-slate-800/45"
-      }`}
+      className="flex w-19.5 shrink-0 flex-col items-center gap-2 rounded-xl p-1 text-left transition"
+      style={{
+        background: active ? "rgba(6,182,212,0.1)" : "transparent",
+      }}
+      onMouseEnter={(e) => {
+        if (!active)
+          (e.currentTarget as HTMLButtonElement).style.background =
+            "var(--surface)";
+      }}
+      onMouseLeave={(e) => {
+        if (!active)
+          (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+      }}
     >
       <div className={`story-ring ${story.viral ? "story-live" : ""}`}>
         <div
@@ -46,10 +56,19 @@ export function StoryBubble({
           ) : null}
         </div>
       </div>
-      <p className="w-full truncate text-center text-xs text-slate-200">
+      <p
+        className="w-full truncate text-center text-xs"
+        style={{ color: "var(--text-primary)" }}
+      >
         {story.name}
       </p>
-      <span className="rounded-full border border-slate-500/60 px-2 py-0.5 text-[10px] text-slate-300">
+      <span
+        className="rounded-full border px-2 py-0.5 text-[10px]"
+        style={{
+          borderColor: "var(--surface-border)",
+          color: "var(--text-secondary)",
+        }}
+      >
         {story.type}
       </span>
     </button>

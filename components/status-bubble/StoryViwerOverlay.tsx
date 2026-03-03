@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Story } from "@/types/content";
 import { StoryContent } from "@/hooks/useStoryViwer";
-// Sesuaikan path
 
 type StoryViewerOverlayProps = {
   selectedStory: Story;
@@ -31,6 +30,7 @@ export function StoryViewerOverlay({
 }: StoryViewerOverlayProps) {
   return (
     <div className="fixed inset-0 z-140 flex items-center justify-center">
+      {/* Backdrop */}
       <button
         type="button"
         aria-label="Tutup status populer"
@@ -44,12 +44,22 @@ export function StoryViewerOverlay({
           <button
             type="button"
             onClick={onPrev}
-            className="pointer-events-auto hidden w-50 shrink-0 cursor-pointer rounded-2xl border border-slate-700/55 bg-slate-900/70 p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 hover:border-slate-500/70 xl:block"
+            className="pointer-events-auto hidden w-50 shrink-0 cursor-pointer rounded-2xl border p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 xl:block"
+            style={{
+              background: "var(--surface)",
+              borderColor: "var(--surface-border)",
+            }}
           >
-            <p className="text-[10px] uppercase tracking-wider text-slate-500">
+            <p
+              className="text-[10px] uppercase tracking-wider"
+              style={{ color: "var(--text-secondary)" }}
+            >
               Sebelumnya
             </p>
-            <p className="mt-2 overflow-hidden text-sm font-semibold leading-snug text-slate-300 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
+            <p
+              className="mt-2 overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]"
+              style={{ color: "var(--text-primary)" }}
+            >
               {prevFeed.title}
             </p>
           </button>
@@ -57,7 +67,7 @@ export function StoryViewerOverlay({
           <div className="hidden w-50 shrink-0 xl:block" />
         )}
 
-        {/* Modal Utama */}
+        {/* Modal Utama — intentionally dark (seperti IG Stories) */}
         <article className="pointer-events-auto relative h-[82vh] max-h-180 w-full max-w-100 overflow-hidden rounded-[28px] border border-slate-500/50 bg-[#07162f] shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
           <div className="pointer-events-none absolute inset-0 rounded-[28px] bg-[radial-gradient(circle_at_18%_0%,rgba(56,189,248,0.25),transparent_45%),radial-gradient(circle_at_92%_0%,rgba(217,70,239,0.18),transparent_40%)]" />
 
@@ -166,12 +176,22 @@ export function StoryViewerOverlay({
           <button
             type="button"
             onClick={onNext}
-            className="pointer-events-auto hidden w-50 shrink-0 cursor-pointer rounded-2xl border border-slate-700/55 bg-slate-900/70 p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 hover:border-slate-500/70 xl:block"
+            className="pointer-events-auto hidden w-50 shrink-0 cursor-pointer rounded-2xl border p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 xl:block"
+            style={{
+              background: "var(--surface)",
+              borderColor: "var(--surface-border)",
+            }}
           >
-            <p className="text-[10px] uppercase tracking-wider text-slate-500">
+            <p
+              className="text-[10px] uppercase tracking-wider"
+              style={{ color: "var(--text-secondary)" }}
+            >
               Selanjutnya
             </p>
-            <p className="mt-2 overflow-hidden text-sm font-semibold leading-snug text-slate-300 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
+            <p
+              className="mt-2 overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]"
+              style={{ color: "var(--text-primary)" }}
+            >
               {nextFeed.title}
             </p>
           </button>

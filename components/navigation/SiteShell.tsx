@@ -2,12 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import {
-  AdminLink,
   AdsPlaceholder,
   MobileNavDrawer,
   NavigationSection,
-  QuickAccessSection,
-  TrendingSection,
 } from ".";
 import { ThemeToggle } from "@/components/navigation/ThemeToggle";
 
@@ -30,7 +27,6 @@ function isDetailPage(path: string) {
 export function SiteShell({ children }: SiteShellProps) {
   const activePath = usePathname();
 
-  // Halaman detail punya shell sendiri (DetailShell) — cukup render children
   if (isDetailPage(activePath)) {
     return <>{children}</>;
   }
@@ -41,7 +37,6 @@ export function SiteShell({ children }: SiteShellProps) {
         {/* Sidebar Kiri */}
         <aside className="hidden w-72 shrink-0 xl:block sidebar-sticky">
           <div className="sidebar-widget flex flex-col gap-0 p-4">
-            {/* Brand header */}
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500/20 text-base font-bold text-cyan-300 ring-1 ring-cyan-400/30">
                 N
@@ -51,23 +46,9 @@ export function SiteShell({ children }: SiteShellProps) {
                 <p className="mt-1 text-xs leading-none" style={{ color: "var(--text-secondary)" }}>Media Digital</p>
               </div>
             </div>
-
-            {/* Divider */}
             <div className="drawer-divider my-3" />
-
-            {/* Nav links */}
             <NavigationSection activePath={activePath} />
-
-            {/* Divider */}
             <div className="drawer-divider my-3" />
-
-            {/* Admin Link */}
-            <AdminLink />
-
-            {/* Divider */}
-            <div className="drawer-divider my-3" />
-
-            {/* Theme toggle */}
             <ThemeToggle />
           </div>
         </aside>
@@ -75,13 +56,12 @@ export function SiteShell({ children }: SiteShellProps) {
         {/* Konten Utama */}
         <main className="mx-auto w-full min-w-0 max-w-3xl">{children}</main>
 
-        {/* Sidebar Kanan */}
+        {/* Sidebar Kanan — Ad slots */}
         <aside className="hidden w-64 shrink-0 xl:block sidebar-sticky">
           <div className="space-y-4">
-            <QuickAccessSection />
-            <AdsPlaceholder label="Google Ads Slot" size="300 x 250" />
-            <AdsPlaceholder label="Sponsored" size="Native Promo Block" />
-            <TrendingSection />
+            <AdsPlaceholder label="Iklan" size="300 × 250" variant="square" />
+            <AdsPlaceholder label="Sponsor" size="Native Promo Block" variant="native" />
+            <AdsPlaceholder label="Iklan" size="300 × 90" variant="banner" />
           </div>
         </aside>
       </div>

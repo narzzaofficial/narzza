@@ -3,23 +3,16 @@
 import { useState } from "react";
 import type { Roadmap, RoadmapStep, RoadmapVideo } from "@/types/roadmaps";
 
-/* ─── tiny helpers ─────────────────────────────────────────────── */
 function totalVideos(steps: RoadmapStep[]) {
   return steps.reduce((sum, s) => sum + s.videos.length, 0);
 }
 
 /* ─── Video Player ─────────────────────────────────────────────── */
-function VideoPlayer({
-  video,
-  stepTitle,
-}: {
-  video: RoadmapVideo;
-  stepTitle: string;
-}) {
+function VideoPlayer({ video, stepTitle }: { video: RoadmapVideo; stepTitle: string }) {
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex flex-col">
       {/* iframe */}
-      <div className="aspect-video w-full overflow-hidden rounded-xl border border-slate-700/50 bg-slate-950 shadow-lg shadow-cyan-500/5">
+      <div className="aspect-video w-full overflow-hidden rounded-xl bg-black shadow-xl">
         <iframe
           src={`https://www.youtube.com/embed/${video.id}?rel=0&modestbranding=1`}
           title={stepTitle}
@@ -29,28 +22,13 @@ function VideoPlayer({
           className="h-full w-full"
         />
       </div>
-
-      {/* Video meta */}
-      <div className="mt-4 space-y-1">
-        <h3 className="text-lg font-semibold text-slate-50">{stepTitle}</h3>
-        <p className="text-sm text-slate-400">
-          oleh{" "}
-          <span className="font-medium text-cyan-300">{video.author}</span>
-        </p>
-      </div>
     </div>
   );
 }
 
-/* ─── Sidebar item ─────────────────────────────────────────────── */
+/* ─── Playlist Item ─────────────────────────────────────────────── */
 function PlaylistItem({
-  videoIndex,
-  step,
-  video,
-  isActive,
-  isWatched,
-  globalIndex,
-  onClick,
+  videoIndex, step, video, isActive, isWatched, globalIndex, onClick,
 }: {
   videoIndex: number;
   step: RoadmapStep;
@@ -63,39 +41,36 @@ function PlaylistItem({
   return (
     <button
       onClick={onClick}
-      className={`group w-full rounded-xl px-3 py-2.5 text-left transition-all duration-150 ${
-        isActive
-          ? "bg-cyan-500/15 ring-1 ring-cyan-400/40"
-          : "hover:bg-slate-800/60"
-      }`}
+      className="group w-full px-4 py-2.5 text-left transition-colors"
+      style={{
+        background: isActive ? "rgba(6,182,212,0.08)" : "transparent",
+        borderLeft: isActive ? "3px solid #06b6d4" : "3px solid transparent",
+      }}
     >
-      <div className="flex items-start gap-2.5">
+      <div className="flex items-start gap-3">
         {/* Index / checkmark */}
         <div
-          className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ring-1 transition-colors ${
-            isWatched
-              ? "bg-emerald-500/20 text-emerald-300 ring-emerald-400/40"
+          className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ring-1 transition-colors"
+          style={{
+            background: isWatched
+              ? "rgba(16,185,129,0.2)"
               : isActive
-                ? "bg-cyan-500/20 text-cyan-300 ring-cyan-400/40"
-                : "bg-slate-700/60 text-slate-400 ring-slate-600/40"
-          }`}
+                ? "rgba(6,182,212,0.2)"
+                : "rgba(100,116,139,0.2)",
+            color: isWatched ? "#6ee7b7" : isActive ? "#67e8f9" : "var(--text-secondary)",
+          }}
         >
           {isWatched ? "✓" : globalIndex}
         </div>
 
         <div className="flex-1 min-w-0">
           <p
-            className={`text-xs font-semibold leading-snug transition-colors ${
-              isActive
-                ? "text-cyan-200"
-                : isWatched
-                  ? "text-slate-400"
-                  : "text-slate-200 group-hover:text-cyan-200"
-            }`}
+            className="text-xs font-semibold leading-snug"
+            style={{ color: isActive ? "#67e8f9" : "var(--text-primary)" }}
           >
             {step.title}
           </p>
-          <p className="mt-0.5 text-[10px] text-slate-500">
+          <p className="mt-0.5 text-[10px]" style={{ color: "var(--text-secondary)" }}>
             Video {videoIndex + 1} • {video.author}
           </p>
         </div>
@@ -113,158 +88,191 @@ function PlaylistItem({
   );
 }
 
-/* ─── Step group heading ────────────────────────────────────────── */
-function StepHeading({
-  step,
-  stepNumber,
-  videoCount,
-}: {
-  step: RoadmapStep;
-  stepNumber: number;
-  videoCount: number;
-}) {
+/* ─── Step Group Heading ─────────────────────────────────────────── */
+function StepHeading({ step, stepNumber, videoCount }: { step: RoadmapStep; stepNumber: number; videoCount: number }) {
   return (
-    <div className="px-3 pb-1 pt-3">
+    <div className="px-4 pb-1 pt-4">
       <div className="flex items-center gap-2">
-        <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan-500/15 text-[10px] font-bold text-cyan-400 ring-1 ring-cyan-400/30">
+        <div
+          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ring-1"
+          style={{ background: "rgba(6,182,212,0.12)", color: "#67e8f9", outline: "1px solid rgba(6,182,212,0.3)" }}
+        >
           {stepNumber}
         </div>
-        <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
+        <p className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "var(--text-secondary)" }}>
           {step.title}
         </p>
       </div>
-      <p className="ml-7 mt-0.5 text-[10px] text-slate-600">{videoCount} video</p>
+      <p className="ml-7 mt-0.5 text-[10px]" style={{ color: "var(--text-secondary)", opacity: 0.6 }}>
+        {videoCount} video
+      </p>
     </div>
   );
 }
 
-/* ─── Main Component ────────────────────────────────────────────── */
+/* ─── Main Component ─────────────────────────────────────────────── */
 type ActiveVideo = { stepIndex: number; videoIndex: number };
 
 export function RoadmapCourseViewer({ roadmap }: { roadmap: Roadmap }) {
   const [active, setActive] = useState<ActiveVideo>({ stepIndex: 0, videoIndex: 0 });
   const [watched, setWatched] = useState<Set<string>>(new Set());
 
-  const markWatched = (stepIndex: number, videoIndex: number) => {
-    setWatched((prev) => new Set(prev).add(`${stepIndex}-${videoIndex}`));
+  const markWatched = (si: number, vi: number) =>
+    setWatched((prev) => new Set(prev).add(`${si}-${vi}`));
+
+  const handleSelect = (si: number, vi: number) => {
+    markWatched(active.stepIndex, active.videoIndex);
+    setActive({ stepIndex: si, videoIndex: vi });
+    if (typeof window !== "undefined" && window.innerWidth < 1024)
+      document.getElementById("roadmap-player")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleSelect = (stepIndex: number, videoIndex: number) => {
-    markWatched(active.stepIndex, active.videoIndex);
-    setActive({ stepIndex, videoIndex });
-    // scroll to top of the player on mobile
-    if (typeof window !== "undefined" && window.innerWidth < 1024) {
-      document.getElementById("roadmap-player")?.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  // Flat list for prev/next navigation
+  const flatList: { si: number; vi: number }[] = [];
+  roadmap.steps.forEach((step, si) => step.videos.forEach((_, vi) => flatList.push({ si, vi })));
+  const flatIndex = flatList.findIndex((f) => f.si === active.stepIndex && f.vi === active.videoIndex);
+  const prevItem = flatIndex > 0 ? flatList[flatIndex - 1] : null;
+  const nextItem = flatIndex < flatList.length - 1 ? flatList[flatIndex + 1] : null;
 
   const currentStep = roadmap.steps[active.stepIndex];
   const currentVideo = currentStep?.videos[active.videoIndex];
-
   const total = totalVideos(roadmap.steps);
   const watchedCount = watched.size;
-
-  // Build flat list for global numbering
   let globalCounter = 0;
 
   if (!currentStep || !currentVideo) {
     return (
-      <div className="glass-panel rounded-2xl p-8 text-center text-slate-400">
+      <div className="glass-panel rounded-2xl p-8 text-center" style={{ color: "var(--text-secondary)" }}>
         Roadmap ini belum memiliki video materi.
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
-      {/* ── Main Video Area ─────────────────────────────────────── */}
-      <div id="roadmap-player" className="flex-1 min-w-0 space-y-4">
-        {/* Player */}
-        <div className="glass-panel overflow-hidden rounded-2xl p-4 md:p-5">
-          <VideoPlayer video={currentVideo} stepTitle={currentStep.title} />
-
-          {/* Step description */}
-          <div className="mt-5 border-t border-slate-700/50 pt-4">
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <span className="roadmap-badge-neutral rounded-full border px-2.5 py-0.5 text-[11px]">
-                {currentStep.focus}
-              </span>
-              <span className="text-[11px] text-slate-500">
-                Langkah {active.stepIndex + 1} dari {roadmap.steps.length}
-              </span>
-            </div>
-            <p className="text-sm leading-relaxed text-slate-300">
-              {currentStep.description}
-            </p>
-          </div>
+    // Coursera-style: playlist left, player right
+    <div className="flex flex-col gap-0 overflow-hidden rounded-2xl border lg:flex-row lg:min-h-[80vh]"
+      style={{ borderColor: "var(--surface-border)", background: "var(--surface)" }}
+    >
+      {/* ── LEFT: Playlist / Kurikulum ───────────────────────────── */}
+      <aside
+        className="w-full shrink-0 border-b lg:w-72 xl:w-80 lg:border-b-0 lg:border-r lg:overflow-y-auto lg:max-h-[80vh]"
+        style={{ borderColor: "var(--surface-border)" }}
+      >
+        {/* Playlist header */}
+        <div className="sticky top-0 z-10 border-b px-4 py-3" style={{ borderColor: "var(--surface-border)", background: "var(--surface)" }}>
+          <h2 className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>Kurikulum</h2>
+          <p className="text-[11px]" style={{ color: "var(--text-secondary)" }}>
+            {roadmap.steps.length} langkah • {total} video
+          </p>
         </div>
 
-        {/* Progress bar */}
-        <div className="glass-panel rounded-xl px-4 py-3">
-          <div className="mb-1.5 flex items-center justify-between text-xs">
-            <span className="font-semibold text-slate-200">Progress Belajar</span>
-            <span className="text-cyan-300">
-              {watchedCount}/{total} video
+        {/* Steps & videos */}
+        <div className="pb-4">
+          {roadmap.steps.map((step, si) => (
+            <div key={step.title}>
+              <StepHeading step={step} stepNumber={si + 1} videoCount={step.videos.length} />
+              {step.videos.map((video, vi) => {
+                globalCounter++;
+                return (
+                  <PlaylistItem
+                    key={`${si}-${vi}`}
+                    videoIndex={vi}
+                    step={step}
+                    video={video}
+                    isActive={active.stepIndex === si && active.videoIndex === vi}
+                    isWatched={watched.has(`${si}-${vi}`)}
+                    globalIndex={globalCounter}
+                    onClick={() => handleSelect(si, vi)}
+                  />
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      {/* ── RIGHT: Video Player + Meta ───────────────────────────── */}
+      <div id="roadmap-player" className="flex flex-1 flex-col">
+        {/* Video */}
+        <div className="w-full bg-black">
+          <VideoPlayer video={currentVideo} stepTitle={currentStep.title} />
+        </div>
+
+        {/* Meta area */}
+        <div className="flex flex-1 flex-col p-5 md:p-6">
+          {/* Title & author */}
+          <h3 className="text-xl font-bold md:text-2xl" style={{ color: "var(--text-primary)" }}>
+            {currentStep.title}
+          </h3>
+          <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
+            oleh{" "}
+            <span className="font-semibold" style={{ color: "var(--text-accent)" }}>
+              {currentVideo.author}
+            </span>
+          </p>
+
+          {/* Divider */}
+          <div className="my-4 border-t" style={{ borderColor: "var(--surface-border)" }} />
+
+          {/* Focus tag + step info */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span
+              className="rounded-full border px-3 py-1 text-xs font-semibold"
+              style={{ borderColor: "var(--surface-border)", color: "var(--text-secondary)" }}
+            >
+              {currentStep.focus}
+            </span>
+            <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
+              Langkah {active.stepIndex + 1} dari {roadmap.steps.length}
             </span>
           </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-700/60">
-            <div
-              className="h-full rounded-full bg-linear-to-r from-cyan-500 to-blue-500 transition-all duration-500"
-              style={{ width: total > 0 ? `${(watchedCount / total) * 100}%` : "0%" }}
-            />
+
+          {/* Description */}
+          <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+            {currentStep.description}
+          </p>
+
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* Progress */}
+          <div className="mt-6 border-t pt-4" style={{ borderColor: "var(--surface-border)" }}>
+            <div className="mb-2 flex items-center justify-between text-xs">
+              <span className="font-semibold" style={{ color: "var(--text-primary)" }}>
+                Progress Belajar
+              </span>
+              <span style={{ color: "var(--text-accent)" }}>
+                {watchedCount}/{total} video
+              </span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full" style={{ background: "var(--surface-border)" }}>
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-500"
+                style={{ width: total > 0 ? `${(watchedCount / total) * 100}%` : "0%" }}
+              />
+            </div>
+          </div>
+
+          {/* Prev / Next navigation */}
+          <div className="mt-4 flex items-center justify-between gap-3">
+            <button
+              onClick={() => prevItem && handleSelect(prevItem.si, prevItem.vi)}
+              disabled={!prevItem}
+              className="rounded-full border px-4 py-2 text-xs font-medium transition disabled:opacity-30"
+              style={{ borderColor: "var(--surface-border)", color: "var(--text-secondary)" }}
+            >
+              ← Sebelumnya
+            </button>
+            <button
+              onClick={() => nextItem && handleSelect(nextItem.si, nextItem.vi)}
+              disabled={!nextItem}
+              className="rounded-full border border-cyan-400/50 bg-cyan-500/10 px-5 py-2 text-xs font-bold text-cyan-300 transition hover:bg-cyan-500/20 disabled:opacity-30"
+            >
+              Video Berikutnya →
+            </button>
           </div>
         </div>
       </div>
-
-      {/* ── Playlist Sidebar ─────────────────────────────────────── */}
-      <aside className="w-full lg:w-72 xl:w-80 shrink-0">
-        <div className="glass-panel rounded-2xl overflow-hidden">
-          {/* Header */}
-          <div className="border-b border-slate-700/50 px-4 py-3">
-            <h2 className="text-sm font-bold text-slate-100">Kurikulum</h2>
-            <p className="text-[11px] text-slate-400">
-              {roadmap.steps.length} langkah • {total} video
-            </p>
-          </div>
-
-          {/* Playlist */}
-          <div className="max-h-130 overflow-y-auto py-1 no-scrollbar">
-            {roadmap.steps.map((step, si) => (
-              <div key={step.title}>
-                <StepHeading
-                  step={step}
-                  stepNumber={si + 1}
-                  videoCount={step.videos.length}
-                />
-                <div className="px-1 pb-1">
-                  {step.videos.map((video, vi) => {
-                    globalCounter++;
-                    const isActive = active.stepIndex === si && active.videoIndex === vi;
-                    const isWatched = watched.has(`${si}-${vi}`);
-                    return (
-                      <PlaylistItem
-                        key={`${si}-${vi}`}
-                        videoIndex={vi}
-                        step={step}
-                        video={video}
-                        isActive={isActive}
-                        isWatched={isWatched}
-                        globalIndex={globalCounter}
-                        onClick={() => handleSelect(si, vi)}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </aside>
     </div>
   );
 }
-
-
-
-
-
