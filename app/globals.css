@@ -386,7 +386,20 @@
         transparent 30%
       ),
       linear-gradient(140deg, #020617 0%, #0f172a 48%, #0b1120 100%);
-    @apply min-h-screen pb-6 pt-20 text-slate-100 xl:pt-0;
+    /* Mobile: normal scroll with top padding for fixed topbar */
+    @apply min-h-screen pt-20 pb-6 text-slate-100;
+  }
+
+  /* Desktop xl+: lock the whole shell to viewport height so only main scrolls */
+  @media (min-width: 1280px) {
+    .page-shell {
+      height: 100dvh;
+      overflow: hidden;
+      padding-top: 0;
+      padding-bottom: 0;
+      display: flex;
+      flex-direction: column;
+    }
   }
 
   .content-grid {
@@ -394,8 +407,56 @@
       md:px-5 md:py-6;
   }
 
+  /* Desktop: content-grid fills the locked shell height */
+  @media (min-width: 1280px) {
+    .content-grid {
+      flex: 1 1 0%;
+      min-height: 0;
+      overflow: hidden;
+      padding-top: 0;
+      padding-bottom: 0;
+      align-items: stretch;
+    }
+  }
+
   .sidebar-sticky {
-    @apply sticky top-6 self-start h-fit;
+    /* Mobile: normal flow */
+    @apply hidden xl:flex xl:flex-col;
+  }
+
+  /* Desktop: sidebar fills full height and does NOT scroll */
+  @media (min-width: 1280px) {
+    .sidebar-sticky {
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .sidebar-sticky::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  /* Desktop: main content scrolls independently */
+  @media (min-width: 1280px) {
+    .page-shell > .content-grid > main {
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .page-shell > .content-grid > main::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   /* ─── Feed / content components ─────────────────────────────── */

@@ -6,14 +6,16 @@ type Props = {
 
 export default function RoadmapDetailLayout({ children }: Props) {
   return (
-    <>
-      {/* Full-width Coursera-style — no sidebars */}
-      <div className="min-h-screen" style={{ background: "var(--background)" }}>
-        <main className="mx-auto w-full max-w-[1400px] px-4 py-4 md:px-6 md:py-6">
-          {children}
-        </main>
-      </div>
-      <MobileNavDrawer activePath={`/roadmap`} />
-    </>
+    <div
+      className="flex min-h-screen flex-col"
+      style={{ background: "var(--background)" }}
+    >
+      {/* ── Page content ────────────────────────────────────────── */}
+      <main className="flex flex-1 flex-col min-h-0">
+        {children}
+      </main>
+
+      <MobileNavDrawer activePath="/roadmap" />
+    </div>
   );
 }

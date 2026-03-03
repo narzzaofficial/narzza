@@ -35,7 +35,7 @@ export function SiteShell({ children }: SiteShellProps) {
     <div className="page-shell">
       <div className="content-grid">
         {/* Sidebar Kiri */}
-        <aside className="hidden w-72 shrink-0 xl:block sidebar-sticky">
+        <aside className="w-72 shrink-0 sidebar-sticky">
           <div className="sidebar-widget flex flex-col gap-0 p-4">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500/20 text-base font-bold text-cyan-300 ring-1 ring-cyan-400/30">
@@ -57,7 +57,7 @@ export function SiteShell({ children }: SiteShellProps) {
         <main className="mx-auto w-full min-w-0 max-w-3xl">{children}</main>
 
         {/* Sidebar Kanan — Ad slots */}
-        <aside className="hidden w-64 shrink-0 xl:block sidebar-sticky">
+        <aside className="w-64 shrink-0 sidebar-sticky">
           <div className="space-y-4">
             <AdsPlaceholder label="Iklan" size="300 × 250" variant="square" />
             <AdsPlaceholder label="Sponsor" size="Native Promo Block" variant="native" />

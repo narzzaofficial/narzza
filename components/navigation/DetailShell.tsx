@@ -21,7 +21,7 @@ export function DetailShell({
     <div className="page-shell">
       <div className="content-grid">
         {/* Sidebar Kiri — Rekomendasi */}
-        <aside className="hidden w-72 shrink-0 xl:block sidebar-sticky">
+        <aside className="w-72 shrink-0 sidebar-sticky">
           <div className="space-y-4">{leftSidebar}</div>
         </aside>
 
@@ -29,7 +29,7 @@ export function DetailShell({
         <main className="mx-auto w-full min-w-0 max-w-3xl">{children}</main>
 
         {/* Sidebar Kanan — Rekomendasi */}
-        <aside className="hidden w-64 shrink-0 xl:block sidebar-sticky">
+        <aside className="w-64 shrink-0 sidebar-sticky">
           <div className="space-y-4">{rightSidebar}</div>
         </aside>
       </div>
