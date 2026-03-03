@@ -27,7 +27,7 @@ export function ChatImage({ src }: { src: string }) {
       {/* 1. Thumbnail (Gambar Kecil) */}
       <button
         onClick={() => setIsOpen(true)}
-        className="group relative mt-2 block max-w-65 overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-900/40 p-1 transition-all hover:border-cyan-500/50"
+        className="group relative mt-2 block max-w-65 overflow-hidden rounded-2xl transition-all"
         title="Buka gambar"
       >
         <Image

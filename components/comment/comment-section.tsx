@@ -95,7 +95,7 @@ export function CommentSection({ feedId }: CommentSectionProps) {
 
   return (
     <section className="mt-6">
-      <h2 className="mb-4 text-lg font-semibold text-slate-100">
+      <h2 className="mb-4 text-lg font-semibold text-[var(--text-primary)]">
         Komentar ({comments.length})
       </h2>
 
@@ -104,7 +104,7 @@ export function CommentSection({ feedId }: CommentSectionProps) {
         className="glass-panel mb-4 rounded-2xl p-5"
       >
         {error ? (
-          <div className="mb-3 rounded-lg border border-amber-500/50 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
+          <div className="mb-3 rounded-lg border border-amber-500/50 bg-amber-500/10 px-3 py-2 text-sm text-amber-600 dark:text-amber-300">
             {error}
           </div>
         ) : null}
@@ -114,7 +114,7 @@ export function CommentSection({ feedId }: CommentSectionProps) {
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             placeholder="Nama Anda"
-            className="w-full rounded-lg border border-slate-600/50 bg-slate-800/50 px-4 py-2 text-sm text-slate-100 placeholder-slate-400 focus:border-cyan-300/50 focus:outline-none focus:ring-1 focus:ring-cyan-300/50"
+            className="w-full rounded-lg border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--text-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--text-accent)]/40"
             maxLength={50}
             disabled={submitting}
           />
@@ -125,7 +125,7 @@ export function CommentSection({ feedId }: CommentSectionProps) {
             onChange={(e) => setText(e.target.value)}
             placeholder="Tulis komentar Anda..."
             rows={3}
-            className="w-full rounded-lg border border-slate-600/50 bg-slate-800/50 px-4 py-2 text-sm text-slate-100 placeholder-slate-400 focus:border-cyan-300/50 focus:outline-none focus:ring-1 focus:ring-cyan-300/50"
+            className="w-full rounded-lg border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--text-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--text-accent)]/40"
             maxLength={500}
             disabled={submitting}
           />
@@ -140,34 +140,34 @@ export function CommentSection({ feedId }: CommentSectionProps) {
       </form>
 
       <div className="glass-panel rounded-2xl p-5">
-        <h3 className="mb-3 text-sm font-semibold text-slate-200">
+        <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">
           Komentar Berita Lainnya
         </h3>
 
         {loading ? (
-          <div className="py-8 text-center text-sm text-slate-400">
+          <div className="py-8 text-center text-sm text-[var(--text-secondary)]">
             Memuat komentar...
           </div>
         ) : comments.length === 0 ? (
-          <div className="py-5 text-center text-sm text-slate-400">
+          <div className="py-5 text-center text-sm text-[var(--text-secondary)]">
             Belum ada komentar. Jadilah yang pertama berkomentar!
           </div>
         ) : (
-          <div className="scrollbar-hide max-h-[500px] space-y-3 overflow-y-auto pr-2">
+          <div className="scrollbar-hide max-h-[400px] space-y-2 overflow-y-auto pr-1">
             {comments.map((comment) => (
               <div
                 key={comment.id}
-                className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-4"
+                className="rounded-xl bg-[var(--surface)] px-3 py-2.5 transition-colors hover:brightness-105"
               >
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="font-semibold text-slate-100">
+                <div className="mb-0.5 flex items-center justify-between gap-2">
+                  <span className="text-xs font-semibold text-[var(--text-accent)]">
                     {comment.author}
                   </span>
-                  <span className="text-xs text-slate-400">
+                  <span className="text-[10px] text-[var(--text-secondary)]">
                     {formatTime(comment.createdAt)}
                   </span>
                 </div>
-                <p className="text-sm leading-relaxed text-slate-300">
+                <p className="text-xs leading-relaxed text-[var(--text-primary)]">
                   {comment.text}
                 </p>
               </div>

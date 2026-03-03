@@ -123,7 +123,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
               Buka Chat Q&A
             </span>
             <svg
-              className="ml-auto h-3 w-3 text-cyan-400 transition-transform group-hover:translate-x-1"
+              className="h-3 w-3 text-cyan-400 transition-transform group-hover:translate-x-1"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -135,6 +135,9 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
                 d="M9 5l7 7-7 7"
               />
             </svg>
+            <span className="ml-auto text-cyan-400/60 transition-colors group-hover:text-cyan-300/80">
+              Gabung diskusi
+            </span>
           </div>
         </div>
       </div>
@@ -217,7 +220,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
               Buka Chat Q&A
             </span>
             <svg
-              className="ml-auto h-3 w-3 text-cyan-400 transition-transform group-hover:translate-x-1"
+              className="h-3 w-3 text-cyan-400 transition-transform group-hover:translate-x-1"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

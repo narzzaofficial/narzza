@@ -638,19 +638,26 @@
 }
 
 /* Name input & textarea */
-[data-theme="light"] .border-slate-600\/50.bg-slate-800\/50 {
+[data-theme="light"] input[type="text"],
+[data-theme="light"] input[type="search"],
+[data-theme="light"] textarea {
   background-color: #f8fafc !important;
   border-color: #cbd5e1 !important;
   color: #0f172a !important;
 }
 
-[data-theme="light"] .border-slate-600\/50.bg-slate-800\/50::placeholder {
+[data-theme="light"] input[type="text"]::placeholder,
+[data-theme="light"] input[type="search"]::placeholder,
+[data-theme="light"] textarea::placeholder {
   color: #94a3b8 !important;
 }
 
-[data-theme="light"] .border-slate-600\/50.bg-slate-800\/50:focus {
+[data-theme="light"] input[type="text"]:focus,
+[data-theme="light"] input[type="search"]:focus,
+[data-theme="light"] textarea:focus {
   border-color: #3b82f6 !important;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+  outline: none !important;
 }
 
 /* "Komentar Berita Lainnya" heading */
@@ -681,23 +688,7 @@
   color: #64748b !important;
 }
 
-[data-theme="light"] input[type="text"],
-[data-theme="light"] input[type="search"] {
-  background-color: #f8fafc !important;
-  border-color: #cbd5e1 !important;
-  color: #0f172a !important;
-}
-
-[data-theme="light"] input[type="text"]:focus,
-[data-theme="light"] input[type="search"]:focus {
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
-}
-
-[data-theme="light"] input[type="text"]::placeholder,
-[data-theme="light"] input[type="search"]::placeholder {
-  color: #94a3b8 !important;
-}
+/* (input/textarea rules consolidated above) */
 
 /* "GLOBAL SEARCH" label above input */
 [data-theme="light"] .glass-panel label.text-cyan-300 {
@@ -725,6 +716,72 @@
 
 [data-theme="light"] .chat-bubble-right {
   border-color: rgba(16, 185, 129, 0.4);
+}
+
+/* Chat bubble text (text-slate-100 / text-slate-300 are near-white on light) */
+[data-theme="light"] .chat-bubble-left,
+[data-theme="light"] .chat-bubble-right {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .chat-bubble-left .text-slate-300,
+[data-theme="light"] .chat-bubble-right .text-slate-300 {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .chat-bubble-left .text-slate-100,
+[data-theme="light"] .chat-bubble-right .text-slate-100 {
+  color: #1e293b !important;
+}
+
+/* "Inti cepat" takeaway box (bg-amber-400/10 text-amber-100) */
+[data-theme="light"] .bg-amber-400\/10 {
+  background-color: #fef9c3 !important;
+}
+
+[data-theme="light"] .border-amber-300\/35 {
+  border-color: #fbbf24 !important;
+}
+
+[data-theme="light"] .text-amber-100 {
+  color: #78350f !important;
+}
+
+/* "Kirim Komentar" submit button */
+[data-theme="light"] button.bg-cyan-500 {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] button.bg-cyan-500:hover:not(:disabled) {
+  background-color: #1d4ed8 !important;
+}
+
+/* Article source box */
+[data-theme="light"] article .bg-slate-800\/30 {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] article .bg-slate-800\/30 .text-slate-400 {
+  color: #64748b !important;
+}
+
+[data-theme="light"] article .bg-slate-800\/30 .text-cyan-300 {
+  color: #0284c7 !important;
+}
+
+/* Article header text */
+[data-theme="light"] article h1.text-slate-50 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] article header .text-slate-400 {
+  color: #64748b !important;
+}
+
+[data-theme="light"] article header.border-slate-700\/70 {
+  border-color: #e2e8f0 !important;
 }
 
 /* Navigation */
@@ -765,6 +822,37 @@
 [data-theme="light"] .mobile-topbar {
   background: rgba(255, 255, 255, 0.95);
   border-color: #c7d4e4;
+}
+
+/* Title text in topbar */
+[data-theme="light"] .mobile-topbar p {
+  color: #0f172a !important;
+}
+
+/* Hamburger button */
+[data-theme="light"] .hamburger-btn {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .hamburger-btn span {
+  background-color: #334155 !important;
+}
+
+[data-theme="light"] .hamburger-btn:hover {
+  background-color: #eff6ff !important;
+  border-color: #93c5fd !important;
+}
+
+/* ThemeToggle compact button (icon-only) */
+[data-theme="light"] .mobile-topbar button.rounded-xl {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .mobile-topbar button.rounded-xl:hover {
+  background-color: #eff6ff !important;
+  border-color: #93c5fd !important;
 }
 
 [data-theme="light"] .mobile-drawer {
