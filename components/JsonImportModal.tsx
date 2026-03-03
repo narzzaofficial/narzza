@@ -49,26 +49,26 @@ export function JsonImportModal({ title, schemaHint, onImport, onClose }: Props)
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-      <div className="w-full max-w-2xl rounded-2xl border border-slate-600/50 bg-slate-900 p-6 shadow-2xl">
+    <div className="json-import-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+      <div className="json-import-panel w-full max-w-2xl rounded-2xl border border-slate-600/50 bg-slate-900 p-6 shadow-2xl">
         {/* Header */}
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-base font-semibold">Import JSON — {title}</h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white text-lg leading-none"
+            className="json-import-close text-slate-400 hover:text-white text-lg leading-none"
           >
             ✕
           </button>
         </div>
 
         {done ? (
-          <div className="rounded-xl bg-emerald-900/40 border border-emerald-600/40 p-4 text-sm text-emerald-300">
+          <div className="json-import-success rounded-xl bg-emerald-900/40 border border-emerald-600/40 p-4 text-sm text-emerald-300">
             ✅ Berhasil import <strong>{done.ok}</strong> item!
             <div className="mt-4 flex justify-end">
               <button
                 onClick={onClose}
-                className="rounded-lg bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600"
+                className="json-import-secondary rounded-lg bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600"
               >
                 Tutup
               </button>
@@ -80,7 +80,7 @@ export function JsonImportModal({ title, schemaHint, onImport, onClose }: Props)
             <p className="mb-2 text-xs text-slate-400">
               Paste array JSON (bisa 1 atau banyak item). Contoh struktur:
             </p>
-            <pre className="mb-3 max-h-28 overflow-auto rounded-lg bg-slate-800/70 p-3 text-[11px] text-slate-400 whitespace-pre-wrap">
+            <pre className="json-import-schema mb-3 max-h-28 overflow-auto rounded-lg bg-slate-800/70 p-3 text-[11px] text-slate-400 whitespace-pre-wrap">
               {schemaHint}
             </pre>
 
@@ -91,11 +91,11 @@ export function JsonImportModal({ title, schemaHint, onImport, onClose }: Props)
               onChange={(e) => setRaw(e.target.value)}
               rows={10}
               placeholder='[{ ... }, { ... }]'
-              className="w-full rounded-xl border border-slate-600/50 bg-slate-800/60 px-3 py-2 font-mono text-xs text-slate-200 outline-none focus:border-cyan-400 resize-y"
+              className="json-import-textarea w-full rounded-xl border border-slate-600/50 bg-slate-800/60 px-3 py-2 font-mono text-xs text-slate-200 outline-none focus:border-cyan-400 resize-y"
             />
 
             {error && (
-              <p className="mt-2 rounded-lg bg-red-900/30 border border-red-600/40 px-3 py-2 text-xs text-red-300">
+              <p className="json-import-error mt-2 rounded-lg bg-red-900/30 border border-red-600/40 px-3 py-2 text-xs text-red-300">
                 {error}
               </p>
             )}
@@ -103,14 +103,14 @@ export function JsonImportModal({ title, schemaHint, onImport, onClose }: Props)
             <div className="mt-4 flex justify-end gap-3">
               <button
                 onClick={onClose}
-                className="rounded-lg bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600"
+                className="json-import-secondary rounded-lg bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600"
               >
                 Batal
               </button>
               <button
                 onClick={handleImport}
                 disabled={loading || !raw.trim()}
-                className="rounded-lg bg-cyan-600 px-5 py-2 text-sm font-semibold hover:bg-cyan-500 disabled:opacity-50"
+                className="json-import-primary rounded-lg bg-cyan-600 px-5 py-2 text-sm font-semibold hover:bg-cyan-500 disabled:opacity-50"
               >
                 {loading ? "Menyimpan…" : "Import"}
               </button>

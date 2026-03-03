@@ -27,7 +27,7 @@ export default function AdminPage() {
   } = useAdmin();
 
   return (
-    <div className="bg-canvas min-h-screen px-4 py-8 text-slate-100">
+    <div className="admin-main-page bg-canvas min-h-screen px-4 py-8 text-slate-100">
       <div className="mx-auto max-w-5xl">
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">

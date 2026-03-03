@@ -26,7 +26,7 @@ export default async function BeritaPage() {
   ]);
 
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-950" />}>
+    <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
       <FeedPage
         activePath="/berita"
         badge="BERITA"

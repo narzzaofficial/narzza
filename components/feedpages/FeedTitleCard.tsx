@@ -39,7 +39,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
       {/* Mobile: Vertical Layout (Image Top) */}
       <div className="block md:hidden">
         {/* Image Full Width */}
-        <div className="relative aspect-video w-full overflow-hidden bg-slate-900">
+        <div className="relative aspect-video w-full overflow-hidden bg-slate-800/40">
           <Image
             src={feed.image}
             alt={feed.title}
@@ -236,7 +236,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
         </div>
 
         {/* Image Thumbnail - Symmetric */}
-        <div className="relative h-32 w-32 shrink-0 self-center overflow-hidden rounded-lg bg-slate-900 shadow-md md:h-36 md:w-36">
+        <div className="relative h-32 w-32 shrink-0 self-center overflow-hidden rounded-lg bg-slate-800/40 shadow-md md:h-36 md:w-36">
           <Image
             src={feed.image}
             alt={feed.title}

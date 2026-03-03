@@ -10,7 +10,7 @@ export function RoadmapTab({ roadmaps }: { roadmaps: Roadmap[] }) {
         <h2 className="text-base sm:text-lg font-semibold">Daftar Roadmap</h2>
         <Link
           href="/admin/roadmaps"
-          className="rounded-lg sm:rounded-xl bg-cyan-600/80 px-3 py-1.5 text-sm font-semibold text-white"
+          className="admin-btn admin-btn-primary rounded-lg sm:rounded-xl bg-cyan-600/80 px-3 py-1.5 text-sm font-semibold text-white"
         >
           + Tambah Roadmap
         </Link>
@@ -19,7 +19,7 @@ export function RoadmapTab({ roadmaps }: { roadmaps: Roadmap[] }) {
         {roadmaps.map((roadmap) => (
           <div
             key={roadmap.slug}
-            className="glass-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4"
+            className="admin-list-card glass-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4"
           >
             <div className="min-w-0 flex-1">
               <div className="mb-1 flex gap-2">
@@ -32,14 +32,14 @@ export function RoadmapTab({ roadmaps }: { roadmaps: Roadmap[] }) {
             <div className="flex shrink-0 gap-2">
               <Link
                 href={`/admin/roadmaps?edit=${roadmap.slug}`}
-                className="bg-slate-700/60 px-3 py-1.5 rounded-lg text-xs"
+                className="admin-btn admin-btn-secondary bg-slate-700/60 px-3 py-1.5 rounded-lg text-xs"
               >
                 Edit
               </Link>
               <Link
                 href={`/roadmap/${roadmap.slug}`}
                 target="_blank"
-                className="bg-cyan-700/40 px-3 py-1.5 rounded-lg text-xs text-cyan-200"
+                className="admin-btn admin-btn-info bg-cyan-700/40 px-3 py-1.5 rounded-lg text-xs text-cyan-200"
               >
                 Lihat
               </Link>
@@ -58,7 +58,7 @@ export function ProductTab({ products }: { products: Product[] }) {
         <h2 className="text-base sm:text-lg font-semibold">Daftar Produk</h2>
         <Link
           href="/admin/products"
-          className="rounded-lg bg-cyan-600/80 px-3 py-1.5 text-sm font-semibold text-white"
+          className="admin-btn admin-btn-primary rounded-lg bg-cyan-600/80 px-3 py-1.5 text-sm font-semibold text-white"
         >
           🛒 Kelola Produk
         </Link>
@@ -67,7 +67,7 @@ export function ProductTab({ products }: { products: Product[] }) {
         {products.map((product) => (
           <div
             key={product.id}
-            className="glass-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4"
+            className="admin-list-card glass-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4"
           >
             <div className="flex min-w-0 flex-1 items-center gap-3">
               {product.images[0] && (
@@ -87,14 +87,14 @@ export function ProductTab({ products }: { products: Product[] }) {
             <div className="flex gap-2">
               <Link
                 href="/admin/products"
-                className="bg-slate-700/60 px-3 py-1.5 rounded-lg text-xs"
+                className="admin-btn admin-btn-secondary bg-slate-700/60 px-3 py-1.5 rounded-lg text-xs"
               >
                 ✏️ Edit
               </Link>
               <Link
                 href={`/toko/${product.id}`}
                 target="_blank"
-                className="bg-cyan-700/40 px-3 py-1.5 rounded-lg text-xs text-cyan-200"
+                className="admin-btn admin-btn-info bg-cyan-700/40 px-3 py-1.5 rounded-lg text-xs text-cyan-200"
               >
                 👁️ Lihat
               </Link>
@@ -113,7 +113,7 @@ export function CategoryTab({ categories }: { categories: Category[] }) {
         <h2 className="text-base sm:text-lg font-semibold">Daftar Kategori</h2>
         <Link
           href="/admin/categories"
-          className="rounded-lg bg-cyan-600/80 px-3 py-1.5 text-sm font-semibold text-white"
+          className="admin-btn admin-btn-primary rounded-lg bg-cyan-600/80 px-3 py-1.5 text-sm font-semibold text-white"
         >
           🏷️ Kelola Kategori
         </Link>
@@ -122,7 +122,7 @@ export function CategoryTab({ categories }: { categories: Category[] }) {
         {categories.map((category) => (
           <div
             key={category.id}
-            className="glass-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4"
+            className="admin-list-card glass-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4"
           >
             <div className="flex min-w-0 flex-1 items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-900/60 text-2xl">
@@ -135,7 +135,7 @@ export function CategoryTab({ categories }: { categories: Category[] }) {
             </div>
             <Link
               href="/admin/categories"
-              className="bg-slate-700/60 px-3 py-1.5 rounded-lg text-xs"
+              className="admin-btn admin-btn-secondary bg-slate-700/60 px-3 py-1.5 rounded-lg text-xs"
             >
               ✏️ Edit
             </Link>

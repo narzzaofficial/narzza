@@ -16,7 +16,7 @@ export function ProductImageGallery({ images, productName, featured }: ProductIm
 
   return (
     <div className="glass-panel overflow-hidden rounded-xl">
-      <div className="relative aspect-video bg-slate-900/60">
+      <div className="product-gallery-main relative aspect-video">
         <Image
           src={mainImage}
           alt={productName}
@@ -40,7 +40,7 @@ export function ProductImageGallery({ images, productName, featured }: ProductIm
 
       {/* Thumbnail Images - Interactive */}
       {images.length > 1 && (
-        <div className="border-t border-slate-700/40 bg-slate-900/20 p-3">
+        <div className="product-gallery-thumbs border-t border-slate-700/40 p-3">
           <div className="flex gap-2 overflow-x-auto">
             {images.map((img, idx) => (
               <button
@@ -50,7 +50,7 @@ export function ProductImageGallery({ images, productName, featured }: ProductIm
                 className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
                   selectedImageIndex === idx
                     ? "border-cyan-500 ring-2 ring-cyan-500/40"
-                    : "border-slate-700/60 hover:border-cyan-500/60"
+                    : "product-gallery-thumb-inactive border-slate-700/60 hover:border-cyan-500/60"
                 }`}
               >
                 <Image

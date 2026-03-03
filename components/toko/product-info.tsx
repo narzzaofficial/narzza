@@ -7,7 +7,7 @@ export function ProductInfo({ product }: { product: Product }) {
         {product.name}
       </h1>
 
-      <div className="mb-4 rounded-lg bg-slate-900/40 p-3">
+      <div className="product-price-box mb-4 rounded-lg p-3">
         <p className="text-2xl font-bold text-orange-500">
           Rp {product.price.toLocaleString("id-ID")}
         </p>
@@ -22,7 +22,7 @@ export function ProductInfo({ product }: { product: Product }) {
             {product.stock > 0 ? `${product.stock} unit tersedia` : "Habis"}
           </span>
         </div>
-        <span className="rounded-full bg-slate-700/60 px-3 py-1 text-xs font-medium text-slate-300">
+        <span className="product-category-badge rounded-full px-3 py-1 text-xs font-medium">
           {product.category}
         </span>
       </div>
@@ -31,7 +31,7 @@ export function ProductInfo({ product }: { product: Product }) {
         <h2 className="mb-3 text-base font-semibold text-slate-100">
           Deskripsi Produk
         </h2>
-        <div className="rounded-lg bg-slate-900/40 p-4">
+        <div className="product-desc-box rounded-lg p-4">
           <p className="text-sm leading-relaxed text-slate-300 whitespace-pre-line">
             {product.description}
           </p>
@@ -52,7 +52,7 @@ export function ProductInfo({ product }: { product: Product }) {
             : "📦 Produk Fisik"}
         </span>
 
-        <div className="rounded-lg bg-slate-900/40 p-3">
+        <div className="product-detail-box rounded-lg p-3">
           <h3 className="mb-3 text-sm font-semibold text-slate-200">
             Keterangan Produk
           </h3>

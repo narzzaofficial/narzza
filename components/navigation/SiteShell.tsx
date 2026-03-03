@@ -19,8 +19,8 @@ type SiteShellProps = {
 const DETAIL_PATTERNS = [
   /^\/read\/\d+$/,
   /^\/buku\/\d+$/,
-  /^\/roadmap\/.+$/,
-  /^\/toko\/.+$/,
+  /^\/roadmap\/[^/]+$/,
+  /^\/toko\/[^/]+$/,
 ];
 
 function isDetailPage(path: string) {

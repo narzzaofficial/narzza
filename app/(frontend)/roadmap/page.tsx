@@ -20,7 +20,7 @@ export default async function RoadmapListPage() {
   return (
     <div className="space-y-6">
       {/* Header Section */}
-      <header className="glass-panel rounded-3xl p-6 shadow-xl shadow-cyan-500/5 ring-1 ring-white/5">
+      <header className="page-hero">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
           Learning Roadmaps
         </p>
@@ -31,12 +31,12 @@ export default async function RoadmapListPage() {
           Tiap kartu berisi urutan langkah, video embed resmi YouTube, dan fokus
           kompetensi. Klik untuk lihat detail lengkap.
         </p>
-        <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
-          <span className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-3 py-1">
+        <div className="mt-4 flex flex-wrap gap-2 text-xs">
+          <span className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-3 py-1 text-cyan-300">
             Semua video via YouTube embed
           </span>
-          <span className="rounded-full border border-slate-600/60 bg-slate-900/40 px-3 py-1">
-            Responsif mobile & desktop
+          <span className="roadmap-badge-neutral rounded-full border px-3 py-1">
+            Responsif mobile &amp; desktop
           </span>
         </div>
       </header>
@@ -65,20 +65,20 @@ export default async function RoadmapListPage() {
             </div>
 
             <div className="flex h-full flex-col gap-3 p-5">
-              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300">
+              <div className="flex flex-wrap items-center gap-2 text-xs">
                 <span className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-2.5 py-0.5 font-semibold text-cyan-200">
                   {item.level}
                 </span>
-                <span className="ml-auto rounded-full border border-slate-700/60 bg-slate-900/60 px-2.5 py-0.5 text-slate-200">
+                <span className="roadmap-badge-neutral ml-auto rounded-full border px-2.5 py-0.5">
                   {item.duration}
                 </span>
               </div>
 
-              <div className="flex flex-wrap gap-2 text-[11px] text-slate-300">
+              <div className="flex flex-wrap gap-2 text-[11px]">
                 {item.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full bg-slate-800/60 px-2.5 py-0.5"
+                    className="roadmap-tag rounded-full px-2.5 py-0.5"
                   >
                     {tag}
                   </span>

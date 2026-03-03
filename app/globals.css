@@ -1,4 +1,4 @@
-  @import "tailwindcss";
+@import "tailwindcss";
 
 /* ─── Design tokens — Dark (default) ────────────────────────────── */
 :root {
@@ -48,8 +48,8 @@
 
 @keyframes card-rise {
   from {
-    opacity: 0;
-    transform: translateY(16px);
+    opacity: 1;
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -143,7 +143,6 @@
 
   .feed-card {
     @apply relative overflow-hidden;
-    animation: card-rise 0.55s ease-out both;
     transition:
       border-color 0.2s ease,
       transform 0.2s ease,
@@ -151,7 +150,7 @@
   }
 
   .tutorial-card {
-    animation: card-rise 0.55s ease-out both;
+    /* Keep transition-driven interactivity, avoid remount fade flash */
   }
 
   .feed-card::after {
@@ -213,7 +212,7 @@
     @apply border-cyan-400/70 bg-cyan-500/15 ring-1 ring-cyan-400/30;
   }
 
-  /* ─── Mobile navigation ──────────────────────────────────────── */
+  /* ─── Mobile navigation ──────────────────────────────────────���─ */
   .mobile-topbar {
     background: var(--surface);
     border: 1px solid var(--surface-border);
@@ -917,11 +916,17 @@
 
 /* Background overrides for common dark panels */
 [data-theme="light"] .bg-slate-900\/90,
+[data-theme="light"] .bg-slate-900\/60,
+[data-theme="light"] .bg-slate-900\/40,
+[data-theme="light"] .bg-slate-900\/30,
 [data-theme="light"] .bg-slate-900 {
   background-color: #f8fafc;
 }
 
+[data-theme="light"] .bg-slate-800\/70,
 [data-theme="light"] .bg-slate-800\/60,
+[data-theme="light"] .bg-slate-800\/40,
+[data-theme="light"] .bg-slate-800\/30,
 [data-theme="light"] .bg-slate-800 {
   background-color: #f1f5f9;
 }
@@ -973,4 +978,342 @@ html {
   transition:
     background-color 0.25s ease,
     color 0.25s ease;
+}
+
+/* Light mode polish for admin screens + JSON import modal */
+[data-theme="light"] .admin-surface .text-slate-100 {
+  color: #1e293b;
+}
+
+[data-theme="light"] .admin-surface .text-slate-200 {
+  color: #334155;
+}
+
+[data-theme="light"] .admin-surface .text-slate-300 {
+  color: #475569;
+}
+
+[data-theme="light"] .admin-surface .text-slate-400,
+[data-theme="light"] .admin-surface .text-slate-500 {
+  color: #64748b;
+}
+
+[data-theme="light"] .admin-surface .bg-slate-900\/30,
+[data-theme="light"] .admin-surface .bg-slate-900\/40,
+[data-theme="light"] .admin-surface .bg-slate-900\/60,
+[data-theme="light"] .admin-surface .bg-slate-800\/30,
+[data-theme="light"] .admin-surface .bg-slate-800\/40,
+[data-theme="light"] .admin-surface .bg-slate-800\/60,
+[data-theme="light"] .admin-surface .bg-slate-800\/70,
+[data-theme="light"] .admin-surface .bg-slate-700\/60,
+[data-theme="light"] .admin-surface .bg-slate-700 {
+  background-color: #e2e8f0;
+}
+
+[data-theme="light"] .admin-surface .border-slate-700\/50,
+[data-theme="light"] .admin-surface .border-slate-700\/30,
+[data-theme="light"] .admin-surface .border-slate-600\/50 {
+  border-color: #cbd5e1;
+}
+
+[data-theme="light"] .admin-surface button.bg-slate-700,
+[data-theme="light"] .admin-surface a.bg-slate-700,
+[data-theme="light"] .admin-surface button.bg-slate-700\/60,
+[data-theme="light"] .admin-surface a.bg-slate-700\/60 {
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+[data-theme="light"] .admin-surface .bg-red-900\/40 {
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
+[data-theme="light"] .admin-surface .text-red-300 {
+  color: #b91c1c;
+}
+
+[data-theme="light"] .admin-surface .text-cyan-200 {
+  color: #0369a1;
+}
+
+[data-theme="light"] .admin-surface .text-cyan-300,
+[data-theme="light"] .admin-surface .text-cyan-400 {
+  color: #0284c7;
+}
+
+[data-theme="light"] .json-import-overlay {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+[data-theme="light"] .json-import-panel {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+[data-theme="light"] .json-import-close {
+  color: #64748b;
+}
+
+[data-theme="light"] .json-import-close:hover {
+  color: #0f172a;
+}
+
+[data-theme="light"] .json-import-schema {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+[data-theme="light"] .json-import-textarea {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+[data-theme="light"] .json-import-textarea::placeholder {
+  color: #94a3b8;
+}
+
+[data-theme="light"] .json-import-secondary {
+  background: #e2e8f0;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+[data-theme="light"] .json-import-secondary:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+[data-theme="light"] .json-import-primary {
+  background: #0ea5e9;
+  color: #ffffff;
+}
+
+[data-theme="light"] .json-import-primary:hover:not(:disabled) {
+  background: #0284c7;
+}
+
+[data-theme="light"] .json-import-success {
+  background: #ecfdf5;
+  border-color: #86efac;
+  color: #166534;
+}
+
+[data-theme="light"] .json-import-error {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+/* ─── Roadmap & Toko shared component tokens ──────────────────────── */
+
+@layer components {
+  /* Back button for detail pages */
+  .detail-back-btn {
+    @apply inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition;
+    border-color: rgba(148, 163, 184, 0.4);
+    background-color: rgba(15, 23, 42, 0.4);
+    color: #e2e8f0;
+  }
+
+  .detail-back-btn:hover {
+    border-color: rgba(103, 232, 249, 0.5);
+    background-color: rgba(6, 182, 212, 0.1);
+    color: #67e8f9;
+  }
+
+  /* Neutral badge (roadmap duration / step focus) */
+  .roadmap-badge-neutral {
+    border-color: rgba(71, 85, 105, 0.6);
+    background-color: rgba(15, 23, 42, 0.4);
+    color: #cbd5e1;
+  }
+
+  /* Tag chip inside roadmap cards */
+  .roadmap-tag {
+    background-color: rgba(30, 41, 59, 0.6);
+    color: #94a3b8;
+  }
+
+  /* YouTube iframe wrapper */
+  .roadmap-video-frame {
+    @apply aspect-video overflow-hidden rounded-xl border shadow-inner;
+    border-color: rgba(71, 85, 105, 0.6);
+    background-color: rgba(2, 6, 23, 0.6);
+    box-shadow: inset 0 2px 8px rgba(6, 182, 212, 0.08);
+  }
+
+  /* Toko filter button */
+  .toko-filter-btn {
+    @apply rounded-full border px-5 py-1.5 text-xs font-medium transition;
+    background-color: rgba(30, 41, 59, 0.8);
+    border-color: rgba(71, 85, 105, 0.5);
+    color: #94a3b8;
+  }
+
+  .toko-filter-btn:hover {
+    background-color: rgba(30, 41, 59, 1);
+    color: #e2e8f0;
+    border-color: rgba(100, 116, 139, 0.8);
+  }
+
+  /* Product image gallery */
+  .product-gallery-main {
+    background-color: rgba(15, 23, 42, 0.5);
+  }
+
+  .product-gallery-thumbs {
+    @apply border-t p-3;
+    background-color: rgba(15, 23, 42, 0.2);
+    border-top-color: rgba(71, 85, 105, 0.4);
+  }
+
+  .product-gallery-thumb-inactive {
+    border-color: rgba(71, 85, 105, 0.6);
+  }
+
+  /* Product info sub-sections */
+  .product-price-box {
+    @apply rounded-lg p-3;
+    background-color: rgba(15, 23, 42, 0.4);
+  }
+
+  .product-category-badge {
+    background-color: rgba(71, 85, 105, 0.6);
+    color: #cbd5e1;
+  }
+
+  .product-desc-box {
+    @apply rounded-lg p-4;
+    background-color: rgba(15, 23, 42, 0.4);
+  }
+
+  .product-detail-box {
+    @apply rounded-lg p-3;
+    background-color: rgba(15, 23, 42, 0.4);
+  }
+}
+
+/* ─── Light mode: detail back button ──────────────────────────────── */
+
+[data-theme="light"] .detail-back-btn {
+  border-color: #cbd5e1;
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+[data-theme="light"] .detail-back-btn:hover {
+  border-color: #60a5fa;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+/* ─── Light mode: roadmap ──────────────────────────────────────────── */
+
+[data-theme="light"] .roadmap-badge-neutral {
+  border-color: #cbd5e1;
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+[data-theme="light"] .roadmap-tag {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+[data-theme="light"] .roadmap-video-frame {
+  border-color: #e2e8f0;
+  background-color: #f1f5f9;
+  box-shadow: inset 0 2px 4px rgba(15, 23, 42, 0.06);
+}
+
+/* ─── Light mode: toko list ──────────────────────────────────────── */
+
+[data-theme="light"] .toko-filter-btn {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+[data-theme="light"] .toko-filter-btn:hover {
+  background-color: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e3a8a;
+}
+
+/* ─── Light mode: toko detail (ProductImageGallery) ──────────────── */
+
+[data-theme="light"] .product-gallery-main {
+  background-color: #f1f5f9;
+}
+
+[data-theme="light"] .product-gallery-thumbs {
+  background-color: #f8fafc;
+  border-top-color: #e2e8f0;
+}
+
+[data-theme="light"] .product-gallery-thumb-inactive {
+  border-color: #cbd5e1;
+}
+
+/* ─── Light mode: toko detail (ProductInfo) ─────────────────────── */
+
+[data-theme="light"] .product-price-box {
+  background-color: #f0f9ff;
+  border: 1px solid #bae6fd;
+}
+
+[data-theme="light"] .product-category-badge {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+[data-theme="light"] .product-desc-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .product-detail-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .product-detail-box h3 {
+  color: #0f172a;
+}
+
+/* DetailRow label */
+[data-theme="light"] .glass-panel .text-slate-400 {
+  color: #64748b;
+}
+
+/* DetailRow value */
+[data-theme="light"] .glass-panel .font-medium.text-slate-200 {
+  color: #1e293b;
+}
+
+/* border divider inside product info */
+[data-theme="light"] .glass-panel .border-slate-700\/40 {
+  border-color: #e2e8f0;
+}
+
+/* stock available */
+[data-theme="light"] .text-emerald-400 {
+  color: #059669;
+}
+
+/* product type badge digital */
+[data-theme="light"] .bg-blue-500\/20 {
+  background-color: #dbeafe;
+}
+
+[data-theme="light"] .text-blue-300 {
+  color: #1d4ed8;
+}
+
+/* italic disclaimer */
+[data-theme="light"] .glass-panel .text-slate-500.italic {
+  color: #94a3b8;
 }

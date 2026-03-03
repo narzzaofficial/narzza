@@ -25,7 +25,7 @@ export default async function TutorialPage() {
   ]);
 
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-950" />}>
+    <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
       <FeedPage
         activePath="/tutorial"
         badge="TUTORIAL"

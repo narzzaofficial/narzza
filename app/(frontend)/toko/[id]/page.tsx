@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getDb } from "@/lib/mongodb";
 
 import { ProductImageGallery } from "@/components/product-image-gallery";
@@ -30,7 +31,7 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ id: string }>;
-}) {
+}): Promise<Metadata> {
   const { id } = await params;
   const product = await fetchProduct(id);
   if (!product) return { title: "Produk Tidak Ditemukan" };
@@ -51,29 +52,24 @@ export default async function ProductDetailPage({
   if (!product) notFound();
 
   return (
-    <div className="bg-canvas min-h-screen px-3 py-4 text-slate-100 md:px-5 md:py-6">
-      <div className="mx-auto w-full max-w-5xl">
-        <div className="mb-4">
-          <Link
-            href="/toko"
-            className="inline-flex items-center gap-2 rounded-full border border-slate-400/40 bg-slate-900/40 px-4 py-2 text-sm transition hover:border-cyan-300/50"
-          >
-            Kembali ke Toko
-          </Link>
-        </div>
-
-        <div className="space-y-4">
-          <ProductImageGallery
-            images={product.images}
-            productName={product.name}
-            featured={product.featured}
-          />
-
-          <ProductInfo product={product} />
-
-          <ProductActions product={product} />
-        </div>
+    <>
+      <div className="mb-4">
+        <Link href="/toko" className="detail-back-btn">
+          ← Kembali ke Toko
+        </Link>
       </div>
-    </div>
+
+      <div className="space-y-4">
+        <ProductImageGallery
+          images={product.images}
+          productName={product.name}
+          featured={product.featured}
+        />
+
+        <ProductInfo product={product} />
+
+        <ProductActions product={product} />
+      </div>
+    </>
   );
 }

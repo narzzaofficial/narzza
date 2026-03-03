@@ -57,13 +57,13 @@ export function FeedTab({ feeds, onRefresh, onDelete, flash }: any) {
           <div className="flex gap-2">
             <button
               onClick={() => setShowJsonModal(true)}
-              className="rounded-xl bg-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-600"
+              className="admin-btn admin-btn-secondary rounded-xl bg-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-600"
             >
               + Tambah JSON
             </button>
             <button
               onClick={startCreate}
-              className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold"
+              className="admin-btn admin-btn-primary rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold"
             >
               + Tambah Feed
             </button>
@@ -83,7 +83,7 @@ export function FeedTab({ feeds, onRefresh, onDelete, flash }: any) {
         {feeds.map((feed: Feed) => (
           <div
             key={feed.id}
-            className="glass-panel flex items-center justify-between p-4 rounded-xl"
+            className="admin-list-card glass-panel flex items-center justify-between p-4 rounded-xl"
           >
             <div>
               <p className="text-sm font-medium">{feed.title}</p>
@@ -95,13 +95,13 @@ export function FeedTab({ feeds, onRefresh, onDelete, flash }: any) {
             <div className="flex gap-2">
               <button
                 onClick={() => startEdit(feed)}
-                className="text-xs bg-slate-700 px-3 py-1.5 rounded-lg"
+                className="admin-btn admin-btn-secondary text-xs bg-slate-700 px-3 py-1.5 rounded-lg"
               >
                 Edit
               </button>
               <button
                 onClick={() => onDelete(feed.id)}
-                className="text-xs bg-red-900/40 px-3 py-1.5 rounded-lg text-red-300"
+                className="admin-btn admin-btn-danger text-xs bg-red-900/40 px-3 py-1.5 rounded-lg text-red-300"
               >
                 Hapus
               </button>
