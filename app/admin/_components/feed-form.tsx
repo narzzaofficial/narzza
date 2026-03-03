@@ -68,12 +68,24 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
           <option value="Riset">Riset</option>
         </select>
         <div className="sm:col-span-2">
-          <input
-            value={form.image}
-            onChange={(e) => setForm({ ...form, image: e.target.value })}
-            placeholder="Image URL"
-            className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400"
+          <label className="mb-1 block text-xs text-slate-400">Cover Image</label>
+          <ImageUpload
+            currentImageUrl={form.image}
+            onUploadComplete={(url) => setForm({ ...form, image: url })}
+            label="Cover Image"
+            buttonText="Upload Gambar"
           />
+          <div className="mt-2">
+            <label className="mb-1 block text-xs text-slate-400">
+              Atau masukkan URL manual
+            </label>
+            <input
+              value={form.image}
+              onChange={(e) => setForm({ ...form, image: e.target.value })}
+              placeholder="https://picsum.photos/seed/your-seed/800/400"
+              className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400"
+            />
+          </div>
         </div>
         <div className="sm:col-span-2">
           <textarea
@@ -83,6 +95,41 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
             rows={2}
             className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400"
           />
+        </div>
+        <div className="sm:col-span-2">
+          <label className="mb-1 block text-xs text-slate-400">
+            Sumber (Opsional)
+          </label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <input
+              value={form.source?.title || ""}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  source: {
+                    title: e.target.value,
+                    url: form.source?.url || "",
+                  },
+                })
+              }
+              placeholder="Nama sumber (contoh: Kompas.com)"
+              className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400"
+            />
+            <input
+              value={form.source?.url || ""}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  source: {
+                    title: form.source?.title || "",
+                    url: e.target.value,
+                  },
+                })
+              }
+              placeholder="URL sumber (contoh: https://...)"
+              className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400"
+            />
+          </div>
         </div>
       </div>
 
