@@ -29,8 +29,21 @@ export async function generateMetadata({
   if (!roadmap) return { title: "Roadmap tidak ditemukan" };
 
   return {
-    title: `${roadmap.title} | Roadmap Belajar`,
+    title: roadmap.title,
     description: roadmap.summary,
+    openGraph: {
+      title: `${roadmap.title} — Roadmap Belajar`,
+      description: roadmap.summary,
+      images: roadmap.image ? [roadmap.image] : [],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: roadmap.title,
+      description: roadmap.summary,
+      images: roadmap.image ? [roadmap.image] : [],
+    },
+    alternates: { canonical: `/roadmap/${slug}` },
   };
 }
 

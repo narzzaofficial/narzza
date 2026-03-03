@@ -32,7 +32,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
 
   return (
     <Link
-      href={`/read/${feed.id}`}
+      href={`/read/${feed.slug}`}
       className={`feed-card glass-panel group relative overflow-hidden rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10 ${categoryConfig.accent}`}
       style={{ animationDelay: `${index * 110}ms` }}
     >

@@ -17,7 +17,7 @@ type SiteShellProps = {
 
 /** Rute detail konten — shell-nya dihandle oleh layout masing-masing */
 const DETAIL_PATTERNS = [
-  /^\/read\/\d+$/,
+  /^\/read\/[^/]+$/,
   /^\/buku\/\d+$/,
   /^\/roadmap\/[^/]+$/,
   /^\/toko\/[^/]+$/,

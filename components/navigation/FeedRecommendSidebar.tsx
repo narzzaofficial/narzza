@@ -25,7 +25,7 @@ export async function FeedRecommendSidebarLeft({ currentId, category }: Props) {
         {similar.map((item) => (
           <li key={item.id}>
             <Link
-              href={`/read/${item.id}`}
+              href={`/read/${item.slug}`}
               className="group flex items-start gap-3 rounded-xl p-2 transition hover:bg-cyan-500/10"
             >
               <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg">
@@ -78,7 +78,7 @@ export async function FeedRecommendSidebarRight({
         {otherFeeds.map((item) => (
           <li key={item.id}>
             <Link
-              href={`/read/${item.id}`}
+              href={`/read/${item.slug}`}
               className="group flex items-start gap-3 rounded-xl p-2 transition hover:bg-cyan-500/10"
             >
               <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg">

@@ -1,7 +1,22 @@
+import type { Metadata } from "next";
 import { BookCard } from "@/components/books/book-card";
 import { getBooks } from "@/lib/data";
 
 export const revalidate = 300;
+
+export const metadata: Metadata = {
+  title: "Buku Q&A Interaktif",
+  description:
+    "Perpustakaan buku digital dengan format tanya-jawab interaktif. Belajar konsep teknis dengan cara yang fokus, padat, dan langsung ke inti.",
+  openGraph: {
+    title: "Buku Q&A Interaktif — Narzza Media Digital",
+    description:
+      "Belajar konsep teknis lewat buku format tanya jawab interaktif.",
+    url: "https://narzza.com/buku",
+    type: "website",
+  },
+  alternates: { canonical: "/buku" },
+};
 
 export default async function BukuPage() {
   const books = await getBooks();

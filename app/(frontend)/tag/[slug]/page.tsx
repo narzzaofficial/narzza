@@ -21,8 +21,19 @@ export async function generateMetadata({
   const { slug } = await params;
   const tag = `#${slug}`;
   return {
-    title: `${tag} | Narzza Media Digital`,
-    description: `Semua konten bertag ${tag} di Narzza Media Digital.`,
+    title: `${tag} — Konten Terkait`,
+    description: `Semua konten bertag ${tag} di Narzza Media Digital. Temukan berita, tutorial, dan riset terkait.`,
+    openGraph: {
+      title: `${tag} — Narzza Media Digital`,
+      description: `Semua konten bertag ${tag} di Narzza Media Digital.`,
+      url: `https://narzza.com/tag/${slug}`,
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: `${tag} — Narzza Media Digital`,
+      description: `Semua konten bertag ${tag} di Narzza Media Digital.`,
+    },
     alternates: { canonical: `/tag/${slug}` },
   };
 }

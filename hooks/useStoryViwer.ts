@@ -81,7 +81,7 @@ export function useStoryViewer({ stories, feeds, books }: UseStoryViewerProps) {
         image: f.image,
         lines: f.lines,
         takeaway: f.takeaway,
-        detailHref: `/read/${f.id}`,
+        detailHref: `/read/${f.slug}`,
       }));
 
     const assignedBooks: StoryContent[] = books

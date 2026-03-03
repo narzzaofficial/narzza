@@ -14,9 +14,23 @@ import {
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Tentang Narzza Media Digital - Perusahaan Media Digital Inovatif",
+  title: "Tentang Narzza — Perusahaan Media Digital Inovatif",
   description:
     "Narzza Media Digital adalah perusahaan media digital yang menghadirkan konten teknologi dalam format interaktif dan mudah dicerna.",
+  openGraph: {
+    title: "Tentang Narzza Media Digital",
+    description:
+      "Perusahaan media digital yang menghadirkan konten teknologi dalam format interaktif.",
+    url: "https://narzza.com/tentang",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tentang Narzza Media Digital",
+    description:
+      "Perusahaan media digital yang menghadirkan konten teknologi dalam format interaktif.",
+  },
+  alternates: { canonical: "/tentang" },
 };
 
 export default function TentangPage() {

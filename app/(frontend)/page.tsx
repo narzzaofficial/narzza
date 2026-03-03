@@ -1,5 +1,20 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { FeedPage } from "@/components/feedpages/FeedPage";
+
+export const metadata: Metadata = {
+  title: "Berita, Tutorial & Eksperimen Teknologi | Narzza Media Digital",
+  description:
+    "Baca berita teknologi, tutorial coding, dan eksperimen koding dalam format chat interaktif. Topik panjang jadi santai dan mudah dicerna.",
+  openGraph: {
+    title: "Narzza Media Digital — Berita & Tutorial Teknologi",
+    description:
+      "Portal berita teknologi, tutorial, dan eksperimen koding dalam format chat interaktif.",
+    url: "https://narzza.com",
+    type: "website",
+  },
+  alternates: { canonical: "/" },
+};
 // Import semua dari centralized data layer
 import {
   getFeeds,

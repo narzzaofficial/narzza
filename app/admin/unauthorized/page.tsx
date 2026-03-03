@@ -10,8 +10,8 @@ export default function UnauthorizedPage() {
           Akses Ditolak
         </h1>
         <p className="mb-6 text-sm text-slate-400">
-          Akun kamu tidak memiliki izin untuk mengakses Admin Panel.
-          Hanya akun yang terdaftar yang diizinkan masuk.
+          Akun kamu tidak memiliki izin untuk mengakses Admin Panel. Hanya akun
+          yang terdaftar yang diizinkan masuk.
         </p>
         <div className="flex flex-col gap-3">
           <SignOutButton redirectUrl="/admin/sign-in">

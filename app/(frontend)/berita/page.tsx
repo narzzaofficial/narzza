@@ -1,6 +1,21 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { FeedPage } from "@/components/feedpages/FeedPage";
 import { getFeeds, getStories, getBooks } from "@/lib/data";
+
+export const metadata: Metadata = {
+  title: "Berita Teknologi Terbaru",
+  description:
+    "Update berita teknologi terkini, tren industri, dan perkembangan dunia digital dalam format chat yang mudah dipahami.",
+  openGraph: {
+    title: "Berita Teknologi Terbaru — Narzza Media Digital",
+    description:
+      "Update berita teknologi terkini dan tren industri dalam format chat interaktif.",
+    url: "https://narzza.com/berita",
+    type: "website",
+  },
+  alternates: { canonical: "/berita" },
+};
 
 // Helper fetch data (sama seperti di Home)
 async function getInternalData(endpoint: string) {

@@ -18,6 +18,7 @@ export type ChatLine = {
 
 export type Feed = {
   id: number;
+  slug: string;
   title: string;
   category: FeedCategory;
   createdAt: number;

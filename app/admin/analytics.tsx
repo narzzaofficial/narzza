@@ -513,7 +513,7 @@ export default function AnalyticsPage() {
                   {topFeeds.map((feed, index) => (
                     <Link
                       key={feed.id}
-                      href={`/read/${feed.id}`}
+                      href={`/read/${feed.slug}`}
                       className="flex items-center gap-3 rounded-lg border border-slate-700/50 bg-slate-900/40 p-3 transition hover:border-cyan-400/50 hover:bg-slate-800/60"
                     >
                       <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-xs font-bold text-white">
@@ -642,7 +642,7 @@ export default function AnalyticsPage() {
                 {feeds.map((feed) => (
                   <Link
                     key={feed.id}
-                    href={`/read/${feed.id}`}
+                    href={`/read/${feed.slug}`}
                     className="flex items-center gap-3 rounded-lg border border-slate-700/50 bg-slate-900/40 p-3 transition hover:border-cyan-400/50 hover:bg-slate-800/60"
                   >
                     <div className="min-w-0 flex-1">

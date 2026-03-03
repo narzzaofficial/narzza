@@ -23,6 +23,7 @@ import {
   type Category,
   type Product,
 } from "@/types/products";
+import { slugify } from "@/lib/slugify";
 
 /** Max 2 seed per IP per jam — hanya untuk setup/restore */
 const SEED_RATE_LIMIT = { max: 2, windowMs: 60 * 60 * 1000 };
@@ -43,14 +44,6 @@ function clampSeedCount(
   return rounded;
 }
 
-function slugify(input: string) {
-  return input
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
 
 function pickSeed<T>(items: T[], index: number): T {
   return items[index % items.length];
@@ -82,6 +75,7 @@ function buildFeeds(count: number, storyCount: number): Feed[] {
 
     return {
       id,
+      slug: slugify(`${base.title} #${id}`, id),
       title: `${base.title} #${id}`,
       category: base.category,
       createdAt: now - index * 60 * 60 * 1000,
@@ -186,7 +180,7 @@ function buildRoadmaps(count: number): Omit<Roadmap, "_id">[] {
     const rawSlug = base.slug || cleanTitle;
 
     return {
-      slug: `${slugify(rawSlug)}-${id}`,
+      slug: slugify(rawSlug, id),
       title: `${cleanTitle} ${id}`,
       summary: `${base.summary} (dummy batch ${id})`,
       duration: `${2 + (index % 10)} minggu`,

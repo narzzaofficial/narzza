@@ -37,7 +37,7 @@ export function SimilarFeedsSection({
         {feeds.map((item) => (
           <Link
             key={item.id}
-            href={"/read/" + item.id}
+            href={"/read/" + item.slug}
             className="glass-panel group block overflow-hidden rounded-2xl transition hover:border-cyan-300/50"
           >
             <div className="relative h-32 w-full overflow-hidden">

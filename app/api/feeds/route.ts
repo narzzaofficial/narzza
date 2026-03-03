@@ -6,6 +6,7 @@ import {
   dbUnavailableResponse,
   validationErrorResponse,
 } from "@/lib/api-helpers";
+import { slugify } from "@/lib/slugify";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +49,7 @@ export async function GET(req: NextRequest) {
 
     const mapped = feeds.map((f) => ({
       id: f.id,
+      slug: (f.slug as string) || slugify(f.title as string, f.id as number),
       title: f.title,
       category: f.category,
       createdAt: f.createdAt ?? Date.now(),
@@ -86,6 +88,7 @@ export async function POST(req: NextRequest) {
 
     const newFeed = {
       title: body.title,
+      slug: slugify(body.title, nextId),
       category: body.category,
       image: body.image,
       lines: body.lines,

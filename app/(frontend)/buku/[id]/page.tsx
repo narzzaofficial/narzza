@@ -8,6 +8,7 @@ import { getBookIds, getBooks, getBookById } from "@/lib/data";
 import { BookHero } from "@/components/books/book-hero";
 import { ChapterView } from "@/components/books/chapter-view";
 import { TableOfContents } from "@/components/books/table-of-content";
+import { JsonLd } from "@/components/JsonLd";
 
 export const revalidate = 300;
 
@@ -24,7 +25,23 @@ export async function generateMetadata({
   const { id } = await params;
   const book = await getBookById(Number(id));
   if (!book) return { title: "Buku tidak ditemukan" };
-  return { title: `${book.title} | Narzza Media Digital` };
+  return {
+    title: book.title,
+    description: `${book.description.slice(0, 155)}...`,
+    openGraph: {
+      title: `${book.title} — Narzza Media Digital`,
+      description: book.description,
+      images: [book.cover],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: book.title,
+      description: book.description,
+      images: [book.cover],
+    },
+    alternates: { canonical: `/buku/${id}` },
+  };
 }
 
 export default async function ReadBookPage({ params }: PageProps) {
@@ -41,6 +58,19 @@ export default async function ReadBookPage({ params }: PageProps) {
 
   return (
     <div className="bg-canvas min-h-screen px-3 py-4 text-slate-100 md:px-5 md:py-6">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Book",
+          name: book.title,
+          author: { "@type": "Person", name: book.author },
+          image: book.cover,
+          description: book.description,
+          genre: book.genre,
+          numberOfPages: book.pages,
+          url: `https://narzza.com/buku/${book.id}`,
+        }}
+      />
       <div className="mx-auto w-full max-w-4xl">
         {/* Header Nav */}
         <div className="mb-4 flex flex-wrap items-center gap-3 sm:justify-between">

@@ -1,6 +1,21 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { FeedPage } from "@/components/feedpages/FeedPage";
 import { getFeeds, getStories, getBooks } from "@/lib/data";
+
+export const metadata: Metadata = {
+  title: "Riset & Eksperimen Koding",
+  description:
+    "Analisa mendalam dan eksperimen koding terbaru. Temukan insight teknis dari riset dan percobaan langsung.",
+  openGraph: {
+    title: "Riset & Eksperimen Koding — Narzza Media Digital",
+    description:
+      "Analisa mendalam dan eksperimen koding dalam format chat interaktif.",
+    url: "https://narzza.com/riset",
+    type: "website",
+  },
+  alternates: { canonical: "/riset" },
+};
 
 async function getInternalData(endpoint: string) {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";

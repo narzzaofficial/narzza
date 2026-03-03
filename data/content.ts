@@ -8,6 +8,17 @@ export type {
 } from "@/types/content";
 
 import type { Story, Feed, Book, BookChapter, ChatLine, } from "@/types/content";
+import { slugify } from "@/lib/slugify";
+
+/** Helper: auto-generate slug for dummy feed data */
+function withSlug<T extends { id: number; title: string }>(
+  items: Omit<T, "slug">[]
+): (T & { slug: string })[] {
+  return items.map((item) => ({
+    ...item,
+    slug: slugify(item.title, item.id),
+  })) as (T & { slug: string })[];
+}
 
 export const stories: Story[] = [
   {
@@ -66,7 +77,7 @@ export const stories: Story[] = [
   },
 ];
 
-export const feeds: Feed[] = [
+export const feeds: Feed[] = withSlug<Feed>([
   {
     id: 1,
     title: "Model AI Lokal Makin Ringan untuk Device Mid-Range",
@@ -405,7 +416,7 @@ export const feeds: Feed[] = [
     ],
     takeaway: "AI code review efektif untuk bug mekanis, tapi human review tetap esensial untuk logic dan security.",
   },
-];
+]);
 
 
 
