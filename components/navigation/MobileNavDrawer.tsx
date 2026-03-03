@@ -37,11 +37,13 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
       {/* 1. Mobile Top Bar */}
       <header className="mobile-topbar">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-semibold tracking-wide text-slate-100">
+          <p
+            className="text-sm font-semibold tracking-wide"
+            style={{ color: "var(--text-primary)" }}
+          >
             Narzza Media Digital
           </p>
           <div className="flex items-center gap-2">
-            <ThemeToggle compact />
             <MenuButton onClick={toggleDrawer} />
           </div>
         </div>
@@ -52,31 +54,45 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
         className={cn(
           "fixed inset-0 z-40 xl:hidden transition-all duration-300",
           isOpen
-            ? "pointer-events-auto visibility-visible"
+            ? "pointer-events-auto"
             : "pointer-events-none visibility-hidden"
         )}
       >
         {/* Dark Background Overlay */}
         <div
-          className={cn("drawer-overlay", isOpen ? "opacity-100" : "opacity-0")}
+          className={cn(
+            "drawer-overlay transition-opacity duration-300",
+            isOpen ? "opacity-100" : "opacity-0"
+          )}
           onClick={closeDrawer}
         />
 
         {/* Sidebar Panel */}
         <aside
           className={cn(
-            "mobile-drawer",
+            "mobile-drawer flex flex-col",
             isOpen ? "translate-x-0" : "-translate-x-full"
           )}
         >
+          {/* Header */}
           <DrawerHeader onClose={closeDrawer} />
 
-          <nav className="mt-4 space-y-2">
+          {/* Divider */}
+          <div className="drawer-divider mb-3" />
+
+          {/* Nav links — scrollable */}
+          <div className="flex-1 overflow-y-auto">
             <NavigationSection
               activePath={activePath}
-              onNavigate={() => setIsOpen(false)}
+              onNavigate={closeDrawer}
             />
-          </nav>
+          </div>
+
+          {/* Footer: theme toggle */}
+          <div className="drawer-divider mt-3 mb-3" />
+          <div className="px-1">
+            <ThemeToggle />
+          </div>
         </aside>
       </div>
     </>

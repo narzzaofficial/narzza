@@ -7,50 +7,83 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Tambahkan prop onNavigate
-type NavigationSectionProps = {
-  activePath: string;
-  onNavigate?: () => void; // Fungsi ini opsional
+// Icon map per route
+const navIcons: Record<string, string> = {
+  "/": "🏠",
+  "/berita": "📰",
+  "/tutorial": "🎓",
+  "/roadmap": "🗺️",
+  "/riset": "🔬",
+  "/buku": "📚",
+  "/toko": "🛍️",
+  "/tentang": "ℹ️",
 };
 
-const NavigationSection = ({
-  activePath,
-  onNavigate,
-}: NavigationSectionProps) => {
+type NavigationSectionProps = {
+  activePath: string;
+  onNavigate?: () => void;
+};
+
+const NavigationSection = ({ activePath, onNavigate }: NavigationSectionProps) => {
   return (
-    <section className="sidebar-widget">
-      <h2 className="widget-heading">Navigasi</h2>
-      <div className="mt-3 space-y-2">
-        {navLink.map((item) => {
-          const isActive = activePath === item.href;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onNavigate} // Panggil fungsi tutup drawer jika ada
-              className={cn("nav-link", isActive && "nav-link-active")}
-            >
-              <p
-                className={cn(
-                  "text-sm font-medium",
-                  isActive ? "text-cyan-200" : "text-slate-100"
-                )}
-              >
+    <nav className="space-y-1.5">
+      {navLink.map((item) => {
+        const isActive = activePath === item.href;
+        const icon = navIcons[item.href] ?? "•";
+
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onNavigate}
+            className={cn(
+              "group relative flex items-center gap-3 rounded-xl px-3 py-3 transition-all duration-150",
+              isActive
+                ? "nav-item-active"
+                : "nav-item"
+            )}
+          >
+            {/* Active left bar */}
+            {isActive && (
+              <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-cyan-400" />
+            )}
+
+            {/* Icon */}
+            <span className={cn(
+              "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base transition-all",
+              isActive
+                ? "nav-icon-active"
+                : "nav-icon"
+            )}>
+              {icon}
+            </span>
+
+            {/* Text */}
+            <div className="min-w-0 flex-1">
+              <p className={cn(
+                "text-sm font-semibold leading-none",
+                isActive ? "nav-title-active" : "nav-title"
+              )}>
                 {item.title}
               </p>
-              <p
-                className={cn(
-                  "text-xs",
-                  isActive ? "text-cyan-300/70" : "text-slate-400"
-                )}
-              >
+              <p className={cn(
+                "mt-0.5 text-[11px] leading-none",
+                isActive ? "nav-note-active" : "nav-note"
+              )}>
                 {item.note}
               </p>
-            </Link>
-          );
-        })}
-      </div>
-    </section>
+            </div>
+
+            {/* Active chevron */}
+            {isActive && (
+              <svg className="h-3.5 w-3.5 shrink-0 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            )}
+          </Link>
+        );
+      })}
+    </nav>
   );
 };
 

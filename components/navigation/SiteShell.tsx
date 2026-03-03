@@ -40,13 +40,35 @@ export function SiteShell({ children }: SiteShellProps) {
       <div className="content-grid">
         {/* Sidebar Kiri */}
         <aside className="hidden w-72 shrink-0 xl:block sidebar-sticky">
-          <div className="space-y-4">
-            <NavigationSection activePath={activePath} />
-            <AdminLink />
-            {/* Theme toggle — bottom of left sidebar */}
-            <div className="sidebar-widget">
-              <ThemeToggle />
+          <div className="sidebar-widget flex flex-col gap-0 p-4">
+            {/* Brand header */}
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500/20 text-base font-bold text-cyan-300 ring-1 ring-cyan-400/30">
+                N
+              </div>
+              <div>
+                <p className="text-base font-bold leading-none" style={{ color: "var(--text-primary)" }}>Narzza</p>
+                <p className="mt-1 text-xs leading-none" style={{ color: "var(--text-secondary)" }}>Media Digital</p>
+              </div>
             </div>
+
+            {/* Divider */}
+            <div className="drawer-divider my-3" />
+
+            {/* Nav links */}
+            <NavigationSection activePath={activePath} />
+
+            {/* Divider */}
+            <div className="drawer-divider my-3" />
+
+            {/* Admin Link */}
+            <AdminLink />
+
+            {/* Divider */}
+            <div className="drawer-divider my-3" />
+
+            {/* Theme toggle */}
+            <ThemeToggle />
           </div>
         </aside>
 
