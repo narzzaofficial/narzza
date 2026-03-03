@@ -13,6 +13,36 @@
   --text-accent: #67e8f9;
   --input-bg: rgba(30, 41, 59, 0.6);
   --input-border: rgba(100, 116, 139, 0.5);
+
+  /* ── Story / Status Popular card ── */
+  --story-card-bg: #07162f;
+  --story-card-border: rgba(100, 116, 139, 0.5);
+  --story-accent: #67e8f9;
+  --story-subtext: #94a3b8;
+  --story-title: #f1f5f9;
+  --story-body: #cbd5e1;
+  --story-progress-active: #ffffff;
+  --story-progress-inactive: rgba(100, 116, 139, 0.5);
+  --story-btn-bg: rgba(30, 41, 59, 0.6);
+  --story-btn-border: rgba(100, 116, 139, 0.5);
+  --story-btn-text: #e2e8f0;
+  --story-inner-bg: rgba(2, 6, 23, 0.5);
+  --story-inner-border: rgba(100, 116, 139, 0.3);
+  --story-img-bg: rgba(15, 23, 42, 0.6);
+  --story-img-border: rgba(100, 116, 139, 0.45);
+  --story-badge-bg: rgba(251, 191, 36, 0.1);
+  --story-badge-border: rgba(251, 191, 36, 0.4);
+  --story-badge-text: #fde68a;
+  --story-takeaway-bg: rgba(251, 191, 36, 0.08);
+  --story-takeaway-border: rgba(251, 191, 36, 0.3);
+  --story-takeaway-text: #fef3c7;
+  --story-takeaway-label: rgba(251, 191, 36, 0.8);
+  --story-nav-bg: rgba(30, 41, 59, 0.5);
+  --story-nav-border: rgba(100, 116, 139, 0.5);
+  --story-nav-text: #e2e8f0;
+  --story-cta-bg: rgba(6, 182, 212, 0.2);
+  --story-cta-border: rgba(6, 182, 212, 0.5);
+  --story-cta-text: #a5f3fc;
 }
 
 /* ─── Design tokens — Light ──────────────────────────────────────── */
@@ -28,6 +58,36 @@
   --text-accent: #0e7490;
   --input-bg: rgba(248, 250, 252, 0.9);
   --input-border: rgba(148, 163, 184, 0.6);
+
+  /* ── Story / Status Popular card ── */
+  --story-card-bg: #ffffff;
+  --story-card-border: rgba(148, 163, 184, 0.45);
+  --story-accent: #0e7490;
+  --story-subtext: #475569;
+  --story-title: #0f172a;
+  --story-body: #334155;
+  --story-progress-active: #0e7490;
+  --story-progress-inactive: rgba(148, 163, 184, 0.4);
+  --story-btn-bg: rgba(241, 245, 249, 0.9);
+  --story-btn-border: rgba(148, 163, 184, 0.5);
+  --story-btn-text: #334155;
+  --story-inner-bg: rgba(248, 250, 252, 0.9);
+  --story-inner-border: rgba(148, 163, 184, 0.35);
+  --story-img-bg: rgba(226, 232, 240, 0.6);
+  --story-img-border: rgba(148, 163, 184, 0.4);
+  --story-badge-bg: rgba(251, 191, 36, 0.12);
+  --story-badge-border: rgba(217, 119, 6, 0.4);
+  --story-badge-text: #92400e;
+  --story-takeaway-bg: rgba(251, 191, 36, 0.1);
+  --story-takeaway-border: rgba(217, 119, 6, 0.3);
+  --story-takeaway-text: #78350f;
+  --story-takeaway-label: #b45309;
+  --story-nav-bg: rgba(241, 245, 249, 0.9);
+  --story-nav-border: rgba(148, 163, 184, 0.5);
+  --story-nav-text: #334155;
+  --story-cta-bg: rgba(6, 182, 212, 0.12);
+  --story-cta-border: rgba(6, 182, 212, 0.4);
+  --story-cta-text: #0e7490;
 }
 
 @theme inline {
