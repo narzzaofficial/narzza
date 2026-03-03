@@ -76,7 +76,7 @@ export function FeedPage({
       );
     }
     return (
-      <section className="mt-4 grid gap-4">
+      <section className={`mt-4 grid ${targetCategory === "Tutorial" ? "gap-4" : "grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-4"}`}>
         {feeds.map((feed, index) =>
           targetCategory === "Tutorial" ? (
             <TutorialCard key={feed.id} feed={feed} index={index} />

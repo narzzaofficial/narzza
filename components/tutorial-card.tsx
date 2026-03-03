@@ -17,6 +17,7 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
       className="tutorial-card group block w-full overflow-hidden rounded-2xl border border-slate-700/50 bg-linear-to-br from-slate-900/80 via-[#0d1b3a]/80 to-slate-900/80 transition-all duration-300 hover:border-cyan-400/40 hover:shadow-[0_0_32px_-8px_rgba(34,211,238,0.15)]"
       style={{ animationDelay: `${index * 100}ms` }}
     >
+      {/* Horizontal layout for all screen sizes */}
       <div className="flex flex-row">
         {/* Thumbnail */}
         <div className="relative h-36 w-28 shrink-0 overflow-hidden bg-slate-800/40 sm:h-auto sm:w-48 md:w-56">

@@ -14,6 +14,7 @@ export function BookCard({ book, index }: BookCardProps) {
       className="feed-card glass-panel group block overflow-hidden rounded-2xl transition hover:border-cyan-300/50"
       style={{ animationDelay: `${index * 110}ms` }}
     >
+      {/* Horizontal layout for all screen sizes */}
       <div className="flex gap-4 p-4">
         <div className="relative h-48 w-32 shrink-0 overflow-hidden rounded-xl shadow-lg">
           <Image

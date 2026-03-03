@@ -40,7 +40,7 @@ export function HomeAllSections({
             desc="Update berita teknologi"
             colorClass="sky"
           />
-          <div className="grid gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-4">
             {berita.map((feed, index) => (
               <FeedTitleCard key={feed.id} feed={feed} index={index} />
             ))}
@@ -74,7 +74,7 @@ export function HomeAllSections({
             desc="Analisa mendalam"
             colorClass="fuchsia"
           />
-          <div className="grid gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-4">
             {riset.map((feed, index) => (
               <FeedTitleCard key={feed.id} feed={feed} index={index} />
             ))}
@@ -135,12 +135,12 @@ export function HomeAllSections({
             desc="Merchandise dan produk digital"
             colorClass="purple"
           />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {products.slice(0, 4).map((product) => (
               <Link
                 key={product.id}
                 href={`/toko/${product.id}`}
-                className="glass-panel group flex flex-col overflow-hidden rounded-lg transition hover:shadow-lg hover:shadow-cyan-500/10"
+                className="glass-panel group flex flex-col overflow-hidden rounded-xl transition hover:border-purple-400/40 hover:shadow-lg hover:shadow-purple-500/10"
               >
                 <div className="relative aspect-square overflow-hidden bg-slate-900/60">
                   <Image
@@ -148,20 +148,25 @@ export function HomeAllSections({
                     alt={product.name}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    sizes="(max-width: 640px) 50vw, 25vw"
                   />
+                  {product.featured && (
+                    <div className="absolute left-2 top-2 rounded bg-orange-500 px-1.5 py-0.5 text-[9px] font-bold text-white">
+                      ⭐
+                    </div>
+                  )}
                 </div>
-                <div className="flex flex-col gap-1.5 p-2.5">
-                  <h3 className="line-clamp-2 min-h-10 text-sm leading-tight text-slate-50">
+                <div className="flex flex-1 flex-col p-2.5">
+                  <h3 className="text-xs font-semibold leading-snug text-slate-50 group-hover:text-purple-200 transition-colors">
                     {product.name}
                   </h3>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-base font-bold text-orange-500">
+                  <div className="mt-auto flex items-center justify-between pt-2">
+                    <span className="text-xs font-bold text-orange-400">
                       Rp {product.price.toLocaleString("id-ID")}
                     </span>
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] text-slate-500">
-                    <span>{product.category}</span>
+                    <span className={`text-[9px] font-semibold ${product.stock > 0 ? "text-emerald-400" : "text-rose-400"}`}>
+                      {product.stock > 0 ? "Ready" : "Habis"}
+                    </span>
                   </div>
                 </div>
               </Link>
