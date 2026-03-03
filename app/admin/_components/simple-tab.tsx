@@ -3,7 +3,28 @@ import Link from "next/link";
 import { Category, Product } from "../_types";
 import { Roadmap } from "@/types/roadmaps";
 
-export function RoadmapTab({ roadmaps }: { roadmaps: Roadmap[] }) {
+export function RoadmapTab({
+  roadmaps,
+  onDelete,
+  onRefresh,
+}: {
+  roadmaps: Roadmap[];
+  onDelete?: (slug: string) => void;
+  onRefresh?: () => void;
+}) {
+  async function handleDelete(slug: string) {
+    if (!confirm("Hapus roadmap ini?")) return;
+    try {
+      const res = await fetch(`/api/roadmaps/${slug}`, { method: "DELETE" });
+      if (res.ok) {
+        onDelete?.(slug);
+        onRefresh?.();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
@@ -43,6 +64,13 @@ export function RoadmapTab({ roadmaps }: { roadmaps: Roadmap[] }) {
               >
                 Lihat
               </Link>
+              <button
+                type="button"
+                onClick={() => handleDelete(roadmap.slug)}
+                className="admin-btn rounded-lg border border-rose-500/50 px-3 py-1.5 text-xs text-rose-400 transition hover:bg-rose-500/10 hover:border-rose-400"
+              >
+                Hapus
+              </button>
             </div>
           </div>
         ))}

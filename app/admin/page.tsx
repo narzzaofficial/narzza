@@ -103,7 +103,13 @@ export default function AdminPage() {
                 flash={flash}
               />
             )}
-            {tab === "roadmaps" && <RoadmapTab roadmaps={data.roadmaps} />}
+            {tab === "roadmaps" && (
+              <RoadmapTab
+                roadmaps={data.roadmaps}
+                onRefresh={fetchData}
+                onDelete={() => fetchData()}
+              />
+            )}
             {tab === "products" && <ProductTab products={data.products} />}
             {tab === "categories" && (
               <CategoryTab categories={data.categories} />
