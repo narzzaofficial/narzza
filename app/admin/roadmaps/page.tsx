@@ -287,8 +287,21 @@ function RoadmapAdminContent() {
     }
   }
 
+  const inputCls =
+    "mt-1 w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-cyan-400/70";
+  const inputStyle = {
+    background: "var(--input-bg)",
+    borderColor: "var(--input-border)",
+    color: "var(--text-primary)",
+  };
+  const labelCls = "text-xs" ;
+  const labelStyle = { color: "var(--text-secondary)" };
+
   return (
-    <div className="bg-canvas min-h-screen px-4 py-6 text-slate-100">
+    <div
+      className="min-h-screen px-4 py-6"
+      style={{ background: "var(--background)", color: "var(--text-primary)" }}
+    >
       {showJsonModal && (
         <JsonImportModal
           title="Roadmap"
@@ -301,30 +314,35 @@ function RoadmapAdminContent() {
         <div className="mb-4">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 hover:text-cyan-100"
+            className="inline-flex items-center gap-2 text-sm font-semibold hover:opacity-80"
+            style={{ color: "var(--text-accent)" }}
           >
             ← Kembali ke Admin
           </Link>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-accent)" }}>
             Admin
           </p>
-          <h1 className="text-2xl font-bold text-slate-50">Roadmaps</h1>
-          <p className="text-sm text-slate-400">
+          <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Roadmaps</h1>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
             CRUD sederhana, data tersimpan di MongoDB yang sudah terhubung.
           </p>
         </div>
 
-        <section className="glass-panel rounded-2xl p-4 ring-1 ring-white/5">
+        {/* ── Form Section ── */}
+        <section
+          className="glass-panel rounded-2xl p-4"
+        >
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-50">
+            <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
               {editingSlug ? "Edit Roadmap" : "Tambah Roadmap"}
             </h2>
             <div className="flex gap-2">
               <button
                 type="button"
-                className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-600"
+                className="rounded-lg px-4 py-2 text-sm font-semibold transition hover:opacity-80"
+                style={{ background: "var(--input-bg)", border: "1px solid var(--input-border)", color: "var(--text-primary)" }}
                 onClick={() => setShowJsonModal(true)}
               >
                 + Tambah JSON
@@ -332,7 +350,8 @@ function RoadmapAdminContent() {
               {editingSlug && (
                 <button
                   type="button"
-                  className="text-sm text-amber-200 hover:text-amber-100"
+                  className="text-sm hover:opacity-80"
+                  style={{ color: "var(--text-accent)" }}
                   onClick={resetForm}
                 >
                   + Baru
@@ -341,11 +360,12 @@ function RoadmapAdminContent() {
             </div>
           </div>
 
-          <div className="mt-3 space-y-3 text-sm text-slate-200">
+          <div className="mt-3 space-y-3 text-sm">
             <label className="block">
-              <span className="text-xs text-slate-400">Title</span>
+              <span className={labelCls} style={labelStyle}>Title</span>
               <input
-                className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                className={inputCls}
+                style={inputStyle}
                 value={form.title}
                 onChange={(e) =>
                   setForm((v) => ({ ...v, title: e.target.value }))
@@ -355,11 +375,12 @@ function RoadmapAdminContent() {
             </label>
 
             <label className="block">
-              <span className="text-xs text-slate-400">
+              <span className={labelCls} style={labelStyle}>
                 Slug (opsional, auto dari title)
               </span>
               <input
-                className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                className={inputCls}
+                style={inputStyle}
                 value={form.slug}
                 onChange={(e) =>
                   setForm((v) => ({ ...v, slug: e.target.value }))
@@ -370,9 +391,10 @@ function RoadmapAdminContent() {
             </label>
 
             <label className="block">
-              <span className="text-xs text-slate-400">Ringkasan</span>
+              <span className={labelCls} style={labelStyle}>Ringkasan</span>
               <textarea
-                className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                className={inputCls}
+                style={inputStyle}
                 rows={3}
                 value={form.summary}
                 onChange={(e) =>
@@ -383,9 +405,10 @@ function RoadmapAdminContent() {
 
             <div className="grid grid-cols-2 gap-3">
               <label className="block">
-                <span className="text-xs text-slate-400">Level</span>
+                <span className={labelCls} style={labelStyle}>Level</span>
                 <select
-                  className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                  className={inputCls}
+                  style={inputStyle}
                   value={form.level}
                   onChange={(e) =>
                     setForm((v) => ({
@@ -400,9 +423,10 @@ function RoadmapAdminContent() {
                 </select>
               </label>
               <label className="block">
-                <span className="text-xs text-slate-400">Durasi</span>
+                <span className={labelCls} style={labelStyle}>Durasi</span>
                 <input
-                  className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                  className={inputCls}
+                  style={inputStyle}
                   value={form.duration}
                   onChange={(e) =>
                     setForm((v) => ({ ...v, duration: e.target.value }))
@@ -413,11 +437,12 @@ function RoadmapAdminContent() {
             </div>
 
             <label className="block">
-              <span className="text-xs text-slate-400">
+              <span className={labelCls} style={labelStyle}>
                 Tags (pisahkan koma)
               </span>
               <input
-                className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                className={inputCls}
+                style={inputStyle}
                 value={Array.isArray(form.tags) ? form.tags.join(", ") : ""}
                 onChange={(e) => {
                   const tags = e.target.value
@@ -431,7 +456,7 @@ function RoadmapAdminContent() {
             </label>
 
             <div className="block">
-              <span className="text-xs text-slate-400">Image (hero)</span>
+              <span className={labelCls} style={labelStyle}>Image (hero)</span>
               <div className="mt-1">
                 <ImageUpload
                   currentImageUrl={form.image}
@@ -443,7 +468,8 @@ function RoadmapAdminContent() {
                 />
               </div>
               <input
-                className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                className={inputCls + " mt-2"}
+                style={inputStyle}
                 value={form.image}
                 onChange={(e) =>
                   setForm((v) => ({ ...v, image: e.target.value }))
@@ -452,9 +478,12 @@ function RoadmapAdminContent() {
               />
             </div>
 
-            <div className="space-y-4 rounded-xl border border-slate-700/60 bg-slate-950/40 p-4">
+            <div
+              className="space-y-4 rounded-xl border p-4"
+              style={{ borderColor: "var(--surface-border)", background: "var(--input-bg)" }}
+            >
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-slate-100">
+                <h3 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
                   Langkah-langkah (Steps)
                 </h3>
                 <button
@@ -467,7 +496,7 @@ function RoadmapAdminContent() {
               </div>
 
               {form.steps.length === 0 && (
-                <p className="text-xs text-slate-400">
+                <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
                   Belum ada langkah. Klik tombol di atas untuk menambah.
                 </p>
               )}
@@ -475,15 +504,16 @@ function RoadmapAdminContent() {
               {form.steps.map((step, stepIndex) => (
                 <div
                   key={stepIndex}
-                  className="space-y-3 rounded-lg border border-slate-700/50 bg-slate-900/60 p-3"
+                  className="space-y-3 rounded-lg border p-3"
+                  style={{ borderColor: "var(--surface-border)", background: "var(--surface)" }}
                 >
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-semibold text-cyan-200">
+                    <h4 className="text-xs font-semibold" style={{ color: "var(--text-accent)" }}>
                       Step {stepIndex + 1}
                     </h4>
                     <button
                       type="button"
-                      className="rounded-lg border border-rose-500/60 px-2 py-1 text-xs text-rose-200 hover:border-rose-400"
+                      className="rounded-lg border border-rose-500/60 px-2 py-1 text-xs text-rose-400 hover:border-rose-400 hover:bg-rose-500/10"
                       onClick={() => removeStep(stepIndex)}
                     >
                       Hapus Step
@@ -491,9 +521,10 @@ function RoadmapAdminContent() {
                   </div>
 
                   <label className="block">
-                    <span className="text-xs text-slate-400">Judul Step</span>
+                    <span className={labelCls} style={labelStyle}>Judul Step</span>
                     <input
-                      className="mt-1 w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                      className={inputCls}
+                      style={inputStyle}
                       value={step.title}
                       onChange={(e) =>
                         updateStep(stepIndex, "title", e.target.value)
@@ -503,9 +534,10 @@ function RoadmapAdminContent() {
                   </label>
 
                   <label className="block">
-                    <span className="text-xs text-slate-400">Deskripsi</span>
+                    <span className={labelCls} style={labelStyle}>Deskripsi</span>
                     <textarea
-                      className="mt-1 w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                      className={inputCls}
+                      style={inputStyle}
                       rows={2}
                       value={step.description}
                       onChange={(e) =>
@@ -516,11 +548,12 @@ function RoadmapAdminContent() {
                   </label>
 
                   <label className="block">
-                    <span className="text-xs text-slate-400">
+                    <span className={labelCls} style={labelStyle}>
                       Focus (label singkat)
                     </span>
                     <input
-                      className="mt-1 w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                      className={inputCls}
+                      style={inputStyle}
                       value={step.focus}
                       onChange={(e) =>
                         updateStep(stepIndex, "focus", e.target.value)
@@ -529,9 +562,12 @@ function RoadmapAdminContent() {
                     />
                   </label>
 
-                  <div className="space-y-2 rounded-lg border border-slate-600/40 bg-slate-800/40 p-3">
+                  <div
+                    className="space-y-2 rounded-lg border p-3"
+                    style={{ borderColor: "var(--input-border)", background: "var(--input-bg)" }}
+                  >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-slate-300">
+                      <span className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
                         Video YouTube
                       </span>
                       <button
@@ -544,13 +580,14 @@ function RoadmapAdminContent() {
                     </div>
 
                     {step.videos.length === 0 && (
-                      <p className="text-xs text-slate-500">Belum ada video.</p>
+                      <p className="text-xs" style={{ color: "var(--text-secondary)" }}>Belum ada video.</p>
                     )}
 
                     {step.videos.map((video, videoIndex) => (
                       <div key={videoIndex} className="flex gap-2">
                         <input
-                          className="flex-1 rounded-lg border border-slate-600/50 bg-slate-800/60 px-2 py-1.5 text-xs text-slate-100 outline-none focus:border-cyan-300/70"
+                          className="flex-1 rounded-lg border px-2 py-1.5 text-xs outline-none focus:border-cyan-400/70"
+                          style={inputStyle}
                           value={video.id}
                           onChange={(e) =>
                             updateVideo(
@@ -563,7 +600,8 @@ function RoadmapAdminContent() {
                           placeholder="URL YouTube atau Video ID"
                         />
                         <input
-                          className="flex-1 rounded-lg border border-slate-600/50 bg-slate-800/60 px-2 py-1.5 text-xs text-slate-100 outline-none focus:border-cyan-300/70"
+                          className="flex-1 rounded-lg border px-2 py-1.5 text-xs outline-none focus:border-cyan-400/70"
+                          style={inputStyle}
                           value={video.author}
                           onChange={(e) =>
                             updateVideo(
@@ -577,7 +615,7 @@ function RoadmapAdminContent() {
                         />
                         <button
                           type="button"
-                          className="rounded-lg border border-rose-500/60 px-2 py-1 text-xs text-rose-200 hover:border-rose-400"
+                          className="rounded-lg border border-rose-500/60 px-2 py-1 text-xs text-rose-400 hover:border-rose-400 hover:bg-rose-500/10"
                           onClick={() => removeVideo(stepIndex, videoIndex)}
                         >
                           ✕
@@ -589,8 +627,8 @@ function RoadmapAdminContent() {
               ))}
             </div>
 
-            {error && <p className="text-sm text-rose-300">{error}</p>}
-            {message && <p className="text-sm text-emerald-300">{message}</p>}
+            {error && <p className="text-sm text-rose-400">{error}</p>}
+            {message && <p className="text-sm text-emerald-400">{message}</p>}
 
             <div className="flex gap-2">
               <button
@@ -607,13 +645,122 @@ function RoadmapAdminContent() {
               </button>
               <button
                 type="button"
-                className="rounded-lg border border-slate-600 px-4 py-2 text-sm text-slate-100 hover:border-cyan-300/70"
+                className="rounded-lg border px-4 py-2 text-sm hover:opacity-80 transition"
+                style={{ borderColor: "var(--input-border)", color: "var(--text-primary)" }}
                 onClick={resetForm}
                 disabled={saving}
               >
                 Reset
               </button>
             </div>
+          </div>
+        </section>
+
+        {/* ── Roadmap List ── */}
+        <section className="glass-panel rounded-2xl p-4">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
+              Daftar Roadmap
+            </h2>
+            <span className="text-xs rounded-full px-2.5 py-1" style={{ background: "var(--input-bg)", color: "var(--text-secondary)", border: "1px solid var(--input-border)" }}>
+              {roadmaps.length} roadmap
+            </span>
+          </div>
+
+          {loading && (
+            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Memuat...</p>
+          )}
+
+          {!loading && roadmaps.length === 0 && (
+            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+              Belum ada roadmap. Tambahkan di atas.
+            </p>
+          )}
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {roadmaps.map((item) => (
+              <div
+                key={item.slug}
+                className="group relative flex flex-col overflow-hidden rounded-xl border transition hover:border-cyan-400/40"
+                style={{
+                  borderColor: "var(--surface-border)",
+                  background: "var(--surface)",
+                }}
+              >
+                {/* Image */}
+                {item.image && (
+                  <div className="relative h-28 w-full overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
+                  </div>
+                )}
+
+                <div className="flex flex-1 flex-col gap-2 p-3">
+                  {/* Title & slug */}
+                  <div>
+                    <p className="text-sm font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>
+                      {item.title}
+                    </p>
+                    <p className="text-[11px] mt-0.5" style={{ color: "var(--text-secondary)" }}>
+                      /{item.slug}
+                    </p>
+                  </div>
+
+                  {/* Badges */}
+                  <div className="flex flex-wrap gap-1.5">
+                    <span className="roadmap-badge-neutral rounded-full border px-2 py-0.5 text-[11px]">
+                      {item.level}
+                    </span>
+                    <span className="roadmap-badge-neutral rounded-full border px-2 py-0.5 text-[11px]">
+                      {item.duration}
+                    </span>
+                    <span className="roadmap-badge-neutral rounded-full border px-2 py-0.5 text-[11px]">
+                      {item.steps.length} step
+                    </span>
+                  </div>
+
+                  {/* Tags */}
+                  {item.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {item.tags.slice(0, 4).map((tag) => (
+                        <span key={tag} className="roadmap-tag rounded-full px-2 py-0.5 text-[10px]">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Action buttons */}
+                  <div className="mt-auto flex gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => startEdit(item)}
+                      className="flex-1 rounded-lg border px-3 py-1.5 text-xs font-medium transition hover:opacity-80"
+                      style={{
+                        borderColor: "var(--text-accent)",
+                        color: "var(--text-accent)",
+                        background: "transparent",
+                      }}
+                    >
+                      ✏️ Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(item.slug)}
+                      disabled={saving}
+                      className="rounded-lg border border-rose-500/50 px-3 py-1.5 text-xs font-medium text-rose-400 transition hover:bg-rose-500/10 hover:border-rose-400 disabled:opacity-40"
+                    >
+                      🗑 Hapus
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </div>

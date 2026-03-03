@@ -1,7 +1,7 @@
-import { UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import AdminUserButton from "./_components/AdminUserButton";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "";
 
@@ -43,13 +43,7 @@ export default async function AdminLayout({
         <span className="text-xs font-semibold text-slate-400 tracking-wide">
           🛠️ Admin Panel
         </span>
-        <UserButton
-          appearance={{
-            elements: {
-              avatarBox: "w-8 h-8",
-            },
-          }}
-        />
+        <AdminUserButton />
       </div>
       {children}
     </div>

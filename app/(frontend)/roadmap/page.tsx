@@ -35,13 +35,13 @@ export default async function RoadmapListPage() {
     <div className="space-y-6">
       {/* Header Section */}
       <header className="page-hero">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-accent)" }}>
           Learning Roadmaps
         </p>
-        <h1 className="mt-2 text-3xl font-bold text-slate-50">
+        <h1 className="mt-2 text-3xl font-bold" style={{ color: "var(--text-primary)" }}>
           Pilih jalur belajar yang sesuai
         </h1>
-        <p className="mt-3 text-slate-300">
+        <p className="mt-3" style={{ color: "var(--text-secondary)" }}>
           Tiap kartu berisi urutan langkah, video embed resmi YouTube, dan fokus
           kompetensi. Klik untuk lihat detail lengkap.
         </p>
@@ -80,7 +80,7 @@ export default async function RoadmapListPage() {
 
             <div className="flex h-full flex-col gap-3 p-5">
               <div className="flex flex-wrap items-center gap-2 text-xs">
-                <span className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-2.5 py-0.5 font-semibold text-cyan-200">
+                <span className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-2.5 py-0.5 font-semibold" style={{ color: "var(--text-accent)" }}>
                   {item.level}
                 </span>
                 <span className="roadmap-badge-neutral ml-auto rounded-full border px-2.5 py-0.5">
@@ -99,14 +99,14 @@ export default async function RoadmapListPage() {
                 ))}
               </div>
 
-              <h2 className="text-lg font-semibold text-slate-100">
+              <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
                 {item.title}
               </h2>
-              <p className="text-sm text-slate-300 line-clamp-3">
+              <p className="text-sm line-clamp-3" style={{ color: "var(--text-secondary)" }}>
                 {item.summary}
               </p>
 
-              <div className="mt-auto flex items-center justify-between text-xs text-cyan-200">
+              <div className="mt-auto flex items-center justify-between text-xs" style={{ color: "var(--text-accent)" }}>
                 <span>{item.steps.length} langkah</span>
                 <span className="inline-flex items-center gap-1 font-semibold">
                   Lihat detail →
