@@ -27,9 +27,15 @@ export function ReadArticleBody({ feed }: ReadArticleBodyProps) {
           <h1 className="text-2xl font-bold text-slate-50 md:text-3xl">
             {feed.title}
           </h1>
-          <p className="mt-2 text-sm text-slate-400">
-            <RelativeTime timestamp={feed.createdAt} />
-          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-400">
+            <span className="font-medium text-slate-300">
+              {feed.author || "Narzza Media Digital"}
+            </span>
+            <span aria-hidden="true">·</span>
+            <time dateTime={new Date(feed.createdAt).toISOString()}>
+              <RelativeTime timestamp={feed.createdAt} />
+            </time>
+          </div>
         </header>
 
         <div className="flex flex-col gap-3">
@@ -44,7 +50,7 @@ export function ReadArticleBody({ feed }: ReadArticleBodyProps) {
                 }`}
               >
                 <span className="mr-1 text-[11px] font-semibold text-slate-300">
-                  {line.role === "q" ? "Q:" : "A:"}
+                  {line.role === "q" ? "Tanya:" : "Jawab:"}
                 </span>
                 {line.text}
                 {line.image ? <ChatImage src={line.image} /> : null}

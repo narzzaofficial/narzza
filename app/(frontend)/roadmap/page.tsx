@@ -35,10 +35,16 @@ export default async function RoadmapListPage() {
     <div className="space-y-6">
       {/* Header Section */}
       <header className="page-hero">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-accent)" }}>
+        <p
+          className="text-xs font-semibold uppercase tracking-[0.2em]"
+          style={{ color: "var(--text-accent)" }}
+        >
           Learning Roadmaps
         </p>
-        <h1 className="mt-2 text-3xl font-bold" style={{ color: "var(--text-primary)" }}>
+        <h1
+          className="mt-2 text-3xl font-bold"
+          style={{ color: "var(--text-primary)" }}
+        >
           Pilih jalur belajar yang sesuai
         </h1>
         <p className="mt-3" style={{ color: "var(--text-secondary)" }}>
@@ -56,7 +62,7 @@ export default async function RoadmapListPage() {
       </header>
 
       {/* Grid Kartu Roadmap */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {roadmaps.map((item, index) => (
           <Link
             key={item.slug}
@@ -66,29 +72,31 @@ export default async function RoadmapListPage() {
               { animationDelay: `${index * 110}ms` } as React.CSSProperties
             }
           >
-            <div className="relative h-36 w-full overflow-hidden">
+            {/* Image */}
+            <div className="relative h-36 w-full overflow-hidden sm:h-40">
               <Image
                 src={item.image}
                 alt={item.title}
                 fill
-                sizes="(max-width: 768px) 100vw, 33vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover transition duration-500 group-hover:scale-105"
                 priority={index < 2}
               />
-              <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
             </div>
 
-            <div className="flex h-full flex-col gap-3 p-5">
-              <div className="flex flex-wrap items-center gap-2 text-xs">
-                <span className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-2.5 py-0.5 font-semibold" style={{ color: "var(--text-accent)" }}>
+            <div className="flex h-full flex-col gap-2 p-4">
+              {/* Level & duration badges */}
+              <div className="flex items-center gap-1.5">
+                <span className="rounded-full bg-cyan-500 px-2.5 py-0.5 text-[10px] font-bold text-white">
                   {item.level}
                 </span>
-                <span className="roadmap-badge-neutral ml-auto rounded-full border px-2.5 py-0.5">
+                <span className="rounded-full border border-slate-300 bg-slate-100 px-2.5 py-0.5 text-[10px] font-semibold text-slate-600 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300">
                   {item.duration}
                 </span>
               </div>
 
-              <div className="flex flex-wrap gap-2 text-[11px]">
+              <div className="flex flex-wrap gap-1.5 text-[10px]">
                 {item.tags.map((tag) => (
                   <span
                     key={tag}
@@ -99,16 +107,25 @@ export default async function RoadmapListPage() {
                 ))}
               </div>
 
-              <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
+              <h2
+                className="text-sm font-bold sm:text-base"
+                style={{ color: "var(--text-primary)" }}
+              >
                 {item.title}
               </h2>
-              <p className="text-sm line-clamp-3" style={{ color: "var(--text-secondary)" }}>
+              <p
+                className="text-xs line-clamp-2 sm:text-sm"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 {item.summary}
               </p>
 
-              <div className="mt-auto flex items-center justify-between text-xs" style={{ color: "var(--text-accent)" }}>
+              <div
+                className="mt-auto flex items-center justify-between text-[10px] sm:text-xs"
+                style={{ color: "var(--text-accent)" }}
+              >
                 <span>{item.steps.length} langkah</span>
-                <span className="inline-flex items-center gap-1 font-semibold">
+                <span className="inline-flex items-center gap-1 font-semibold group-hover:gap-2 transition-all">
                   Lihat detail →
                 </span>
               </div>

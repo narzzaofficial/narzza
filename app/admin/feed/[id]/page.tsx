@@ -294,10 +294,12 @@ export default function EditFeedPage() {
             </div>
           </div>
 
-          {/* Q&A Lines */}
+          {/* Tanya/Jawab Lines */}
           <div className="mt-4">
             <div className="mb-2 flex items-center justify-between">
-              <label className="text-xs text-slate-400">Chat Lines (Q&A)</label>
+              <label className="text-xs text-slate-400">
+                Chat Lines (Tanya/Jawab)
+              </label>
               <button
                 onClick={addLine}
                 className="rounded-lg bg-slate-700/60 px-3 py-1 text-xs text-slate-300 hover:bg-slate-600/60"
@@ -319,8 +321,8 @@ export default function EditFeedPage() {
                       }
                       className="shrink-0 rounded-lg border border-slate-600/50 bg-slate-800/60 px-2 py-2 text-xs outline-none"
                     >
-                      <option value="q">Q</option>
-                      <option value="a">A</option>
+                      <option value="q">Tanya</option>
+                      <option value="a">Jawab</option>
                     </select>
                     <input
                       value={line.text}

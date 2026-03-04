@@ -26,6 +26,7 @@ export type Feed = {
   image: string;
   lines: ChatLine[];
   takeaway: string;
+  author?: string;
   source?: { title: string; url: string };
   storyId?: number | null;
 };

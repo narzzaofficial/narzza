@@ -9,7 +9,9 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/api/"],
       },
     ],
-    sitemap: "https://narzza.com/sitemap.xml",
+    sitemap: [
+      "https://narzza.com/sitemap.xml",
+      "https://narzza.com/news-sitemap.xml",
+    ],
   };
 }
-

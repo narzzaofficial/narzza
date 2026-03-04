@@ -12,6 +12,7 @@ const FEED_SCHEMA = `[
     "category": "Berita",
     "image": "https://example.com/image.jpg",
     "takeaway": "Ringkasan singkat",
+    "author": "Nama Penulis (opsional)",
     "lines": [
       { "role": "q", "text": "Pertanyaan..." },
       { "role": "a", "text": "Jawaban..." }
@@ -19,7 +20,8 @@ const FEED_SCHEMA = `[
     "source": { "title": "Nama Sumber", "url": "https://example.com/artikel" },
     "storyId": null
   }
-]`;
+]
+// Catatan: "role" diisi "q" untuk Tanya, "a" untuk Jawab`;
 
 type FeedTabProps = {
   feeds: Feed[];
@@ -29,8 +31,14 @@ type FeedTabProps = {
 };
 
 export function FeedTab({ feeds, onRefresh, onDelete, flash }: FeedTabProps) {
-  const { editingItem: editingFeed, showForm, handleSave, startEdit, startCreate, cancelForm } =
-    useAdminTab<Feed>("/api/feeds", "✅ Feed Tersimpan!", flash, onRefresh);
+  const {
+    editingItem: editingFeed,
+    showForm,
+    handleSave,
+    startEdit,
+    startCreate,
+    cancelForm,
+  } = useAdminTab<Feed>("/api/feeds", "✅ Feed Tersimpan!", flash, onRefresh);
   const [showJsonModal, setShowJsonModal] = useState(false);
 
   async function handleJsonImport(items: unknown[]) {
@@ -51,7 +59,7 @@ export function FeedTab({ feeds, onRefresh, onDelete, flash }: FeedTabProps) {
             ? Object.entries(fields)
                 .map(([k, v]) => `${k}: ${(v as string[]).join(", ")}`)
                 .join(" | ")
-            : data?.error ?? `HTTP ${res.status}`;
+            : (data?.error ?? `HTTP ${res.status}`);
         } catch {
           lastError = `HTTP ${res.status}`;
         }

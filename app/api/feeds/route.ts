@@ -9,6 +9,11 @@ import {
   cachedJson,
 } from "@/lib/api-helpers";
 import { slugify } from "@/lib/slugify";
+import {
+  INDEXNOW_KEY,
+  INDEXNOW_ENGINES,
+  BASE_URL,
+} from "@/lib/indexnow-config";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +29,7 @@ function feedToJson(doc: IFeed) {
     image: doc.image,
     lines: doc.lines,
     takeaway: doc.takeaway,
+    author: doc.author ?? "",
     source: doc.source ?? undefined,
     storyId: doc.storyId ?? null,
   };
@@ -77,11 +83,15 @@ export async function POST(req: NextRequest) {
       image: body.image,
       lines: body.lines,
       takeaway: body.takeaway,
+      author: body.author ?? "",
       source: body.source,
       storyId: body.storyId,
       createdAt: Date.now(),
       popularity: 0,
     });
+
+    // Fire-and-forget: notify search engines without blocking the response
+    void pingIndexNow(newFeed.slug || slugify(newFeed.title, newFeed.id));
 
     return NextResponse.json(feedToJson(newFeed), { status: 201 });
   } catch (error) {
@@ -91,4 +101,27 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+/**
+ * Fires-and-forgets an IndexNow ping to all configured engines.
+ * Called after a feed is successfully created.
+ */
+async function pingIndexNow(slug: string): Promise<void> {
+  const articleUrl = `${BASE_URL}/read/${slug}`;
+  const payload = {
+    host: new URL(BASE_URL).hostname,
+    key: INDEXNOW_KEY,
+    keyLocation: `${BASE_URL}/${INDEXNOW_KEY}.txt`,
+    urlList: [articleUrl],
+  };
+  await Promise.allSettled(
+    INDEXNOW_ENGINES.map((endpoint) =>
+      fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify(payload),
+      })
+    )
+  );
 }

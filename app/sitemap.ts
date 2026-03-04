@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getFeeds, getBooks, getRoadmaps } from "@/lib/data";
 import { slugify } from "@/lib/slugify";
-
-const BASE_URL = "https://narzza.com";
+import { BASE_URL } from "@/lib/site-config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
@@ -86,4 +85,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [...staticPages, ...feedPages, ...bookPages, ...roadmapPages];
 }
-

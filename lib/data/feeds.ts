@@ -30,6 +30,7 @@ function docToFeed(d: IFeed): Feed {
     image: d.image ?? "",
     lines: (d.lines ?? []) as Feed["lines"],
     takeaway: d.takeaway ?? "",
+    author: d.author ?? "",
     source: d.source as Feed["source"],
     storyId: d.storyId ?? null,
   };
@@ -97,4 +98,3 @@ export async function getFeedSlugs(): Promise<string[]> {
   const feeds = await getFeeds();
   return feeds.map((f) => f.slug);
 }
-

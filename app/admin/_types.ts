@@ -16,6 +16,7 @@ export type FeedForm = {
   category: "Berita" | "Tutorial" | "Riset";
   image: string;
   takeaway: string;
+  author?: string;
   lines: ChatLine[];
   source?: { title: string; url: string };
 };
@@ -81,6 +82,7 @@ export const emptyFeedForm: FeedForm = {
   category: "Berita",
   image: "",
   takeaway: "",
+  author: "",
   lines: [
     { role: "q", text: "" },
     { role: "a", text: "" },

@@ -4,15 +4,23 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { JsonLd } from "@/components/JsonLd";
+import {
+  SITE_NAME,
+  BASE_URL,
+  SITE_DESCRIPTION,
+  SITE_LOGO,
+  SITE_OG_IMAGE_WIDTH,
+  SITE_OG_IMAGE_HEIGHT,
+  SITE_LOCALE,
+} from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://narzza.com"),
+  metadataBase: new URL(BASE_URL),
   title: {
-    default: "Narzza Media Digital",
-    template: "%s | Narzza Media Digital",
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "Platform media digital yang menyajikan berita, tutorial, dan riset dari berbagai bidang dalam format interaktif. Baca topik panjang jadi santai.",
+  description: SITE_DESCRIPTION,
   keywords: [
     "berita terkini",
     "tutorial",
@@ -22,31 +30,29 @@ export const metadata: Metadata = {
     "informasi umum",
     "belajar online",
   ],
-  authors: [{ name: "Narzza Media Digital", url: "https://narzza.com" }],
-  creator: "Narzza Media Digital",
-  publisher: "Narzza Media Digital",
+  authors: [{ name: SITE_NAME, url: BASE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
   openGraph: {
     type: "website",
-    locale: "id_ID",
-    siteName: "Narzza Media Digital",
-    title: "Narzza Media Digital",
-    description:
-      "Platform media digital yang menyajikan berita, tutorial, dan riset dari berbagai bidang dalam format interaktif.",
-    url: "https://narzza.com",
+    locale: SITE_LOCALE,
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: BASE_URL,
     images: [
       {
         url: "/logo.png",
-        width: 1200,
-        height: 630,
-        alt: "Narzza Media Digital",
+        width: SITE_OG_IMAGE_WIDTH,
+        height: SITE_OG_IMAGE_HEIGHT,
+        alt: SITE_NAME,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Narzza Media Digital",
-    description:
-      "Platform media digital yang menyajikan berita, tutorial, dan riset dari berbagai bidang dalam format interaktif.",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
     images: ["/logo.png"],
   },
   robots: {
@@ -61,16 +67,14 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://narzza.com",
+    canonical: BASE_URL,
   },
   icons: {
-     icon: "/favicon.ico",
+    icon: "/favicon.ico",
     apple: [
       { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
-    other: [
-      { rel: "manifest", url: "/site.webmanifest" },
-    ],
+    other: [{ rel: "manifest", url: "/site.webmanifest" }],
   },
 };
 
@@ -99,11 +103,11 @@ export default function RootLayout({
           data={{
             "@context": "https://schema.org",
             "@type": "WebSite",
-            name: "Narzza Media Digital",
-            url: "https://narzza.com",
+            name: SITE_NAME,
+            url: BASE_URL,
             potentialAction: {
               "@type": "SearchAction",
-              target: "https://narzza.com/search?q={search_term_string}",
+              target: `${BASE_URL}/search?q={search_term_string}`,
               "query-input": "required name=search_term_string",
             },
           }}
@@ -112,9 +116,9 @@ export default function RootLayout({
           data={{
             "@context": "https://schema.org",
             "@type": "Organization",
-            name: "Narzza Media Digital",
-            url: "https://narzza.com",
-            logo: "https://narzza.com/logo.png",
+            name: SITE_NAME,
+            url: BASE_URL,
+            logo: SITE_LOGO,
             sameAs: [],
           }}
         />

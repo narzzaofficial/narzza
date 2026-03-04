@@ -12,8 +12,7 @@ export function escapeRegex(value: string): string {
 export function sanitizeSearchQuery(raw: string | null): string | null {
   if (raw == null || typeof raw !== "string") return null;
   const trimmed = raw.trim();
-  if (trimmed.length === 0 || trimmed.length > MAX_SEARCH_LENGTH)
-    return null;
+  if (trimmed.length === 0 || trimmed.length > MAX_SEARCH_LENGTH) return null;
   return escapeRegex(trimmed);
 }
 
@@ -60,14 +59,17 @@ export const feedCreateSchema = z.object({
   title: z.string().min(1).max(500),
   category: z.enum(["Berita", "Tutorial", "Riset"]),
   image: z.string().max(2000).default(""),
-  lines: z.array(
-    z.object({
-      role: z.enum(["q", "a"]),
-      text: z.string(),
-      image: z.string().optional(),
-    })
-  ).default([]),
+  lines: z
+    .array(
+      z.object({
+        role: z.enum(["q", "a"]),
+        text: z.string(),
+        image: z.string().optional(),
+      })
+    )
+    .default([]),
   takeaway: z.string().max(2000).default(""),
+  author: z.string().max(200).default(""),
   source: z
     .object({
       title: z.string(),
@@ -99,7 +101,11 @@ export const presignedUrlSchema = z.object({
 
 /** Product create body */
 export const productCreateSchema = z.object({
-  id: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/i, "id must be alphanumeric with hyphens"),
+  id: z
+    .string()
+    .min(1)
+    .max(100)
+    .regex(/^[a-z0-9-]+$/i, "id must be alphanumeric with hyphens"),
   name: z.string().min(1).max(300),
   description: z.string().max(5000).default(""),
   price: z.coerce.number().min(0).max(1e12),
@@ -113,7 +119,9 @@ export const productCreateSchema = z.object({
 });
 
 /** Product update body (partial) */
-export const productUpdateSchema = productCreateSchema.partial().omit({ id: true });
+export const productUpdateSchema = productCreateSchema
+  .partial()
+  .omit({ id: true });
 
 /** Story create body (no id) */
 export const storyCreateSchema = z.object({

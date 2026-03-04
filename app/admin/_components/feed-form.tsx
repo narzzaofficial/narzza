@@ -21,6 +21,7 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
           category: initialData.category,
           image: initialData.image,
           takeaway: initialData.takeaway,
+          author: initialData.author ?? "",
           lines: [...initialData.lines],
           source: initialData.source ? { ...initialData.source } : undefined,
         }
@@ -57,7 +58,10 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
           title="s"
           value={form.category}
           onChange={(e) =>
-            setForm({ ...form, category: e.target.value as FeedFormType["category"] })
+            setForm({
+              ...form,
+              category: e.target.value as FeedFormType["category"],
+            })
           }
           className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400"
         >
@@ -66,7 +70,9 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
           <option value="Riset">Riset</option>
         </select>
         <div className="sm:col-span-2">
-          <label className="mb-1 block text-xs text-slate-400">Cover Image</label>
+          <label className="mb-1 block text-xs text-slate-400">
+            Cover Image
+          </label>
           <ImageUpload
             currentImageUrl={form.image}
             onUploadComplete={(url) => setForm({ ...form, image: url })}
@@ -91,6 +97,17 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
             onChange={(e) => setForm({ ...form, takeaway: e.target.value })}
             placeholder="Takeaway"
             rows={2}
+            className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400"
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <label className="mb-1 block text-xs text-slate-400">
+            Nama Penulis (Opsional)
+          </label>
+          <input
+            value={form.author ?? ""}
+            onChange={(e) => setForm({ ...form, author: e.target.value })}
+            placeholder="Contoh: Redaksi Narzza"
             className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400"
           />
         </div>
@@ -133,7 +150,9 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
 
       <div className="mt-6">
         <div className="mb-2 flex items-center justify-between">
-          <label className="text-xs text-slate-400">Chat Lines (Q&A)</label>
+          <label className="text-xs text-slate-400">
+            Chat Lines (Tanya/Jawab)
+          </label>
           <button
             onClick={addLine}
             className="rounded-lg bg-slate-700/60 px-3 py-1 text-xs hover:bg-slate-600/60"
@@ -155,8 +174,8 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
                   onChange={(e) => updateLine(i, "role", e.target.value)}
                   className="bg-slate-800 text-xs p-2 rounded outline-none border border-slate-600/50"
                 >
-                  <option value="q">Q</option>
-                  <option value="a">A</option>
+                  <option value="q">Tanya</option>
+                  <option value="a">Jawab</option>
                 </select>
                 <input
                   value={line.text}

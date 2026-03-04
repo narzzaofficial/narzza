@@ -38,7 +38,7 @@ export function ChapterView({
               }`}
             >
               <span className="mr-1 text-[11px] font-semibold text-slate-300">
-                {line.role === "q" ? "Q:" : "A:"}
+                {line.role === "q" ? "Tanya:" : "Jawab:"}
               </span>
               {line.text}
               {line.image && <ChatImage src={line.image} />}
