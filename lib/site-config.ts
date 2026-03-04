@@ -4,7 +4,7 @@
  */
 
 export const SITE_NAME = "Narzza Media Digital";
-export const BASE_URL = "https://narzza.com";
+export const BASE_URL = "https://narzza.studio";
 export const SITE_DESCRIPTION =
   "Platform media digital yang menyajikan berita, tutorial, dan riset dari berbagai bidang dalam format interaktif. Baca topik panjang jadi santai.";
 export const SITE_EMAIL = "redaksi@narzza.com";

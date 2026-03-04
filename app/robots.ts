@@ -10,8 +10,8 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: [
-      "https://narzza.com/sitemap.xml",
-      "https://narzza.com/news-sitemap.xml",
+      "https://narzza.studio/sitemap.xml",
+      "https://narzza.studio/news-sitemap.xml",
     ],
   };
 }
