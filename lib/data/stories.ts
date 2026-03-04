@@ -10,7 +10,7 @@ async function loadStories(): Promise<Story[]> {
     const conn = await connectDB();
     if (!conn) return dummyStories;
     const docs = await StoryModel.find().sort({ id: 1 }).lean();
-    if (docs.length === 0) return dummyStories;
+    if (docs.length === 0) return [];
     return docs.map((d) => ({
       id: d.id,
       name: d.name,

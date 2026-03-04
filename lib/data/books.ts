@@ -30,8 +30,6 @@ async function loadBooks(): Promise<Book[]> {
     const conn = await connectDB();
     if (!conn) return dummyBooks;
     const docs = await BookModel.find().sort({ id: 1 }).lean();
-    // If DB is empty, fall back to in-memory dummy data
-    if (docs.length === 0) return dummyBooks;
     return docs.map(docToBook);
   } catch {
     return dummyBooks;

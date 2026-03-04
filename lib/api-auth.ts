@@ -1,16 +1,21 @@
 import { NextResponse } from "next/server";
 
-const SEED_API_KEY = process.env.SEED_API_KEY;
+const API_KEY = process.env.API_KEY;
 
 /**
- * Protects the seed route. If SEED_API_KEY is set, requests must include
- * header x-api-key matching it. If not set, seed is allowed (dev only).
+ * Protects privileged API routes with a shared secret.
+ * If API_KEY is not configured, ALL requests are denied (secure by default).
  */
-export function requireSeedAuth(request: Request): NextResponse | null {
-  if (!SEED_API_KEY) return null;
+export function requireApiKey(request: Request): NextResponse | null {
+  if (!API_KEY) {
+    return NextResponse.json(
+      { error: "Server misconfigured: API_KEY not set" },
+      { status: 500 }
+    );
+  }
 
   const key = request.headers.get("x-api-key");
-  if (key !== SEED_API_KEY) {
+  if (key !== API_KEY) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   return null;

@@ -84,7 +84,7 @@ export default async function ReadBookPage({ params }: PageProps) {
   const slug = slugify(book.title, book.id);
 
   return (
-    <div className="bg-canvas min-h-screen px-3 py-4 text-slate-100 md:px-5 md:py-6">
+    <>
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -98,49 +98,47 @@ export default async function ReadBookPage({ params }: PageProps) {
           url: `https://narzza.com/buku/${slug}`,
         }}
       />
-      <div className="mx-auto w-full max-w-4xl">
-        {/* Header Nav */}
-        <div className="mb-4 flex flex-wrap items-center gap-3 sm:justify-between">
-          <Link
-            href="/buku"
-            className="rounded-full border border-slate-400/40 bg-slate-900/40 px-4 py-2 text-sm transition hover:border-cyan-300/50"
-          >
-            Semua Buku
-          </Link>
-          <div className="flex items-center gap-3">
-            <ShareButton title={book.title} />
-            <span className="rounded-full border border-cyan-300/40 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-200">
-              {book.genre}
-            </span>
-          </div>
+      {/* Header Nav */}
+      <div className="mb-4 flex flex-wrap items-center gap-3 sm:justify-between">
+        <Link
+          href="/buku"
+          className="rounded-full border border-slate-400/40 bg-slate-900/40 px-4 py-2 text-sm transition hover:border-cyan-300/50"
+        >
+          Semua Buku
+        </Link>
+        <div className="flex items-center gap-3">
+          <ShareButton title={book.title} />
+          <span className="rounded-full border border-cyan-300/40 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-200">
+            {book.genre}
+          </span>
         </div>
-
-        <BookHero book={book} />
-
-        <TableOfContents chapters={book.chapters} />
-
-        <div className="mt-6 space-y-6">
-          {book.chapters.map((chapter, i) => (
-            <ChapterView
-              key={i}
-              chapter={chapter}
-              index={i}
-              totalChapters={book.chapters.length}
-            />
-          ))}
-        </div>
-
-        {otherBooks.length > 0 && (
-          <section className="mt-8">
-            <h2 className="mb-4 text-lg font-semibold">Buku Lainnya</h2>
-            <div className="grid gap-4">
-              {otherBooks.map((item, i) => (
-                <BookCard key={item.id} book={item} index={i} />
-              ))}
-            </div>
-          </section>
-        )}
       </div>
-    </div>
+
+      <BookHero book={book} />
+
+      <TableOfContents chapters={book.chapters} />
+
+      <div className="mt-6 space-y-6">
+        {book.chapters.map((chapter, i) => (
+          <ChapterView
+            key={i}
+            chapter={chapter}
+            index={i}
+            totalChapters={book.chapters.length}
+          />
+        ))}
+      </div>
+
+      {otherBooks.length > 0 && (
+        <section className="mt-8">
+          <h2 className="mb-4 text-lg font-semibold">Buku Lainnya</h2>
+          <div className="grid gap-4">
+            {otherBooks.map((item, i) => (
+              <BookCard key={item.id} book={item} index={i} />
+            ))}
+          </div>
+        </section>
+      )}
+    </>
   );
 }

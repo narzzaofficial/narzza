@@ -48,8 +48,6 @@ async function loadFeeds(category?: Feed["category"]): Promise<Feed[]> {
     const filter: Record<string, unknown> = {};
     if (category) filter.category = category;
     const docs = await FeedModel.find(filter).sort({ createdAt: -1 }).lean();
-    // If DB is empty and no filter applied, fall back to dummy data
-    if (docs.length === 0 && !category) return dummyFeeds.map(ensureSlug);
     return docs.map(docToFeed);
   } catch {
     // On any DB error, fall back to dummy data

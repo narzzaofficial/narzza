@@ -914,7 +914,22 @@
 }
 
 [data-theme="light"] .sidebar-widget .text-slate-400 {
-  color: #94a3b8 !important;
+  color: #64748b !important;
+}
+
+/* Book sidebar: title, author, genre colors */
+[data-theme="light"] .sidebar-widget .text-slate-100 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .sidebar-widget .group:hover .text-slate-100,
+[data-theme="light"] .sidebar-widget .group:hover .text-cyan-200 {
+  color: #1d4ed8 !important;
+}
+
+[data-theme="light"] .sidebar-widget .text-cyan-300\/80,
+[data-theme="light"] .sidebar-widget .text-cyan-300 {
+  color: #0e7490 !important;
 }
 
 /* Chat bubbles */

@@ -3,7 +3,6 @@ import { connectDB } from "@/lib/mongodb";
 import { FeedModel } from "@/lib/models/Feed";
 import type { IFeed } from "@/lib/models/Feed";
 import { feedCreateSchema, sanitizeSearchQuery } from "@/lib/validate";
-import { feeds as dummyFeeds } from "@/constants/content";
 import {
   dbUnavailableResponse,
   validationErrorResponse,
@@ -34,13 +33,7 @@ function feedToJson(doc: IFeed) {
 export async function GET(req: NextRequest) {
   try {
     const conn = await connectDB();
-    if (!conn) {
-      const category = req.nextUrl.searchParams.get("category");
-      const q = req.nextUrl.searchParams.get("q")?.trim().toLowerCase() || "";
-      let filtered = category ? dummyFeeds.filter((f) => f.category === category) : dummyFeeds;
-      if (q) filtered = filtered.filter((f) => f.title.toLowerCase().includes(q));
-      return NextResponse.json(filtered);
-    }
+    if (!conn) return dbUnavailableResponse();
 
     const category = req.nextUrl.searchParams.get("category");
     const q = sanitizeSearchQuery(req.nextUrl.searchParams.get("q"));
@@ -54,7 +47,10 @@ export async function GET(req: NextRequest) {
     return cachedJson(feeds.map(feedToJson), q ? 30 : 60);
   } catch (error) {
     console.error("GET /api/feeds error:", error);
-    return NextResponse.json(dummyFeeds, { status: 200 });
+    return NextResponse.json(
+      { error: "Failed to fetch feeds" },
+      { status: 500 }
+    );
   }
 }
 

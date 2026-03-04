@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { StoryModel } from "@/lib/models/Story";
 import { storyCreateSchema } from "@/lib/validate";
-import { stories as dummyStories } from "@/constants/content";
 import {
   dbUnavailableResponse,
   validationErrorResponse,
@@ -14,11 +13,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const conn = await connectDB();
-
-    if (!conn) {
-      console.warn("MongoDB not available, using dummy data");
-      return NextResponse.json(dummyStories);
-    }
+    if (!conn) return dbUnavailableResponse();
 
     const stories = await StoryModel.find().sort({ id: 1 }).lean();
 
@@ -35,7 +30,10 @@ export async function GET() {
     return NextResponse.json(mapped);
   } catch (error) {
     console.error("GET /api/stories error:", error);
-    return NextResponse.json(dummyStories, { status: 200 });
+    return NextResponse.json(
+      { error: "Failed to fetch stories" },
+      { status: 500 }
+    );
   }
 }
 

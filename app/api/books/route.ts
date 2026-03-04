@@ -3,7 +3,6 @@ import { connectDB } from "@/lib/mongodb";
 import { BookModel } from "@/lib/models/Book";
 import type { IBook } from "@/lib/models/Book";
 import { bookSchema, sanitizeSearchQuery } from "@/lib/validate";
-import { books as dummyBooks } from "@/constants/content";
 import {
   dbUnavailableResponse,
   validationErrorResponse,
@@ -33,13 +32,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const conn = await connectDB();
-    if (!conn) {
-      const q = searchParams.get("q")?.trim().toLowerCase() || "";
-      const filtered = q
-        ? dummyBooks.filter((b) => b.title.toLowerCase().includes(q))
-        : dummyBooks;
-      return NextResponse.json(filtered);
-    }
+    if (!conn) return dbUnavailableResponse();
 
     const q = sanitizeSearchQuery(searchParams.get("q"));
 
@@ -50,7 +43,10 @@ export async function GET(request: NextRequest) {
     return cachedJson(books.map(bookToJson), q ? 30 : 60);
   } catch (error) {
     console.error("GET /api/books error:", error);
-    return NextResponse.json(dummyBooks, { status: 200 });
+    return NextResponse.json(
+      { error: "Failed to fetch books" },
+      { status: 500 }
+    );
   }
 }
 
