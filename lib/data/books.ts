@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/mongodb";
 import { BookModel } from "@/lib/models/Book";
 import type { IBook } from "@/lib/models/Book";
 import type { Book } from "@/types/content";
-import { books as dummyBooks } from "@/data/content";
+import { books as dummyBooks } from "@/constants/content";
 import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
 
 /**

@@ -1,25 +1,19 @@
 "use client";
-import Image from "next/image";
+import { ThemeLogo } from "./ThemeLogo";
 
 const DrawerHeader = ({ onClose }: { onClose: () => void }) => {
   return (
-   <div className="drawer-header flex items-center justify-between pb-5 border-b border-gray-200">
+   <div className="drawer-header flex items-center justify-between pb-5 border-b border-slate-700/50">
 
   {/* Brand */}
   <div className="flex items-center gap-3">
-    <Image
-      src="/logo.png"
-      alt="Narzza Logo"
-      width={200}
-      height={200}
-      className="w-24 sm:w-18 object-contain transition-transform hover:scale-105"
-    />
+    <ThemeLogo className="w-24 object-contain transition-transform hover:scale-105" />
 
     <div>
-      <p className="text-base sm:text-lg font-semibold text-gray-900 leading-none">
+      <p className="text-base sm:text-lg font-semibold text-slate-50 leading-none">
         Narzza
       </p>
-      <p className="text-[11px] sm:text-xs text-gray-500 mt-1">
+      <p className="text-[11px] sm:text-xs text-slate-400 mt-1">
         Media Digital
       </p>
     </div>

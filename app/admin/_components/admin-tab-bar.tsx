@@ -29,12 +29,13 @@ const tabs: { key: AdminTab; label: string; countKey: keyof Omit<AdminTabBarProp
 
 export function AdminTabBar({ tab, setTab, counts }: AdminTabBarProps) {
   return (
-    <div className="mb-6 flex flex-wrap gap-2">
+    <div className="mb-6 -mx-4 px-4 sm:mx-0 sm:px-0">
+    <div className="flex overflow-x-auto scrollbar-hide gap-1 sm:gap-2 pb-1 sm:flex-wrap">
       {tabs.map(({ key, label, countKey }) => (
         <button
           key={key}
           onClick={() => setTab(key)}
-          className={`admin-tab-btn rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition ${
+          className={`admin-tab-btn shrink-0 rounded-lg px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold transition ${
             tab === key
               ? "admin-tab-btn-active bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-500/40"
               : "text-slate-400 hover:text-slate-200"
@@ -47,7 +48,7 @@ export function AdminTabBar({ tab, setTab, counts }: AdminTabBarProps) {
       {/* Messages tab with unread badge */}
       <button
         onClick={() => setTab("messages")}
-        className={`admin-tab-btn relative rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition ${
+        className={`admin-tab-btn relative shrink-0 rounded-lg px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold transition ${
           tab === "messages"
             ? "admin-tab-btn-active bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-500/40"
             : "text-slate-400 hover:text-slate-200"
@@ -63,10 +64,11 @@ export function AdminTabBar({ tab, setTab, counts }: AdminTabBarProps) {
 
       <Link
         href="/admin/analytics"
-        className="admin-tab-link rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-slate-400 hover:text-slate-200 transition flex items-center"
+        className="admin-tab-link shrink-0 rounded-lg px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center"
       >
         📊 Analytics
       </Link>
+    </div>
     </div>
   );
 }

@@ -3,28 +3,60 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ShareButton } from "@/components/share-button";
 import { BookCard } from "@/components/books/book-card";
-import { getBookPageData, getBookStaticIds } from "@/lib/data";
+import { getBookStaticSlugs, getBooks } from "@/lib/data";
 import { BookHero } from "@/components/books/book-hero";
 import { ChapterView } from "@/components/books/chapter-view";
 import { TableOfContents } from "@/components/books/table-of-content";
 import { JsonLd } from "@/components/JsonLd";
+import { parseSlugId, slugify, slugifyBase } from "@/lib/slugify";
 
 export const revalidate = 300;
+export const dynamicParams = true;
 
 type PageProps = { params: Promise<{ id: string }> };
 
+async function loadBookData(param: string) {
+  const all = await getBooks();
+
+  // 1. Match by numeric id parsed from slug end (e.g. "judul-buku-1" → id 1)
+  const parsedId = parseSlugId(param);
+  if (parsedId) {
+    const byId = all.find((b) => b.id === parsedId);
+    if (byId) {
+      return { book: byId, otherBooks: all.filter((b) => b.id !== byId.id).slice(0, 3) };
+    }
+  }
+
+  // 2. Match by exact slug  (slugify(title, id) === param)
+  const bySlug = all.find((b) => slugify(b.title, b.id) === param);
+  if (bySlug) {
+    return { book: bySlug, otherBooks: all.filter((b) => b.id !== bySlug.id).slice(0, 3) };
+  }
+
+  // 3. Fuzzy: match title-only slug, ignoring the trailing id number
+  //    Handles case where DB ids differ from URL ids but title matches
+  const titlePart = param.replace(/-\d+$/, "").replace(/-undefined$/, "");
+  const byTitle = all.find((b) => slugifyBase(b.title) === titlePart);
+  if (byTitle) {
+    return { book: byTitle, otherBooks: all.filter((b) => b.id !== byTitle.id).slice(0, 3) };
+  }
+
+  return null;
+}
+
 export async function generateStaticParams() {
-  const ids = await getBookStaticIds();
-  return ids.map((id) => ({ id: String(id) }));
+  const slugs = await getBookStaticSlugs();
+  return slugs.map((id) => ({ id }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const data = await getBookPageData(Number(id));
+  const data = await loadBookData(id);
   if (!data) return { title: "Buku tidak ditemukan" };
   const { book } = data;
+  const slug = slugify(book.title, book.id);
   return {
     title: book.title,
     description: `${book.description.slice(0, 155)}...`,
@@ -40,19 +72,16 @@ export async function generateMetadata({
       description: book.description,
       images: [book.cover],
     },
-    alternates: { canonical: `/buku/${id}` },
+    alternates: { canonical: `/buku/${slug}` },
   };
 }
 
 export default async function ReadBookPage({ params }: PageProps) {
   const { id } = await params;
-  const bookId = Number(id);
-
-  if (isNaN(bookId)) notFound();
-
-  const data = await getBookPageData(bookId);
+  const data = await loadBookData(id);
   if (!data) notFound();
   const { book, otherBooks } = data;
+  const slug = slugify(book.title, book.id);
 
   return (
     <div className="bg-canvas min-h-screen px-3 py-4 text-slate-100 md:px-5 md:py-6">
@@ -66,7 +95,7 @@ export default async function ReadBookPage({ params }: PageProps) {
           description: book.description,
           genre: book.genre,
           numberOfPages: book.pages,
-          url: `https://narzza.com/buku/${book.id}`,
+          url: `https://narzza.com/buku/${slug}`,
         }}
       />
       <div className="mx-auto w-full max-w-4xl">

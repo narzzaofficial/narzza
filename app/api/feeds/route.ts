@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/mongodb";
 import { FeedModel } from "@/lib/models/Feed";
 import type { IFeed } from "@/lib/models/Feed";
 import { feedCreateSchema, sanitizeSearchQuery } from "@/lib/validate";
-import { feeds as dummyFeeds } from "@/data/content";
+import { feeds as dummyFeeds } from "@/constants/content";
 import {
   dbUnavailableResponse,
   validationErrorResponse,

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getFeeds, getBooks, getRoadmaps } from "@/lib/data";
+import { slugify } from "@/lib/slugify";
 
 const BASE_URL = "https://narzza.com";
 
@@ -68,7 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic: Books
   const books = await getBooks();
   const bookPages: MetadataRoute.Sitemap = books.map((book) => ({
-    url: `${BASE_URL}/buku/${book.id}`,
+    url: `${BASE_URL}/buku/${slugify(book.title, book.id)}`,
     lastModified: new Date(),
     changeFrequency: "monthly",
     priority: 0.7,

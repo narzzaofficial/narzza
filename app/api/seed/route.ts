@@ -13,7 +13,7 @@ import {
   books as seedBooks,
   feeds as seedFeeds,
   stories as seedStories,
-} from "@/data/content";
+} from "@/constants/content";
 import {
   roadmaps as seedRoadmaps,
   type Roadmap,
@@ -30,7 +30,7 @@ import { slugify } from "@/lib/slugify";
 /** Max 2 seed per IP per jam — hanya untuk setup/restore */
 const SEED_RATE_LIMIT = { max: 2, windowMs: 60 * 60 * 1000 };
 
-const DEFAULT_SEED_COUNT = 200;
+const DEFAULT_SEED_COUNT = 50;
 const MIN_SEED_COUNT = 1;
 const MAX_SEED_COUNT = 1000;
 

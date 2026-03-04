@@ -372,6 +372,18 @@
     opacity: 0.8;
   }
 
+  /* Lock scroll when mobile drawer is open */
+  @media (max-width: 640px) {
+    .drawer-open-mobile {
+      overscroll-behavior: contain;
+    }
+
+    .drawer-open-mobile body {
+      overflow: hidden !important;
+      touch-action: none;
+    }
+  }
+
   /* ─── Layout shell ───────────────────────────────────────────── */
   .page-shell {
     background:

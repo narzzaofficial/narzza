@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     url: "https://narzza.com",
     images: [
       {
-        url: "/og-default.png",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "Narzza Media Digital",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     title: "Narzza Media Digital",
     description:
       "Portal berita teknologi, tutorial, dan eksperimen koding dalam format chat interaktif.",
-    images: ["/og-default.png"],
+    images: ["/logo.png"],
   },
   robots: {
     index: true,
@@ -116,7 +116,7 @@ export default function RootLayout({
             "@type": "Organization",
             name: "Narzza Media Digital",
             url: "https://narzza.com",
-            logo: "https://narzza.com/og-default.png",
+            logo: "https://narzza.com/logo.png",
             sameAs: [],
           }}
         />

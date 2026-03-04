@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Feed, Book } from "@/types/content";
+import { slugify } from "@/lib/slugify";
 import {
   BarChart,
   Bar,
@@ -541,7 +542,7 @@ export default function AnalyticsPage() {
                   {books.map((book) => (
                     <Link
                       key={book.id}
-                      href={`/buku/${book.id}`}
+                      href={`/buku/${slugify(book.title, book.id)}`}
                       className="flex items-center gap-3 rounded-lg border border-slate-700/50 bg-slate-900/40 p-3 transition hover:border-amber-400/50 hover:bg-slate-800/60"
                     >
                       <div className="min-w-0 flex-1">

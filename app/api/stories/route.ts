@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { StoryModel } from "@/lib/models/Story";
 import { storyCreateSchema } from "@/lib/validate";
-import { stories as dummyStories } from "@/data/content";
+import { stories as dummyStories } from "@/constants/content";
 import {
   dbUnavailableResponse,
   validationErrorResponse,

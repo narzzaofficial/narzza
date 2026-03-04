@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/mongodb";
 import { BookModel } from "@/lib/models/Book";
 import type { IBook } from "@/lib/models/Book";
 import { bookSchema, sanitizeSearchQuery } from "@/lib/validate";
-import { books as dummyBooks } from "@/data/content";
+import { books as dummyBooks } from "@/constants/content";
 import {
   dbUnavailableResponse,
   validationErrorResponse,

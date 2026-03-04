@@ -5,8 +5,8 @@ import { StarIcon } from "./icons";
 export function BookHero({ book }: { book: Book }) {
   return (
     <section className="glass-panel overflow-hidden rounded-3xl">
-      <div className="flex flex-col items-center gap-6 p-6 sm:flex-row sm:items-start md:p-8">
-        <div className="relative h-64 w-44 shrink-0 overflow-hidden rounded-2xl shadow-2xl sm:h-72 sm:w-48">
+      <div className="flex flex-col items-center gap-4 p-5 sm:flex-row sm:items-start md:gap-6 md:p-8">
+        <div className="relative h-56 w-40 shrink-0 overflow-hidden rounded-2xl shadow-2xl sm:h-72 sm:w-48">
           <Image
             src={book.cover}
             alt={book.title}
@@ -23,7 +23,7 @@ export function BookHero({ book }: { book: Book }) {
           </h1>
           <p className="mt-2 text-sm text-slate-400">oleh {book.author}</p>
 
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
             <div className="flex items-center gap-1 text-amber-300">
               <StarIcon />
               <span className="text-sm font-semibold">{book.rating}</span>
@@ -34,7 +34,7 @@ export function BookHero({ book }: { book: Book }) {
             <span className="text-sm text-slate-400">{book.pages} halaman</span>
           </div>
 
-          <p className="mt-4 text-sm leading-relaxed text-slate-300">
+          <p className="mt-3 text-sm leading-relaxed text-slate-300">
             {book.description}
           </p>
         </div>

@@ -10,13 +10,14 @@ const FEED_SCHEMA = `[
   {
     "title": "Judul Feed",
     "category": "Berita",
-    "image": "https://...",
+    "image": "https://example.com/image.jpg",
     "takeaway": "Ringkasan singkat",
     "lines": [
       { "role": "q", "text": "Pertanyaan..." },
       { "role": "a", "text": "Jawaban..." }
     ],
-    "source": { "title": "Nama Sumber", "url": "https://..." }
+    "source": { "title": "Nama Sumber", "url": "https://example.com/artikel" },
+    "storyId": null
   }
 ]`;
 
@@ -34,15 +35,30 @@ export function FeedTab({ feeds, onRefresh, onDelete, flash }: FeedTabProps) {
 
   async function handleJsonImport(items: unknown[]) {
     let failCount = 0;
+    let lastError = "";
     for (const item of items) {
       const res = await fetch("/api/feeds", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(item),
       });
-      if (!res.ok) failCount++;
+      if (!res.ok) {
+        failCount++;
+        try {
+          const data = await res.json();
+          const fields = data?.details?.fieldErrors;
+          lastError = fields
+            ? Object.entries(fields)
+                .map(([k, v]) => `${k}: ${(v as string[]).join(", ")}`)
+                .join(" | ")
+            : data?.error ?? `HTTP ${res.status}`;
+        } catch {
+          lastError = `HTTP ${res.status}`;
+        }
+      }
     }
-    if (failCount > 0) return `${failCount} dari ${items.length} feed gagal disimpan.`;
+    if (failCount > 0)
+      return `${failCount} dari ${items.length} feed gagal disimpan. Error: ${lastError}`;
     flash(`✅ ${items.length} Feed berhasil diimport!`);
     onRefresh();
     return null;
@@ -64,13 +80,13 @@ export function FeedTab({ feeds, onRefresh, onDelete, flash }: FeedTabProps) {
           <div className="flex gap-2">
             <button
               onClick={() => setShowJsonModal(true)}
-              className="admin-btn admin-btn-secondary rounded-xl bg-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-600"
+              className="admin-btn admin-btn-secondary rounded-lg bg-slate-700 px-3 py-1.5 text-xs font-semibold hover:bg-slate-600"
             >
               + Tambah JSON
             </button>
             <button
               onClick={startCreate}
-              className="admin-btn admin-btn-primary rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold"
+              className="admin-btn admin-btn-primary rounded-lg bg-cyan-600 px-3 py-1.5 text-xs font-semibold"
             >
               + Tambah Feed
             </button>

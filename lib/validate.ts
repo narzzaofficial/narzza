@@ -69,7 +69,10 @@ export const feedCreateSchema = z.object({
   ).default([]),
   takeaway: z.string().max(2000).default(""),
   source: z
-    .object({ title: z.string(), url: z.string().url() })
+    .object({
+      title: z.string(),
+      url: z.string().max(2000),
+    })
     .optional(),
   storyId: z.number().int().positive().nullable().optional().default(null),
 });

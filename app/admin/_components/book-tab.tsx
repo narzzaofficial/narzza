@@ -9,7 +9,7 @@ const BOOK_SCHEMA = `[
   {
     "title": "Judul Buku",
     "author": "Nama Penulis",
-    "cover": "https://...",
+    "cover": "https://example.com/cover.jpg",
     "genre": "Teknologi",
     "pages": 200,
     "rating": 4.5,
@@ -18,11 +18,12 @@ const BOOK_SCHEMA = `[
       {
         "title": "Bab 1",
         "lines": [
-          { "role": "q", "text": "Pertanyaan..." },
-          { "role": "a", "text": "Jawaban..." }
+          { "role": "q", "text": "Pertanyaan...", "image": "" },
+          { "role": "a", "text": "Jawaban...", "image": "" }
         ]
       }
-    ]
+    ],
+    "storyId": null
   }
 ]`;
 
@@ -46,16 +47,30 @@ export function BookTab({ books, onRefresh, onDelete, flash }: BookTabProps) {
 
   async function handleJsonImport(items: unknown[]) {
     let failCount = 0;
+    let lastError = "";
     for (const item of items) {
       const res = await fetch("/api/books", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(item),
       });
-      if (!res.ok) failCount++;
+      if (!res.ok) {
+        failCount++;
+        try {
+          const data = await res.json();
+          const fields = data?.details?.fieldErrors;
+          lastError = fields
+            ? Object.entries(fields)
+                .map(([k, v]) => `${k}: ${(v as string[]).join(", ")}`)
+                .join(" | ")
+            : data?.error ?? `HTTP ${res.status}`;
+        } catch {
+          lastError = `HTTP ${res.status}`;
+        }
+      }
     }
     if (failCount > 0)
-      return `${failCount} dari ${items.length} buku gagal disimpan.`;
+      return `${failCount} dari ${items.length} buku gagal disimpan. Error: ${lastError}`;
     flash(`✅ ${items.length} Buku berhasil diimport!`);
     onRefresh();
     return null;
@@ -77,13 +92,13 @@ export function BookTab({ books, onRefresh, onDelete, flash }: BookTabProps) {
           <div className="flex gap-2">
             <button
               onClick={() => setShowJsonModal(true)}
-              className="rounded-xl bg-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-600"
+              className="rounded-lg bg-slate-700 px-3 py-1.5 text-xs font-semibold hover:bg-slate-600"
             >
               + Tambah JSON
             </button>
             <button
               onClick={startCreate}
-              className="rounded-xl bg-amber-600/80 hover:bg-amber-500 px-4 py-2 text-sm font-semibold text-white"
+              className="rounded-lg bg-amber-600/80 hover:bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white"
             >
               + Tambah Buku
             </button>

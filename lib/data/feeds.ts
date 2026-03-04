@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/mongodb";
 import { FeedModel } from "@/lib/models/Feed";
 import type { IFeed } from "@/lib/models/Feed";
 import type { Feed } from "@/types/content";
-import { feeds as dummyFeeds } from "@/data/content";
+import { feeds as dummyFeeds } from "@/constants/content";
 import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
 import { slugify, parseSlugId } from "@/lib/slugify";
 

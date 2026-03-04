@@ -104,7 +104,7 @@ export function BookForm({ initialData, onSave, onCancel }: Props) {
           placeholder="URL Cover Image"
           className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
         />
-        <div className="flex gap-4">
+        <div className="grid grid-cols-2 gap-2 sm:gap-4">
           <input
             type="number"
             value={form.pages}
@@ -112,7 +112,7 @@ export function BookForm({ initialData, onSave, onCancel }: Props) {
               setForm({ ...form, pages: Number(e.target.value) })
             }
             placeholder="Halaman"
-            className="w-1/2 rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
+            className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
           />
           <input
             type="number"
@@ -122,7 +122,7 @@ export function BookForm({ initialData, onSave, onCancel }: Props) {
               setForm({ ...form, rating: Number(e.target.value) })
             }
             placeholder="Rating"
-            className="w-1/2 rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
+            className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
           />
         </div>
         <textarea
@@ -151,7 +151,7 @@ export function BookForm({ initialData, onSave, onCancel }: Props) {
               key={ci}
               className="bg-slate-800/30 border border-slate-700/50 p-4 rounded-xl"
             >
-              <div className="flex gap-2 mb-3">
+              <div className="flex flex-wrap gap-2 mb-3">
                 <span className="bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded text-xs font-bold shrink-0">
                   Bab {ci + 1}
                 </span>
@@ -159,22 +159,22 @@ export function BookForm({ initialData, onSave, onCancel }: Props) {
                   value={ch.title}
                   onChange={(e) => updateChTitle(ci, e.target.value)}
                   placeholder="Judul Bab..."
-                  className="flex-1 bg-slate-800 text-sm px-2 rounded border border-slate-600/50 outline-none"
+                  className="flex-1 min-w-[180px] bg-slate-800 text-sm px-2 py-2 rounded border border-slate-600/50 outline-none"
                 />
                 <button
                   onClick={() => removeChapter(ci)}
-                  className="bg-red-900/40 text-red-300 px-2 text-xs rounded"
+                  className="bg-red-900/40 text-red-300 px-2.5 py-1 text-xs rounded"
                 >
                   Hapus Bab
                 </button>
               </div>
 
-              <div className="ml-4 pl-4 border-l border-slate-700">
-                <div className="flex justify-between mb-2">
+              <div className="ml-3 sm:ml-4 pl-3 sm:pl-4 border-l border-slate-700/70">
+                <div className="flex items-center justify-between gap-2 mb-2">
                   <span className="text-[11px] text-slate-400">Lines Q&A</span>
                   <button
                     onClick={() => addLine(ci)}
-                    className="text-[10px] bg-slate-700 px-2 rounded"
+                    className="text-[10px] bg-slate-700 px-2 py-1 rounded"
                   >
                     + Line
                   </button>
@@ -182,16 +182,16 @@ export function BookForm({ initialData, onSave, onCancel }: Props) {
                 {ch.lines.map((line, li) => (
                   <div
                     key={li}
-                    className="mb-2 bg-slate-800/40 p-2 rounded border border-slate-700/40"
+                    className="mb-3 bg-slate-800/40 p-2 rounded border border-slate-700/40"
                   >
-                    <div className="flex gap-2 mb-2">
+                    <div className="flex flex-wrap gap-2 mb-2">
                       <select
                         value={line.role}
                         onChange={(e) =>
                           updateLine(ci, li, "role", e.target.value as string)
                         }
                         title="Pilih Peran (Q/A)"
-                        className="bg-slate-800 text-xs rounded border border-slate-600"
+                        className="bg-slate-800 text-xs rounded border border-slate-600 px-2 py-1"
                       >
                         <option value="q">Q</option>
                         <option value="a">A</option>
@@ -201,17 +201,17 @@ export function BookForm({ initialData, onSave, onCancel }: Props) {
                         onChange={(e) =>
                           updateLine(ci, li, "text", e.target.value)
                         }
-                        className="flex-1 bg-slate-800 text-xs px-2 rounded border border-slate-600"
+                        className="flex-1 min-w-[220px] bg-slate-800 text-xs px-2 py-2 rounded border border-slate-600"
                         placeholder="Teks..."
                       />
                       <button
                         onClick={() => removeLine(ci, li)}
-                        className="text-red-400 text-xs"
+                        className="text-red-400 text-xs px-2 py-1"
                       >
                         ✕
                       </button>
                     </div>
-                    <div className="pl-10">
+                    <div className="pl-0 sm:pl-10">
                       <ImageUpload
                         currentImageUrl={line.image}
                         onUploadComplete={(url) =>

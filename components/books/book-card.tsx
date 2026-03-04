@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Book } from "@/types/content";
+import { slugify } from "@/lib/slugify";
 
 type BookCardProps = {
   book: Book;
@@ -8,15 +9,17 @@ type BookCardProps = {
 };
 
 export function BookCard({ book, index }: BookCardProps) {
+  const slug = slugify(book.title, book.id);
+
   return (
     <Link
-      href={`/buku/${book.id}`}
+      href={`/buku/${slug}`}
       className="feed-card glass-panel group block overflow-hidden rounded-2xl transition hover:border-cyan-300/50"
       style={{ animationDelay: `${index * 110}ms` }}
     >
       {/* Horizontal layout for all screen sizes */}
       <div className="flex gap-4 p-4">
-        <div className="relative h-48 w-32 shrink-0 overflow-hidden rounded-xl shadow-lg">
+        <div className="relative h-36 w-24 sm:h-48 sm:w-32 shrink-0 overflow-hidden rounded-xl shadow-lg">
           <Image
             src={book.cover}
             alt={book.title}

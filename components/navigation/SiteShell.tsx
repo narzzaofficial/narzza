@@ -8,7 +8,7 @@ import {
 } from ".";
 import { ThemeToggle } from "@/components/navigation/ThemeToggle";
 import { SiteFeedbackButton } from "@/components/floating-actions/SiteFeedbackButton";
-import Image from "next/image";
+import { ThemeLogo } from "./ThemeLogo";
 
 type SiteShellProps = {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ type SiteShellProps = {
 /** Rute detail konten — shell-nya dihandle oleh layout masing-masing */
 const DETAIL_PATTERNS = [
   /^\/read\/[^/]+$/,
-  /^\/buku\/\d+$/,
+  /^\/buku\/[^/]+$/, // supports slug-with-id or legacy numeric
   /^\/roadmap\/[^/]+$/,
   /^\/toko\/[^/]+$/,
 ];
@@ -42,13 +42,7 @@ export function SiteShell({ children }: SiteShellProps) {
 
     {/* Brand */}
     <div className="flex items-center gap-3">
-      <Image
-        src="/logo.png"
-        alt="Narzza Logo"
-        width={200}
-        height={200}
-        className="w-24 object-contain"
-      />
+      <ThemeLogo className="w-24 object-contain" />
 
       <div className="leading-tight">
         <p className="text-lg font-semibold">Narzza</p>

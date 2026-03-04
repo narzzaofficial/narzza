@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getBooks } from "@/lib/data";
+import { slugify } from "@/lib/slugify";
 
 type Props = {
   currentId: number;
@@ -21,7 +22,7 @@ export async function BookRecommendSidebarLeft({ currentId }: Props) {
         {others.map((book) => (
           <li key={book.id}>
             <Link
-              href={`/buku/${book.id}`}
+              href={`/buku/${slugify(book.title, book.id)}`}
               className="group flex items-start gap-3 rounded-xl p-2 transition hover:bg-cyan-500/10"
             >
               <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md">
@@ -63,7 +64,7 @@ export async function BookRecommendSidebarRight({ currentId }: Props) {
           {fallback.map((book) => (
             <li key={book.id}>
               <Link
-                href={`/buku/${book.id}`}
+                href={`/buku/${slugify(book.title, book.id)}`}
                 className="group flex items-start gap-3 rounded-xl p-2 transition hover:bg-cyan-500/10"
               >
                 <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md">
@@ -98,7 +99,7 @@ export async function BookRecommendSidebarRight({ currentId }: Props) {
         {others.map((book) => (
           <li key={book.id}>
             <Link
-              href={`/buku/${book.id}`}
+              href={`/buku/${slugify(book.title, book.id)}`}
               className="group flex items-start gap-3 rounded-xl p-2 transition hover:bg-cyan-500/10"
             >
               <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md">

@@ -29,11 +29,14 @@ export function slugifyBase(title: string): string {
 
 /**
  * Extract the numeric ID from the end of a slug.
- * Example: parseSlugId("ai-revolution-whats-next-42") → 42
+ * Accepts both slug-with-id and legacy numeric-only paths.
+ * Example: parseSlugId("ai-revolution-whats-next-42") → 42; parseSlugId("42") → 42
  */
 export function parseSlugId(slug: string): number | null {
   const match = slug.match(/-(\d+)$/);
-  return match ? Number(match[1]) : null;
+  if (match) return Number(match[1]);
+  if (/^\d+$/.test(slug)) return Number(slug);
+  return null;
 }
 
 

@@ -43,7 +43,7 @@ export default function NotFound() {
               href="/"
               className="rounded-lg bg-cyan-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-cyan-400"
             >
-              ← Kembali ke Beranda
+              Kembali ke Beranda
             </Link>
             <Link
               href="/search"

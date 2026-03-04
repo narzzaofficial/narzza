@@ -52,14 +52,14 @@ export function RoadmapForm({
 }: Props) {
   return (
     <section className="glass-panel rounded-2xl p-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
           {editingSlug ? "Edit Roadmap" : "Tambah Roadmap"}
         </h2>
         <div className="flex gap-2">
           <button
             type="button"
-            className="rounded-lg px-4 py-2 text-sm font-semibold transition hover:opacity-80"
+            className="rounded-lg px-3 py-1.5 text-xs font-semibold transition hover:opacity-80"
             style={{ background: "var(--input-bg)", border: "1px solid var(--input-border)", color: "var(--text-primary)" }}
             onClick={onShowJsonModal}
           >
@@ -68,7 +68,7 @@ export function RoadmapForm({
           {editingSlug && (
             <button
               type="button"
-              className="text-sm hover:opacity-80"
+              className="text-xs hover:opacity-80"
               style={{ color: "var(--text-accent)" }}
               onClick={onReset}
             >
@@ -119,7 +119,7 @@ export function RoadmapForm({
         </label>
 
         {/* Level + Duration */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <label className="block">
             <span className={labelCls} style={labelStyle}>Level</span>
             <select
@@ -184,10 +184,10 @@ export function RoadmapForm({
 
         {/* Steps */}
         <div
-          className="space-y-4 rounded-xl border p-4"
+          className="space-y-4 rounded-xl border p-3 sm:p-4"
           style={{ borderColor: "var(--surface-border)", background: "var(--input-bg)" }}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <h3 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
               Langkah-langkah (Steps)
             </h3>
@@ -212,7 +212,7 @@ export function RoadmapForm({
               className="space-y-3 rounded-lg border p-3"
               style={{ borderColor: "var(--surface-border)", background: "var(--surface)" }}
             >
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <h4 className="text-xs font-semibold" style={{ color: "var(--text-accent)" }}>
                   Step {si + 1}
                 </h4>
@@ -264,7 +264,7 @@ export function RoadmapForm({
                 className="space-y-2 rounded-lg border p-3"
                 style={{ borderColor: "var(--input-border)", background: "var(--input-bg)" }}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
                     Video YouTube
                   </span>
@@ -284,16 +284,16 @@ export function RoadmapForm({
                 )}
 
                 {step.videos.map((video, vi) => (
-                  <div key={vi} className="flex gap-2">
+                  <div key={vi} className="flex flex-wrap gap-2">
                     <input
-                      className="flex-1 rounded-lg border px-2 py-1.5 text-xs outline-none focus:border-cyan-400/70"
+                      className="flex-1 min-w-[200px] rounded-lg border px-2 py-1.5 text-xs outline-none focus:border-cyan-400/70"
                       style={inputStyle}
                       value={video.id}
                       onChange={(e) => onUpdateVideo(si, vi, "id", e.target.value)}
                       placeholder="URL YouTube atau Video ID"
                     />
                     <input
-                      className="flex-1 rounded-lg border px-2 py-1.5 text-xs outline-none focus:border-cyan-400/70"
+                      className="flex-1 min-w-[160px] rounded-lg border px-2 py-1.5 text-xs outline-none focus:border-cyan-400/70"
                       style={inputStyle}
                       value={video.author}
                       onChange={(e) => onUpdateVideo(si, vi, "author", e.target.value)}
@@ -316,10 +316,10 @@ export function RoadmapForm({
         {error && <p className="text-sm text-rose-400">{error}</p>}
         {message && <p className="text-sm text-emerald-400">{message}</p>}
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-500 disabled:opacity-60"
+            className="rounded-lg bg-cyan-600 px-3 py-1.5 text-xs sm:text-sm font-semibold text-white hover:bg-cyan-500 disabled:opacity-60"
             onClick={onSave}
             disabled={saving || (!editingSlug && !hasChanges)}
           >
@@ -327,7 +327,7 @@ export function RoadmapForm({
           </button>
           <button
             type="button"
-            className="rounded-lg border px-4 py-2 text-sm hover:opacity-80 transition"
+            className="rounded-lg border px-3 py-1.5 text-xs sm:text-sm hover:opacity-80 transition"
             style={{ borderColor: "var(--input-border)", color: "var(--text-primary)" }}
             onClick={onReset}
             disabled={saving}

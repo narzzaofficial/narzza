@@ -5,6 +5,7 @@
  */
 
 import type { Book } from "@/types/content";
+import { slugify } from "@/lib/slugify";
 import { getBookById, getBooks } from "./books";
 
 export type BookPageData = {
@@ -22,5 +23,12 @@ export async function getBookPageData(id: number): Promise<BookPageData | null> 
 export async function getBookStaticIds(): Promise<number[]> {
   const books = await getBooks();
   return books.map((b) => b.id);
+}
+
+export async function getBookStaticSlugs(): Promise<string[]> {
+  const books = await getBooks();
+  return books
+    .filter((b) => b.id != null && !isNaN(b.id))
+    .map((b) => slugify(b.title, b.id));
 }
 
