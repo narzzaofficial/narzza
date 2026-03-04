@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 type AdsProps = {
   label: string;
   size: string;

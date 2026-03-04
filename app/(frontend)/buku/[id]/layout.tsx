@@ -5,6 +5,8 @@ import {
   BookRecommendSidebarLeft,
   BookRecommendSidebarRight,
 } from "@/components/navigation/BookRecommendSidebar";
+import { parseSlugId } from "@/lib/slugify";
+import { getBooks } from "@/lib/data";
 
 type Props = {
   children: React.ReactNode;
@@ -13,8 +15,19 @@ type Props = {
 
 export default async function BukuDetailLayout({ children, params }: Props) {
   const { id } = await params;
-  const bookId = Number(id);
-  if (Number.isNaN(bookId)) notFound();
+
+  // Try to resolve a numeric id from the slug (e.g. "clean-code-1" → 1)
+  let bookId = parseSlugId(id);
+
+  // If no id in slug, try matching by title against the book list
+  if (!bookId) {
+    const all = await getBooks();
+    const { slugifyBase } = await import("@/lib/slugify");
+    const titlePart = id.replace(/-\d+$/, "").replace(/-undefined$/, "");
+    const match = all.find((b) => slugifyBase(b.title) === titlePart);
+    if (!match) notFound();
+    bookId = match!.id;
+  }
 
   return (
     <DetailShell

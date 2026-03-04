@@ -18,8 +18,6 @@ const DrawerHeader = ({ onClose }: { onClose: () => void }) => {
       </p>
     </div>
   </div>
- 
-
 
       {/* Close button */}
       <button

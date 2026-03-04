@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import type { Story } from "@/types/content";
 import { StoryContent } from "@/hooks/useStoryViwer";
 
@@ -11,10 +14,19 @@ type StoryViewerOverlayProps = {
   prevFeed: StoryContent | null;
   nextFeed: StoryContent | null;
   viewerCover?: string;
+  isFirstStory?: boolean;
+  isLastStory?: boolean;
+  nextStory?: Story | null;
+  prevStory?: Story | null;
+  nextStoryTopFeed?: StoryContent | null;
+  prevStoryTopFeed?: StoryContent | null;
+  storyCoverMap?: Map<number, string>;
   onClose: () => void;
   onNext: () => void;
   onPrev: () => void;
 };
+
+const STORY_DURATION = 10000; // 10 seconds per card
 
 export function StoryViewerOverlay({
   selectedStory,
@@ -24,10 +36,47 @@ export function StoryViewerOverlay({
   prevFeed,
   nextFeed,
   viewerCover,
+  isFirstStory = false,
+  isLastStory = false,
+  nextStory = null,
+  prevStory = null,
+  nextStoryTopFeed = null,
+  prevStoryTopFeed = null,
   onClose,
   onNext,
   onPrev,
 }: StoryViewerOverlayProps) {
+  // progress 0→100 for the active bar
+  const [progress, setProgress] = useState(0);
+  const rafRef = useRef<number | null>(null);
+  const startRef = useRef<number>(0);
+  const isLastFeed = currentIndex === popularFeeds.length - 1;
+  const isFirstFeed = currentIndex === 0;
+
+  // Reset and start animation when currentIndex changes
+  useEffect(() => {
+    setProgress(0);
+    startRef.current = performance.now();
+
+    const tick = (now: number) => {
+      const elapsed = now - startRef.current;
+      const pct = Math.min((elapsed / STORY_DURATION) * 100, 100);
+      setProgress(pct);
+      if (pct < 100) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        // goNext() in the hook handles cross-story navigation and closing
+        onNext();
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex]);
+
   return (
     <div className="fixed inset-0 z-140 flex items-center justify-center">
       {/* Backdrop */}
@@ -57,11 +106,64 @@ export function StoryViewerOverlay({
               Sebelumnya
             </p>
             <p
-              className="mt-2 overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]"
+              className="mt-2 overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
               style={{ color: "var(--story-title)" }}
             >
               {prevFeed.title}
             </p>
+            {prevFeed.takeaway ? (
+              <div
+                className="mt-2.5 rounded-lg border px-2.5 py-2 text-[10px] leading-relaxed"
+                style={{
+                  borderColor: "var(--story-takeaway-border)",
+                  background: "var(--story-takeaway-bg)",
+                  color: "var(--story-takeaway-text)",
+                }}
+              >
+                {prevFeed.takeaway}
+              </div>
+            ) : null}
+          </button>
+        ) : prevStory && isFirstFeed ? (
+          <button
+            type="button"
+            onClick={onPrev}
+            className="pointer-events-auto hidden w-50 shrink-0 cursor-pointer rounded-2xl border p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 xl:block"
+            style={{
+              background: "var(--story-card-bg)",
+              borderColor: "var(--story-card-border)",
+            }}
+          >
+            <p
+              className="mb-2.5 text-[10px] font-semibold uppercase tracking-wider"
+              style={{ color: "var(--story-subtext)" }}
+            >
+              {prevStory.name}
+            </p>
+            {prevStoryTopFeed ? (
+              <>
+                <p
+                  className="overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
+                  style={{ color: "var(--story-title)" }}
+                >
+                  {prevStoryTopFeed.title}
+                </p>
+                <div
+                  className="mt-2.5 rounded-lg border px-2.5 py-2 text-[10px] leading-relaxed"
+                  style={{
+                    borderColor: "var(--story-takeaway-border)",
+                    background: "var(--story-takeaway-bg)",
+                    color: "var(--story-takeaway-text)",
+                  }}
+                >
+                  {prevStoryTopFeed.takeaway}
+                </div>
+              </>
+            ) : (
+              <p className="text-sm" style={{ color: "var(--story-subtext)" }}>
+                {prevStory.type}
+              </p>
+            )}
           </button>
         ) : (
           <div className="hidden w-50 shrink-0 xl:block" />
@@ -84,14 +186,23 @@ export function StoryViewerOverlay({
               {popularFeeds.map((feed, index) => (
                 <span
                   key={feed.id}
-                  className="h-0.75 flex-1 rounded-full transition-colors duration-300"
-                  style={{
-                    background:
-                      index <= currentIndex
-                        ? "var(--story-progress-active)"
-                        : "var(--story-progress-inactive)",
-                  }}
-                />
+                  className="relative h-1 flex-1 overflow-hidden rounded-full"
+                  style={{ background: "var(--story-progress-inactive)" }}
+                >
+                  <span
+                    className="absolute inset-y-0 left-0 rounded-full"
+                    style={{
+                      background: "var(--story-progress-active)",
+                      width:
+                        index < currentIndex
+                          ? "100%"
+                          : index === currentIndex
+                            ? `${progress}%`
+                            : "0%",
+                      transition: index === currentIndex ? "none" : undefined,
+                    }}
+                  />
+                </span>
               ))}
             </div>
 
@@ -205,7 +316,7 @@ export function StoryViewerOverlay({
               <button
                 type="button"
                 onClick={onPrev}
-                disabled={currentIndex === 0}
+                disabled={isFirstFeed && isFirstStory}
                 className="rounded-full border px-4 py-2 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-30"
                 style={{
                   borderColor: "var(--story-nav-border)",
@@ -213,7 +324,7 @@ export function StoryViewerOverlay({
                   background: "var(--story-nav-bg)",
                 }}
               >
-                Prev
+                Sebelumnya
               </button>
               <Link
                 href={activeFeed.detailHref}
@@ -230,7 +341,7 @@ export function StoryViewerOverlay({
               <button
                 type="button"
                 onClick={onNext}
-                disabled={currentIndex === popularFeeds.length - 1}
+                disabled={isLastFeed && isLastStory}
                 className="rounded-full border px-4 py-2 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-30"
                 style={{
                   borderColor: "var(--story-nav-border)",
@@ -238,7 +349,7 @@ export function StoryViewerOverlay({
                   background: "var(--story-nav-bg)",
                 }}
               >
-                Next
+                Selanjutnya
               </button>
             </div>
           </div>
@@ -262,11 +373,64 @@ export function StoryViewerOverlay({
               Selanjutnya
             </p>
             <p
-              className="mt-2 overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]"
+              className="mt-2 overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
               style={{ color: "var(--story-title)" }}
             >
               {nextFeed.title}
             </p>
+            {nextFeed.takeaway ? (
+              <div
+                className="mt-2.5 rounded-lg border px-2.5 py-2 text-[10px] leading-relaxed"
+                style={{
+                  borderColor: "var(--story-takeaway-border)",
+                  background: "var(--story-takeaway-bg)",
+                  color: "var(--story-takeaway-text)",
+                }}
+              >
+                {nextFeed.takeaway}
+              </div>
+            ) : null}
+          </button>
+        ) : nextStory && isLastFeed ? (
+          <button
+            type="button"
+            onClick={onNext}
+            className="pointer-events-auto hidden w-50 shrink-0 cursor-pointer rounded-2xl border p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 xl:block"
+            style={{
+              background: "var(--story-card-bg)",
+              borderColor: "var(--story-card-border)",
+            }}
+          >
+            <p
+              className="mb-2.5 text-[10px] font-semibold uppercase tracking-wider"
+              style={{ color: "var(--story-subtext)" }}
+            >
+              {nextStory.name}
+            </p>
+            {nextStoryTopFeed ? (
+              <>
+                <p
+                  className="overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
+                  style={{ color: "var(--story-title)" }}
+                >
+                  {nextStoryTopFeed.title}
+                </p>
+                <div
+                  className="mt-2.5 rounded-lg border px-2.5 py-2 text-[10px] leading-relaxed"
+                  style={{
+                    borderColor: "var(--story-takeaway-border)",
+                    background: "var(--story-takeaway-bg)",
+                    color: "var(--story-takeaway-text)",
+                  }}
+                >
+                  {nextStoryTopFeed.takeaway}
+                </div>
+              </>
+            ) : (
+              <p className="text-sm" style={{ color: "var(--story-subtext)" }}>
+                {nextStory.type}
+              </p>
+            )}
           </button>
         ) : (
           <div className="hidden w-50 shrink-0 xl:block" />

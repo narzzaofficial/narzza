@@ -142,14 +142,38 @@ export function useStoryViewer({ stories, feeds, books }: UseStoryViewerProps) {
     setActiveIndex(0);
   }
 
+  function goNextStory() {
+    const idx = stories.findIndex((s) => s.id === selectedStoryId);
+    if (idx >= 0 && idx < stories.length - 1) {
+      openStory(stories[idx + 1].id);
+    } else {
+      closeStoryViewer();
+    }
+  }
+
+  function goPrevStory() {
+    const idx = stories.findIndex((s) => s.id === selectedStoryId);
+    if (idx > 0) {
+      openStory(stories[idx - 1].id);
+    }
+  }
+
   function goNext() {
     if (!popularFeeds.length) return;
-    setActiveIndex((current) => Math.min(current + 1, popularFeeds.length - 1));
+    if (activeIndex < popularFeeds.length - 1) {
+      setActiveIndex((current) => current + 1);
+    } else {
+      goNextStory();
+    }
   }
 
   function goPrev() {
     if (!popularFeeds.length) return;
-    setActiveIndex((current) => Math.max(current - 1, 0));
+    if (activeIndex > 0) {
+      setActiveIndex((current) => current - 1);
+    } else {
+      goPrevStory();
+    }
   }
 
   // 6. Keyboard Effect & Body Scroll Lock
@@ -172,6 +196,51 @@ export function useStoryViewer({ stories, feeds, books }: UseStoryViewerProps) {
     };
   }, [selectedStory, popularFeeds.length]);
 
+  const selectedStoryIndex = stories.findIndex((s) => s.id === selectedStoryId);
+  const isFirstStory = selectedStoryIndex <= 0;
+  const isLastStory = selectedStoryIndex >= stories.length - 1;
+  const nextStory = !isLastStory ? stories[selectedStoryIndex + 1] : null;
+  const prevStory = !isFirstStory ? stories[selectedStoryIndex - 1] : null;
+
+  // Top content preview for adjacent stories
+  function getTopContentForStory(storyId: number): StoryContent | null {
+    const storyFeeds: StoryContent[] = feeds
+      .filter((f) => f.storyId === storyId)
+      .map((f) => ({
+        kind: "feed",
+        id: f.id,
+        title: f.title,
+        category: f.category,
+        createdAt: f.createdAt,
+        popularity: f.popularity,
+        image: f.image,
+        lines: f.lines,
+        takeaway: f.takeaway,
+        detailHref: `/read/${f.slug}`,
+      }));
+    const storyBooks: StoryContent[] = books
+      .filter((b) => b.storyId === storyId)
+      .map((b) => ({
+        kind: "book",
+        id: Number(`200000${b.id}`),
+        title: b.title,
+        category: "Berita" as const,
+        createdAt: Date.now(),
+        popularity: Math.round((b.rating || 0) * 20),
+        image: b.cover,
+        lines: [],
+        takeaway: `${b.genre} • ${b.pages} halaman • ★ ${b.rating}`,
+        detailHref: `/buku/${b.id}`,
+      }));
+    const sorted = [...storyFeeds, ...storyBooks].sort(
+      (a, b) => b.popularity - a.popularity
+    );
+    return sorted[0] ?? null;
+  }
+
+  const nextStoryTopFeed = nextStory ? getTopContentForStory(nextStory.id) : null;
+  const prevStoryTopFeed = prevStory ? getTopContentForStory(prevStory.id) : null;
+
   return {
     selectedStory,
     storyCoverMap,
@@ -181,6 +250,12 @@ export function useStoryViewer({ stories, feeds, books }: UseStoryViewerProps) {
     prevFeed,
     nextFeed,
     viewerCover,
+    isFirstStory,
+    isLastStory,
+    nextStory,
+    prevStory,
+    nextStoryTopFeed,
+    prevStoryTopFeed,
     openStory,
     closeStoryViewer,
     goNext,

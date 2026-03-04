@@ -1,8 +1,9 @@
 "use client";
 
 import { createPortal } from "react-dom";
+import { useRef, useEffect } from "react";
 import { StoryBubble } from "@/components/status-bubble/StoryBubble";
-import { EmptyStoryOverlay } from "./EmptyStoryOverlay"; // Sesuaikan path
+import { EmptyStoryOverlay } from "./EmptyStoryOverlay";
 import type { Book, Feed, Story } from "@/types/content";
 import { useStoryViewer } from "@/hooks/useStoryViwer";
 import { StoryViewerOverlay } from "./StoryViwerOverlay";
@@ -30,11 +31,33 @@ export function StatusViralSection({
     prevFeed,
     nextFeed,
     viewerCover,
+    isFirstStory,
+    isLastStory,
+    nextStory,
+    prevStory,
+    nextStoryTopFeed,
+    prevStoryTopFeed,
     openStory,
     closeStoryViewer,
     goNext,
     goPrev,
   } = useStoryViewer({ stories, feeds, books });
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Scroll horizontally with mouse wheel on desktop
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        el.scrollBy({ left: e.deltaY * 1.5, behavior: "smooth" });
+      }
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
 
   const portalTarget = typeof document === "undefined" ? null : document.body;
 
@@ -52,6 +75,13 @@ export function StatusViralSection({
           prevFeed={prevFeed}
           nextFeed={nextFeed}
           viewerCover={viewerCover}
+          isFirstStory={isFirstStory}
+          isLastStory={isLastStory}
+          nextStory={nextStory}
+          prevStory={prevStory}
+          nextStoryTopFeed={nextStoryTopFeed}
+          prevStoryTopFeed={prevStoryTopFeed}
+          storyCoverMap={storyCoverMap}
           onClose={closeStoryViewer}
           onNext={goNext}
           onPrev={goPrev}
@@ -88,7 +118,7 @@ export function StatusViralSection({
         </div>
 
         {/* Render List Story Bubble */}
-        <div className="no-scrollbar flex gap-3 overflow-x-auto pb-2">
+        <div ref={scrollRef} className="no-scrollbar flex gap-3 overflow-x-auto pb-2 cursor-grab active:cursor-grabbing">
           {stories.map((story) => (
             <StoryBubble
               key={story.id}

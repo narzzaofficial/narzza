@@ -1,35 +1,35 @@
+import type React from "react";
 import { type HomeCategory } from "./FeedPage"; // Sesuaikan lokasi tipe
 
 const categoryButtons: {
   key: HomeCategory;
   icon: string;
-  activeColor: string;
+  activeStyle: React.CSSProperties;
 }[] = [
   {
     key: "Semua",
     icon: "🌐",
-    // Ubah ring-1 ring-cyan menjadi border-cyan
-    activeColor: "bg-cyan-500/20 text-cyan-200 border-cyan-500/40",
+    activeStyle: { background: "#06b6d4", borderColor: "#06b6d4", color: "#fff" },
   },
   {
     key: "Berita",
     icon: "📰",
-    activeColor: "bg-sky-500/20 text-sky-200 border-sky-500/40",
+    activeStyle: { background: "#0ea5e9", borderColor: "#0ea5e9", color: "#fff" },
   },
   {
     key: "Tutorial",
     icon: "🎓",
-    activeColor: "bg-emerald-500/20 text-emerald-200 border-emerald-500/40",
+    activeStyle: { background: "#10b981", borderColor: "#10b981", color: "#fff" },
   },
   {
     key: "Riset",
     icon: "🔬",
-    activeColor: "bg-fuchsia-500/20 text-fuchsia-200 border-fuchsia-500/40",
+    activeStyle: { background: "#d946ef", borderColor: "#d946ef", color: "#fff" },
   },
   {
     key: "Buku",
     icon: "📚",
-    activeColor: "bg-amber-500/20 text-amber-200 border-amber-500/40",
+    activeStyle: { background: "#f59e0b", borderColor: "#f59e0b", color: "#fff" },
   },
 ];
 
@@ -43,20 +43,19 @@ export function CategoryTabs({
   return (
     <div className="mt-5">
       <div className="scrollbar-hide flex w-full max-w-full items-center gap-2 overflow-x-auto pb-2 px-safe scroll-px-safe">
-        {categoryButtons.map((cat) => (
-          <button
-            key={cat.key}
-            onClick={() => onChange(cat.key)}
-            // Tambahkan 'border' sebagai class dasar, dan 'focus:outline-none'
-            className={`category-tab-btn ${
-              activeCategory === cat.key
-                ? cat.activeColor
-                : "border-slate-700/50 bg-transparent text-slate-400 hover:border-slate-500 hover:text-slate-200"
-            }`}
-          >
-            {cat.icon} {cat.key}
-          </button>
-        ))}
+        {categoryButtons.map((cat) => {
+          const isActive = activeCategory === cat.key;
+          return (
+            <button
+              key={cat.key}
+              onClick={() => onChange(cat.key)}
+              className="category-tab-btn"
+              style={isActive ? cat.activeStyle : undefined}
+            >
+              {cat.icon} {cat.key}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

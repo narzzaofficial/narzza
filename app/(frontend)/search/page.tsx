@@ -151,21 +151,21 @@ function SearchPageContent() {
         </div>
       </div>
 
-      <section className="mt-5 grid gap-4">
+      <section className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-1 md:gap-4">
         {loading && (
-          <div className="glass-panel rounded-2xl p-5 text-sm text-slate-300">
+          <div className="col-span-2 glass-panel rounded-2xl p-5 text-sm text-slate-300 md:col-span-1">
             🔍 Mencari...
           </div>
         )}
 
         {!query && !loading && (
-          <div className="glass-panel rounded-2xl p-5 text-sm text-slate-300">
+          <div className="col-span-2 glass-panel rounded-2xl p-5 text-sm text-slate-300 md:col-span-1">
             ↩️ Kembali ke homepage...
           </div>
         )}
 
         {query && !loading && !hasResults && (
-          <div className="glass-panel rounded-2xl p-5 text-sm text-slate-300">
+          <div className="col-span-2 glass-panel rounded-2xl p-5 text-sm text-slate-300 md:col-span-1">
             Tidak ada hasil untuk kata kunci tersebut.
           </div>
         )}
