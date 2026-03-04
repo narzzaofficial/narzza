@@ -6,13 +6,13 @@ import { getFeedPageData } from "@/lib/data";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Riset & Eksperimen Koding",
+  title: "Riset & Eksperimen",
   description:
-    "Analisa mendalam dan eksperimen koding terbaru. Temukan insight teknis dari riset dan percobaan langsung.",
+    "Analisa mendalam, temuan menarik, dan eksperimen dari berbagai bidang. Temukan insight dari riset yang disajikan secara ringkas.",
   openGraph: {
-    title: "Riset & Eksperimen Koding — Narzza Media Digital",
+    title: "Riset & Eksperimen — Narzza Media Digital",
     description:
-      "Analisa mendalam dan eksperimen koding dalam format chat interaktif.",
+      "Analisa mendalam dan eksperimen dari berbagai topik dalam format interaktif.",
     url: "https://narzza.com/riset",
     type: "website",
   },
@@ -29,7 +29,7 @@ export default async function RisetPage() {
         activePath="/riset"
         badge="RISET"
         title="Riset & Eksperimen"
-        description="Analisa mendalam dan eksperimen koding."
+        description="Analisa mendalam dan temuan menarik dari berbagai bidang."
         category="Riset"
         initialFeeds={feeds}
         initialStories={stories}

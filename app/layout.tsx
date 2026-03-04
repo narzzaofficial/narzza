@@ -12,14 +12,15 @@ export const metadata: Metadata = {
     template: "%s | Narzza Media Digital",
   },
   description:
-    "Portal berita teknologi, tutorial, dan eksperimen koding dalam format chat interaktif. Baca topik panjang jadi santai.",
+    "Platform media digital yang menyajikan berita, tutorial, dan riset dari berbagai bidang dalam format interaktif. Baca topik panjang jadi santai.",
   keywords: [
-    "berita teknologi",
-    "tutorial coding",
+    "berita terkini",
+    "tutorial",
     "media digital",
     "narzza",
-    "belajar programming",
-    "roadmap developer",
+    "riset",
+    "informasi umum",
+    "belajar online",
   ],
   authors: [{ name: "Narzza Media Digital", url: "https://narzza.com" }],
   creator: "Narzza Media Digital",
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     siteName: "Narzza Media Digital",
     title: "Narzza Media Digital",
     description:
-      "Portal berita teknologi, tutorial, dan eksperimen koding dalam format chat interaktif.",
+      "Platform media digital yang menyajikan berita, tutorial, dan riset dari berbagai bidang dalam format interaktif.",
     url: "https://narzza.com",
     images: [
       {
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Narzza Media Digital",
     description:
-      "Portal berita teknologi, tutorial, dan eksperimen koding dalam format chat interaktif.",
+      "Platform media digital yang menyajikan berita, tutorial, dan riset dari berbagai bidang dalam format interaktif.",
     images: ["/logo.png"],
   },
   robots: {

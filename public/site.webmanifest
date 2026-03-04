@@ -1,7 +1,7 @@
 {
   "name": "Narzza Media Digital",
   "short_name": "Narzza",
-  "description": "Portal berita teknologi, tutorial, dan eksperimen koding dalam format chat interaktif.",
+  "description": "Platform media digital yang menyajikan berita, tutorial, dan riset dari berbagai bidang dalam format interaktif.",
   "icons": [
     { "src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }

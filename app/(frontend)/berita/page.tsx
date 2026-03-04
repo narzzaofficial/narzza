@@ -6,13 +6,13 @@ import { getFeedPageData } from "@/lib/data";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Berita Teknologi Terbaru",
+  title: "Berita Terkini",
   description:
-    "Update berita teknologi terkini, tren industri, dan perkembangan dunia digital dalam format chat yang mudah dipahami.",
+    "Informasi dan berita terkini dari berbagai topik, disajikan dalam format yang mudah dipahami dan cepat dicerna.",
   openGraph: {
-    title: "Berita Teknologi Terbaru — Narzza Media Digital",
+    title: "Berita Terkini — Narzza Media Digital",
     description:
-      "Update berita teknologi terkini dan tren industri dalam format chat interaktif.",
+      "Informasi dan berita terkini dari berbagai topik dalam format interaktif.",
     url: "https://narzza.com/berita",
     type: "website",
   },
@@ -28,8 +28,8 @@ export default async function BeritaPage() {
       <FeedPage
         activePath="/berita"
         badge="BERITA"
-        title="Berita Teknologi"
-        description="Update teknologi terkini dan tren industri."
+        title="Berita Terkini"
+        description="Informasi dan berita terkini dari berbagai topik."
         category="Berita"
         initialFeeds={feeds}
         initialStories={stories}

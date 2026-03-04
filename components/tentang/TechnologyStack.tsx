@@ -1,34 +1,25 @@
-import { TECH_STACK } from "@/constants/about";
-import Link from "next/link";
+import { PLATFORM_FEATURES } from "@/constants/about";
 import React from "react";
 
 const TechnologyStack = () => {
   return (
     <section className="glass-panel rounded-2xl p-6 ring-1 ring-white/5">
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-50">Teknologi</h2>
-          <p className="text-sm text-slate-400">
-            Tech stack modern yang kami gunakan untuk membangun platform
-          </p>
-        </div>
-        <Link
-          href="https://github.com/naa-news"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-lg border border-slate-600/60 bg-slate-800/60 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-cyan-400/50 hover:text-cyan-100"
-        >
-          GitHub Repository
-        </Link>
+      <div className="mb-5">
+        <h2 className="text-2xl font-bold text-slate-50">Layanan Platform</h2>
+        <p className="mt-1 text-sm text-slate-400">
+          Berbagai jenis konten dan layanan yang tersedia di Narzza
+        </p>
       </div>
-      <div className="flex flex-wrap gap-3">
-        {TECH_STACK.map((item) => (
-          <span
-            key={item}
-            className="rounded-full border border-slate-700/60 bg-slate-900/40 px-4 py-2 text-sm font-medium text-slate-200"
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {PLATFORM_FEATURES.map((item) => (
+          <div
+            key={item.label}
+            className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-4 transition hover:border-cyan-500/40 hover:bg-slate-800/60"
           >
-            {item}
-          </span>
+            <div className="mb-2 text-2xl">{item.icon}</div>
+            <p className="font-semibold text-slate-50">{item.label}</p>
+            <p className="mt-1 text-xs text-slate-400">{item.desc}</p>
+          </div>
         ))}
       </div>
     </section>

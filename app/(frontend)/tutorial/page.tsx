@@ -6,13 +6,13 @@ import { getFeedPageData } from "@/lib/data";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Tutorial & Panduan Coding",
+  title: "Tutorial & Panduan",
   description:
-    "Langkah demi langkah menguasai teknologi baru lewat tutorial interaktif. Dari frontend hingga backend, semua ada di sini.",
+    "Panduan praktis langkah demi langkah dari berbagai topik. Pelajari hal-hal baru dengan cara yang mudah dan menyenangkan.",
   openGraph: {
-    title: "Tutorial & Panduan Coding — Narzza Media Digital",
+    title: "Tutorial & Panduan — Narzza Media Digital",
     description:
-      "Tutorial coding langkah demi langkah dalam format chat interaktif.",
+      "Panduan praktis langkah demi langkah dari berbagai topik dalam format interaktif.",
     url: "https://narzza.com/tutorial",
     type: "website",
   },
@@ -29,7 +29,7 @@ export default async function TutorialPage() {
         activePath="/tutorial"
         badge="TUTORIAL"
         title="Tutorial & Panduan"
-        description="Langkah demi langkah menguasai teknologi baru."
+        description="Panduan praktis langkah demi langkah dari berbagai topik."
         category="Tutorial"
         initialFeeds={feeds}
         initialStories={stories}

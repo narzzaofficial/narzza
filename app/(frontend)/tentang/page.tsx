@@ -14,21 +14,21 @@ import {
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Tentang Narzza — Perusahaan Media Digital Inovatif",
+  title: "Tentang Narzza — Platform Media Digital Penyedia Informasi Umum",
   description:
-    "Narzza Media Digital adalah perusahaan media digital yang menghadirkan konten teknologi dalam format interaktif dan mudah dicerna.",
+    "Narzza adalah platform media digital yang menyajikan berita, tutorial, dan riset dari berbagai bidang dalam format yang mudah dipahami. Temukan informasi berkualitas untuk semua kalangan.",
   openGraph: {
-    title: "Tentang Narzza Media Digital",
+    title: "Tentang Narzza — Platform Media Digital",
     description:
-      "Perusahaan media digital yang menghadirkan konten teknologi dalam format interaktif.",
+      "Platform penyedia informasi umum yang menghadirkan berita, tutorial, dan riset dalam format interaktif dan mudah dicerna.",
     url: "https://narzza.com/tentang",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tentang Narzza Media Digital",
+    title: "Tentang Narzza — Platform Media Digital",
     description:
-      "Perusahaan media digital yang menghadirkan konten teknologi dalam format interaktif.",
+      "Platform penyedia informasi umum yang menghadirkan berita, tutorial, dan riset dalam format interaktif dan mudah dicerna.",
   },
   alternates: { canonical: "/tentang" },
 };

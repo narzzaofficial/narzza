@@ -4,33 +4,33 @@ export const ABOUT_HIGHLIGHTS = [
   {
     title: "Visi Perusahaan",
     points: [
-      "Menjadi platform media digital terdepan yang mengubah cara orang mengonsumsi informasi teknologi.",
-      "Menciptakan ekosistem pembelajaran yang interaktif dan engaging untuk profesional tech.",
-      "Membangun komunitas pembaca yang aktif dan terus berkembang di era digital.",
+      "Menjadi platform media digital terpercaya untuk berbagi informasi berkualitas bagi masyarakat Indonesia.",
+      "Menciptakan ekosistem konten yang edukatif, informatif, dan mudah diakses oleh semua kalangan.",
+      "Membangun komunitas pembaca aktif yang saling berbagi pengetahuan dan tumbuh bersama.",
     ],
   },
   {
     title: "Misi Kami",
     points: [
-      "Menyajikan konten berkualitas tinggi dalam format yang mudah dipahami dan cepat dicerna.",
-      "Memberikan value kepada pembaca melalui tutorial, riset, dan analisis mendalam.",
-      "Berinovasi dalam penyampaian konten dengan pendekatan UX yang user-friendly.",
+      "Menyajikan informasi aktual dan relevan dalam format yang mudah dipahami dan cepat dicerna.",
+      "Memberikan nilai tambah kepada pembaca melalui tutorial, riset, dan analisis dari berbagai bidang.",
+      "Berinovasi dalam penyampaian konten untuk memberikan pengalaman membaca yang lebih baik.",
     ],
   },
   {
     title: "Format Konten Unik",
     points: [
-      "Setiap artikel dipecah jadi deret Q&A interaktif, mirip percakapan dengan mentor.",
-      "Dilengkapi visual (diagram, screenshot, ilustrasi) untuk pemahaman lebih baik.",
-      "Takeaway ringkas di akhir setiap artikel untuk pembacaan cepat.",
+      "Setiap konten disajikan dalam format percakapan interaktif yang mudah dipahami.",
+      "Dilengkapi ringkasan cepat di setiap artikel agar pembaca bisa menangkap inti informasi secara efisien.",
+      "Tersedia dalam berbagai format: artikel, buku interaktif, dan roadmap pembelajaran.",
     ],
   },
   {
     title: "Produk & Layanan",
     points: [
-      "Platform media digital dengan konten berita, tutorial, dan riset teknologi.",
-      "E-commerce untuk merchandise dan produk digital.",
-      "Roadmap pembelajaran terstruktur untuk pengembangan skill.",
+      "Platform media dengan konten berita, tutorial, dan riset dari berbagai bidang.",
+      "E-commerce untuk produk digital, buku, dan merchandise.",
+      "Roadmap pembelajaran terstruktur untuk pengembangan diri.",
       "Buku interaktif dengan format Q&A yang engaging.",
     ],
   },
@@ -39,9 +39,9 @@ export const ABOUT_HIGHLIGHTS = [
 export const COMPANY_STATS = [
   { label: "Nama Perusahaan", value: "Narzza Media Digital", icon: "🏢" },
   { label: "Tahun Berdiri", value: "2024", icon: "📅" },
-  { label: "Fokus Bisnis", value: "Media Digital & EdTech", icon: "🎯" },
+  { label: "Fokus Bisnis", value: "Media Digital & Informasi", icon: "🎯" },
   { label: "Model Bisnis", value: "Content + E-commerce", icon: "💼" },
-  { label: "Tim", value: "15+ Professionals", icon: "👥" },
+  { label: "Tim", value: "4 Orang", icon: "👥" },
   { label: "Lokasi", value: "Remote-first, Indonesia", icon: "🌏" },
 ];
 
@@ -51,43 +51,33 @@ export const FOUNDERS = [
     role: "Founder & CEO",
     avatar: "👨‍💼",
     description:
-      "Visioner di balik Narzza Media Digital dengan passion untuk mengubah cara orang mengonsumsi konten teknologi.",
+      "Visioner di balik Narzza Media Digital dengan passion untuk menghadirkan informasi berkualitas yang mudah diakses oleh semua orang.",
   },
   {
     name: "Nur Azizah Azzahra",
     role: "Co-Founder & COO",
     avatar: "👩‍💼",
     description:
-      "Mengatur operasional dan strategi bisnis untuk memastikan pertumbuhan perusahaan yang berkelanjutan.",
+      "Mengatur operasional dan strategi bisnis untuk memastikan pertumbuhan platform yang berkelanjutan dan berdampak positif bagi komunitas.",
   },
 ];
 
 export const AI_TEAM = [
-  { name: "GPT-4", role: "Content Writer", avatar: "🤖", team: "Content" },
-  { name: "Claude", role: "Technical Writer", avatar: "🧠", team: "Content" },
-  { name: "Gemini", role: "Research Analyst", avatar: "💎", team: "Research" },
   {
-    name: "Perplexity",
-    role: "Search Specialist",
-    avatar: "🔍",
-    team: "Research",
-  },
-  { name: "Midjourney", role: "Visual Designer", avatar: "🎨", team: "Design" },
-  { name: "DALL-E", role: "Graphic Artist", avatar: "🖼️", team: "Design" },
-  {
-    name: "Copilot",
-    role: "Code Assistant",
+    name: "GitHub Copilot",
+    role: "Engineering Assistant",
     avatar: "💻",
     team: "Engineering",
   },
+  { name: "ChatGPT", role: "Content Writer", avatar: "🤖", team: "Content" },
+  { name: "Gemini", role: "Research Analyst", avatar: "💎", team: "Research" },
   {
-    name: "Cursor",
-    role: "Development Lead",
-    avatar: "⚡",
-    team: "Engineering",
+    name: "Claude Sonnet",
+    role: "Writing Assistant",
+    avatar: "🧠",
+    team: "Content",
   },
-  { name: "Llama", role: "Data Processor", avatar: "🦙", team: "Data" },
-  { name: "Mistral", role: "Analytics Expert", avatar: "🌪️", team: "Data" },
+  { name: "Midjourney", role: "Visual Designer", avatar: "🎨", team: "Design" },
 ];
 
 export const CONTACT_INFO = [
@@ -100,10 +90,10 @@ export const CONTACT_INFO = [
 ];
 
 export const ACHIEVEMENTS = [
-  { number: "10K+", label: "Monthly Readers", icon: "👁️" },
-  { number: "500+", label: "Articles Published", icon: "📝" },
-  { number: "50+", label: "Tutorial Roadmaps", icon: "🗺️" },
-  { number: "1000+", label: "Community Members", icon: "👥" },
+  { number: "500+", label: "Pembaca Aktif", icon: "👁️" },
+  { number: "30+", label: "Konten Diterbitkan", icon: "📝" },
+  { number: "3+", label: "Roadmap Tersedia", icon: "🗺️" },
+  { number: "50+", label: "Member Komunitas", icon: "👥" },
 ];
 
 export const CORE_VALUES = [
@@ -111,35 +101,35 @@ export const CORE_VALUES = [
     icon: "🎯",
     title: "Kualitas Konten",
     description:
-      "Setiap artikel melalui proses riset dan review mendalam untuk memastikan akurasi dan relevansi.",
+      "Setiap konten melalui proses riset dan review yang seksama untuk memastikan akurasi, kejelasan, dan relevansi bagi pembaca.",
   },
   {
-    icon: "🚀",
-    title: "Inovasi Berkelanjutan",
+    icon: "🌱",
+    title: "Tumbuh Bersama",
     description:
-      "Kami terus berinovasi dalam format penyajian konten untuk pengalaman pembaca yang lebih baik.",
+      "Kami percaya pertumbuhan terbaik terjadi ketika komunitas saling mendukung, berbagi, dan belajar bersama.",
   },
   {
     icon: "🤝",
-    title: "Community First",
+    title: "Keterbukaan",
     description:
-      "Membangun komunitas yang saling support dan berbagi pengetahuan untuk tumbuh bersama.",
+      "Kami terbuka terhadap masukan dari komunitas dan terus berupaya meningkatkan kualitas layanan secara berkelanjutan.",
   },
   {
     icon: "💡",
-    title: "Pembelajaran Praktis",
+    title: "Informasi Mudah Dicerna",
     description:
-      "Fokus pada konten yang actionable dan dapat langsung diterapkan dalam pekerjaan sehari-hari.",
+      "Fokus pada penyajian konten yang sederhana, ringkas, dan mudah dipahami oleh siapa saja.",
   },
 ];
 
-export const TECH_STACK = [
-  "Next.js 14 + App Router",
-  "TypeScript & Tailwind CSS",
-  "MongoDB untuk database",
-  "DigitalOcean Spaces",
-  "Vercel Deployment",
-  "Recharts untuk visualisasi",
+export const PLATFORM_FEATURES = [
+  { icon: "📰", label: "Berita & Artikel", desc: "Informasi terkini dari berbagai topik" },
+  { icon: "🎓", label: "Tutorial Interaktif", desc: "Panduan langkah demi langkah" },
+  { icon: "🔬", label: "Riset & Analisis", desc: "Konten mendalam berbasis data" },
+  { icon: "📚", label: "Buku Digital", desc: "Buku dengan format Q&A interaktif" },
+  { icon: "🗺️", label: "Roadmap Belajar", desc: "Jalur pembelajaran terstruktur" },
+  { icon: "🛒", label: "Toko Produk", desc: "Produk digital & merchandise" },
 ];
 
 export const PARTNERS = [
@@ -151,12 +141,12 @@ export const PARTNERS = [
   "YouTube",
 ];
 
-export const TEAMS= [
+export const TEAMS = [
   { label: "Nama Perusahaan", value: "Narzza Media Digital", icon: "🏢" },
   { label: "Tahun Berdiri", value: "2024", icon: "📅" },
-  { label: "Fokus Bisnis", value: "Media Digital & EdTech", icon: "🎯" },
+  { label: "Fokus Bisnis", value: "Media Digital & Informasi", icon: "🎯" },
   { label: "Model Bisnis", value: "Content + E-commerce", icon: "💼" },
-  { label: "Tim", value: "15+ Professionals", icon: "👥" },
+  { label: "Tim", value: "4 Orang", icon: "👥" },
   { label: "Lokasi", value: "Remote-first, Indonesia", icon: "🌏" },
 ];
 
