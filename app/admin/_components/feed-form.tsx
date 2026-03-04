@@ -7,8 +7,6 @@ import {
   emptyFeedForm,
 } from "@/app/admin/_types";
 
-type FeedCategory = "Berita" | "Tutorial" | "Riset";
-
 interface Props {
   initialData?: Feed | null;
   onSave: (form: FeedFormType) => Promise<void>;
@@ -59,7 +57,7 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
           title="s"
           value={form.category}
           onChange={(e) =>
-            setForm({ ...form, category: e.target.value as FeedCategory })
+            setForm({ ...form, category: e.target.value as FeedFormType["category"] })
           }
           className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400"
         >
@@ -154,9 +152,7 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
                   id={`line-role-${i}`}
                   title="Role"
                   value={line.role}
-                  onChange={(e) =>
-                    updateLine(i, "role", e.target.value as FeedCategory)
-                  }
+                  onChange={(e) => updateLine(i, "role", e.target.value)}
                   className="bg-slate-800 text-xs p-2 rounded outline-none border border-slate-600/50"
                 >
                   <option value="q">Q</option>

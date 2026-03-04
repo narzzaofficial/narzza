@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { CategoryModel } from "@/lib/models/Category";
 import { categorySchema } from "@/lib/validate";
 import { categories } from "@/types/products";
 import {
@@ -11,27 +12,13 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const db = await getDb();
+    const conn = await connectDB();
+    if (!conn) return NextResponse.json(categories);
 
-    if (!db) {
-      return NextResponse.json(categories);
-    }
+    const data = await CategoryModel.find().sort({ name: 1 }).lean();
+    if (data.length === 0) return NextResponse.json(categories);
 
-    const data = await db
-      .collection("categories")
-      .find({})
-      .sort({ name: 1 })
-      .toArray();
-
-    if (data.length === 0) {
-      return NextResponse.json(categories);
-    }
-
-    const formattedData = data.map((item) => ({
-      ...item,
-      _id: item._id?.toString(),
-    }));
-
+    const formattedData = data.map(({ _id, ...rest }) => rest);
     return NextResponse.json(formattedData);
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -45,8 +32,8 @@ export async function POST(request: Request) {
     const parsed = categorySchema.safeParse(raw);
     if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
     const now = Date.now();
     const slugBase =
@@ -54,7 +41,8 @@ export async function POST(request: Request) {
         .toLowerCase()
         .replace(/\s+/g, "-")
         .replace(/[^a-z0-9-]/g, "") || "category";
-    const newCategory = {
+
+    const newCategory = await CategoryModel.create({
       id: body.id ?? body.slug ?? slugBase,
       name: body.name,
       slug: body.slug ?? slugBase,
@@ -62,14 +50,11 @@ export async function POST(request: Request) {
       icon: body.icon ?? "",
       createdAt: now,
       updatedAt: now,
-    };
-
-    const result = await db.collection("categories").insertOne(newCategory);
-
-    return NextResponse.json({
-      ...newCategory,
-      _id: result.insertedId.toString(),
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _id, ...result } = newCategory.toObject();
+    return NextResponse.json(result);
   } catch (error) {
     console.error("Error creating category:", error);
     return NextResponse.json(

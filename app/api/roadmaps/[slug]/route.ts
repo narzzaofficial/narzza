@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { RoadmapModel } from "@/lib/models/Roadmap";
 import { roadmaps as seedRoadmaps } from "@/types/roadmaps";
 import { dbUnavailableResponse } from "@/lib/api-helpers";
 
@@ -14,27 +15,23 @@ function normalizeTags(tags: unknown): string[] {
   return [];
 }
 
-function stripId<T extends { _id?: unknown }>(doc: T): Omit<T, "_id"> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { _id, ...rest } = doc;
-  return rest;
-}
-
 // GET /api/roadmaps/:slug
 export async function GET(_req: NextRequest, context: RouteContext) {
   try {
     const { slug } = await context.params;
-    const db = await getDb();
-    if (!db) {
+    const conn = await connectDB();
+    if (!conn) {
       const fallback = seedRoadmaps.find((r) => r.slug === slug);
       if (!fallback)
         return NextResponse.json({ error: "Not found" }, { status: 404 });
       return NextResponse.json(fallback);
     }
 
-    const doc = await db.collection("roadmaps").findOne({ slug });
+    const doc = await RoadmapModel.findOne({ slug }).lean();
     if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    return NextResponse.json(stripId(doc));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _id, ...rest } = doc;
+    return NextResponse.json(rest);
   } catch (error) {
     console.error("GET /api/roadmaps/[slug] error:", error);
     return NextResponse.json({ error: "Failed to fetch roadmap" }, { status: 500 });
@@ -46,8 +43,8 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   try {
     const { slug } = await context.params;
     const body = await request.json();
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
     const update = {
       title: body.title ?? "",
@@ -60,14 +57,18 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       updatedAt: Date.now(),
     };
 
-    const result = await db
-      .collection("roadmaps")
-      .findOneAndUpdate({ slug }, { $set: update }, { returnDocument: "after" });
+    const result = await RoadmapModel.findOneAndUpdate(
+      { slug },
+      { $set: update },
+      { new: true, lean: true }
+    );
 
     if (!result)
       return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-    return NextResponse.json(stripId(result));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _id, ...rest } = result;
+    return NextResponse.json(rest);
   } catch (error) {
     console.error("PUT /api/roadmaps/[slug] error:", error);
     return NextResponse.json({ error: "Failed to update roadmap" }, { status: 500 });
@@ -78,10 +79,10 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 export async function DELETE(_request: NextRequest, context: RouteContext) {
   try {
     const { slug } = await context.params;
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
-    const result = await db.collection("roadmaps").deleteOne({ slug });
+    const result = await RoadmapModel.deleteOne({ slug });
     if (result.deletedCount === 0)
       return NextResponse.json({ error: "Not found" }, { status: 404 });
 

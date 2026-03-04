@@ -1,116 +1,107 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { ProductModel } from "@/lib/models/Product";
+import type { IProduct } from "@/lib/models/Product";
 import { productUpdateSchema } from "@/lib/validate";
-import { getProductById } from "@/types/products";
+import { getProductById as getDummyProductById } from "@/types/products";
 import {
   dbUnavailableResponse,
   validationErrorResponse,
 } from "@/lib/api-helpers";
 
-// GET /api/products/[id] — get single product
+/** Shapes a Mongoose Product document into the JSON response format. */
+function productToJson(doc: IProduct) {
+  return {
+    id: doc.id,
+    name: doc.name,
+    description: doc.description,
+    price: doc.price,
+    images: doc.images,
+    category: doc.category,
+    categoryId: doc.categoryId,
+    stock: doc.stock,
+    featured: doc.featured ?? false,
+    productType: doc.productType,
+    platforms: doc.platforms ?? {},
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
+  };
+}
+
+// GET /api/products/[id] — returns a single product by string ID
 export async function GET(
-  req: Request,
+  _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const db = await getDb();
+    const conn = await connectDB();
 
-    if (!db) {
-      const product = getProductById(id);
-      if (!product) {
-        return NextResponse.json(
-          { error: "Product not found" },
-          { status: 404 }
-        );
-      }
+    if (!conn) {
+      // DB not available — fall back to in-memory dummy data
+      const product = getDummyProductById(id);
+      if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
       return NextResponse.json(product);
     }
 
-    const product = await db.collection("products").findOne({ id });
-
-    if (!product) {
-      const fallback = getProductById(id);
-      if (!fallback) {
-        return NextResponse.json(
-          { error: "Product not found" },
-          { status: 404 }
-        );
-      }
+    const doc = await ProductModel.findOne({ id }).lean();
+    if (!doc) {
+      // Not in DB — try dummy data as last resort
+      const fallback = getDummyProductById(id);
+      if (!fallback) return NextResponse.json({ error: "Product not found" }, { status: 404 });
       return NextResponse.json(fallback);
     }
 
-    return NextResponse.json(product);
+    return NextResponse.json(productToJson(doc));
   } catch (error) {
     console.error("GET /api/products/[id] error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch product" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
   }
 }
 
-// PUT /api/products/[id] — update product
+// PUT /api/products/[id] — updates an existing product (all fields optional)
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
     const raw = await req.json();
     const parsed = productUpdateSchema.safeParse(raw);
     if (!parsed.success) return validationErrorResponse(parsed.error);
-    const body = parsed.data;
 
-    const updateData: Record<string, unknown> = {
-      updatedAt: Date.now(),
-    };
-    if (body.name !== undefined) updateData.name = body.name;
-    if (body.description !== undefined)
-      updateData.description = body.description;
-    if (body.price !== undefined) updateData.price = body.price;
-    if (body.images !== undefined) updateData.images = body.images;
-    if (body.category !== undefined) updateData.category = body.category;
-    if (body.categoryId !== undefined) updateData.categoryId = body.categoryId;
-    if (body.stock !== undefined) updateData.stock = body.stock;
-    if (body.featured !== undefined) updateData.featured = body.featured;
-    if (body.productType !== undefined)
-      updateData.productType = body.productType;
-    if (body.platforms !== undefined) updateData.platforms = body.platforms;
+    // Merge validated fields with an auto-updated timestamp
+    const result = await ProductModel.findOneAndUpdate(
+      { id },
+      { $set: { ...parsed.data, updatedAt: Date.now() } },
+      { new: true, lean: true }
+    );
 
-    const result = await db
-      .collection("products")
-      .updateOne({ id }, { $set: updateData });
-
-    if (result.matchedCount === 0) {
+    if (!result) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json(productToJson(result));
   } catch (error) {
     console.error("PUT /api/products/[id] error:", error);
-    return NextResponse.json(
-      { error: "Failed to update product" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
   }
 }
 
-// DELETE /api/products/[id] — delete product
+// DELETE /api/products/[id] — deletes a product
 export async function DELETE(
-  req: Request,
+  _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
-    const result = await db.collection("products").deleteOne({ id });
-
+    const result = await ProductModel.deleteOne({ id });
     if (result.deletedCount === 0) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
@@ -118,9 +109,7 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/products/[id] error:", error);
-    return NextResponse.json(
-      { error: "Failed to delete product" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
   }
 }
+

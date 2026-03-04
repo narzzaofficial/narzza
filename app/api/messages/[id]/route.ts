@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { MessageModel } from "@/lib/models/Message";
 import { dbUnavailableResponse } from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
@@ -11,21 +12,19 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const body = await req.json();
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
     const allowed = ["unread", "read", "archived"];
     if (body.status && !allowed.includes(body.status)) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const result = await db
-      .collection("messages")
-      .findOneAndUpdate(
-        { id },
-        { $set: { status: body.status } },
-        { returnDocument: "after" }
-      );
+    const result = await MessageModel.findOneAndUpdate(
+      { id },
+      { $set: { status: body.status } },
+      { new: true, lean: true }
+    );
 
     if (!result) return NextResponse.json({ error: "Not found" }, { status: 404 });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -41,10 +40,10 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 export async function DELETE(_req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
-    const result = await db.collection("messages").deleteOne({ id });
+    const result = await MessageModel.deleteOne({ id });
     if (result.deletedCount === 0)
       return NextResponse.json({ error: "Not found" }, { status: 404 });
 

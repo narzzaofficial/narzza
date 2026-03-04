@@ -1,3 +1,5 @@
+"use client";
+
 import { navLink } from "@/constants";
 import Link from "next/link";
 import { clsx, type ClassValue } from "clsx";

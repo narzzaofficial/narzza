@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { CommentModel } from "@/lib/models/Comment";
+import { FeedModel } from "@/lib/models/Feed";
 import { rateLimit } from "@/lib/rate-limit";
 import { commentCreateSchema } from "@/lib/validate";
 
@@ -14,8 +16,8 @@ const COMMENTS_RATE_LIMIT = { max: 15, windowMs: 60_000 };
 /** GET /api/comments?feedId=123 — list komentar untuk satu artikel */
 export async function GET(request: NextRequest) {
   try {
-    const db = await getDb();
-    if (!db) {
+    const conn = await connectDB();
+    if (!conn) {
       return NextResponse.json(
         { error: "Database tidak tersedia" },
         { status: 503 }
@@ -32,12 +34,10 @@ export async function GET(request: NextRequest) {
     }
     const feedId = parsed.data;
 
-    const docs = await db
-      .collection("comments")
-      .find({ feedId })
+    const docs = await CommentModel.find({ feedId })
       .sort({ createdAt: -1 })
       .limit(200)
-      .toArray();
+      .lean();
 
     const comments = docs.map((d) => ({
       id: d._id.toString(),
@@ -63,8 +63,8 @@ export async function POST(request: NextRequest) {
   if (rateLimitRes) return rateLimitRes;
 
   try {
-    const db = await getDb();
-    if (!db) {
+    const conn = await connectDB();
+    if (!conn) {
       return NextResponse.json(
         { error: "Database tidak tersedia" },
         { status: 503 }
@@ -81,9 +81,7 @@ export async function POST(request: NextRequest) {
     }
     const { feedId, author, text } = parsed.data;
 
-    const feedExists = await db
-      .collection("feeds")
-      .findOne({ id: feedId }, { projection: { _id: 1 } });
+    const feedExists = await FeedModel.findOne({ id: feedId }, { _id: 1 }).lean();
     if (!feedExists) {
       return NextResponse.json(
         { error: "Artikel tidak ditemukan" },
@@ -91,18 +89,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const doc = {
+    const doc = await CommentModel.create({
       feedId,
       author,
       text,
       createdAt: Date.now(),
-    };
-
-    const result = await db.collection("comments").insertOne(doc);
+    });
 
     return NextResponse.json(
       {
-        id: result.insertedId.toString(),
+        id: doc._id.toString(),
         feedId: doc.feedId,
         author: doc.author,
         text: doc.text,

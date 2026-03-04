@@ -13,6 +13,7 @@
     "@aws-sdk/s3-request-presigner": "^3.712.0",
     "@clerk/nextjs": "^6.39.0",
     "mongodb": "^7.1.0",
+    "mongoose": "^9.2.4",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",

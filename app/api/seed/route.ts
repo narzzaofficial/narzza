@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
+import connectDB from "@/lib/mongodb";
+import { StoryModel } from "@/lib/models/Story";
+import { FeedModel } from "@/lib/models/Feed";
+import { BookModel } from "@/lib/models/Book";
+import { RoadmapModel } from "@/lib/models/Roadmap";
+import { CategoryModel } from "@/lib/models/Category";
+import { ProductModel } from "@/lib/models/Product";
 import { requireSeedAuth } from "@/lib/api-auth";
 import { rateLimit } from "@/lib/rate-limit";
 import type { Book, BookChapter, ChatLine, Feed, Story } from "@/types/content";
@@ -24,7 +30,7 @@ import { slugify } from "@/lib/slugify";
 /** Max 2 seed per IP per jam — hanya untuk setup/restore */
 const SEED_RATE_LIMIT = { max: 2, windowMs: 60 * 60 * 1000 };
 
-const DEFAULT_SEED_COUNT = 10;
+const DEFAULT_SEED_COUNT = 200;
 const MIN_SEED_COUNT = 1;
 const MAX_SEED_COUNT = 1000;
 
@@ -255,14 +261,7 @@ export async function POST(request: Request) {
   if (rateLimitRes) return rateLimitRes;
 
   try {
-    const db = await getDb();
-
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    await connectDB();
 
     let bodyCount: unknown;
     const contentType = request.headers.get("content-type") ?? "";
@@ -289,22 +288,19 @@ export async function POST(request: Request) {
     const products = buildProducts(itemCount, categories);
 
     // Clear existing data
-    await db.collection("feeds").deleteMany({});
-    await db.collection("stories").deleteMany({});
-    await db.collection("books").deleteMany({});
-    await db.collection("roadmaps").deleteMany({});
-    await db.collection("products").deleteMany({});
-    await db.collection("categories").deleteMany({});
+    await FeedModel.deleteMany({});
+    await StoryModel.deleteMany({});
+    await BookModel.deleteMany({});
+    await RoadmapModel.deleteMany({});
+    await ProductModel.deleteMany({});
+    await CategoryModel.deleteMany({});
 
-    if (stories.length > 0) await db.collection("stories").insertMany(stories);
-    if (feeds.length > 0) await db.collection("feeds").insertMany(feeds);
-    if (books.length > 0) await db.collection("books").insertMany(books);
-    if (roadmaps.length > 0)
-      await db.collection("roadmaps").insertMany(roadmaps);
-    if (categories.length > 0)
-      await db.collection("categories").insertMany(categories);
-    if (products.length > 0)
-      await db.collection("products").insertMany(products);
+    if (stories.length > 0) await StoryModel.insertMany(stories);
+    if (feeds.length > 0) await FeedModel.insertMany(feeds);
+    if (books.length > 0) await BookModel.insertMany(books);
+    if (roadmaps.length > 0) await RoadmapModel.insertMany(roadmaps);
+    if (categories.length > 0) await CategoryModel.insertMany(categories);
+    if (products.length > 0) await ProductModel.insertMany(products);
 
     return NextResponse.json({
       success: true,

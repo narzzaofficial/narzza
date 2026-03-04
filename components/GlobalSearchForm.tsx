@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 type GlobalSearchFormProps = {
   placeholder?: string;
@@ -16,15 +16,22 @@ export function GlobalSearchForm({
   const pathname = usePathname();
   const [query, setQuery] = useState(defaultQuery);
   const inputRef = useRef<HTMLInputElement>(null);
+  const navTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  function handleChange(value: string) {
-    setQuery(value);
+  // Debounce navigation so we don't trigger a full route push on every keystroke
+  useEffect(() => {
+    if (pathname === "/search") return; // search page handles its own state
+    if (!query.trim()) return;
 
-    // Jika bukan di search page dan ada input, redirect ke search
-    if (pathname !== "/search" && value.trim()) {
-      router.push(`/search?q=${encodeURIComponent(value.trim())}`);
-    }
-  }
+    if (navTimerRef.current) clearTimeout(navTimerRef.current);
+    navTimerRef.current = setTimeout(() => {
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+    }, 350);
+
+    return () => {
+      if (navTimerRef.current) clearTimeout(navTimerRef.current);
+    };
+  }, [query, pathname, router]);
 
   return (
     <div>
@@ -40,7 +47,7 @@ export function GlobalSearchForm({
           id="global-search"
           type="text"
           value={query}
-          onChange={(e) => handleChange(e.target.value)}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
           autoComplete="off"
           className="w-full rounded-xl border border-slate-500/45 bg-slate-950/40 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-cyan-300/65"

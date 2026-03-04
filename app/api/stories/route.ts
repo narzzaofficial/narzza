@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { StoryModel } from "@/lib/models/Story";
 import { storyCreateSchema } from "@/lib/validate";
 import { stories as dummyStories } from "@/data/content";
 import {
@@ -12,18 +13,14 @@ export const dynamic = "force-dynamic";
 // GET all stories
 export async function GET() {
   try {
-    const db = await getDb();
+    const conn = await connectDB();
 
-    if (!db) {
+    if (!conn) {
       console.warn("MongoDB not available, using dummy data");
       return NextResponse.json(dummyStories);
     }
 
-    const stories = await db
-      .collection("stories")
-      .find()
-      .sort({ id: 1 })
-      .toArray();
+    const stories = await StoryModel.find().sort({ id: 1 }).lean();
 
     const mapped = stories.map((s) => ({
       id: s.id,
@@ -45,22 +42,17 @@ export async function GET() {
 // POST create story
 export async function POST(req: NextRequest) {
   try {
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
     const raw = await req.json();
     const parsed = storyCreateSchema.safeParse(raw);
     if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
 
-    const last = await db
-      .collection("stories")
-      .find()
-      .sort({ id: -1 })
-      .limit(1)
-      .toArray();
-    const nextId = last.length > 0 ? (last[0].id as number) + 1 : 1;
+    const last = await StoryModel.findOne().sort({ id: -1 }).lean();
+    const nextId = last ? last.id + 1 : 1;
 
-    const newStory = {
+    const newStory = await StoryModel.create({
       name: body.name,
       label: body.label,
       type: body.type,
@@ -68,10 +60,12 @@ export async function POST(req: NextRequest) {
       image: body.image || "",
       viral: body.viral,
       id: nextId,
-    };
-    await db.collection("stories").insertOne(newStory);
+    });
 
-    return NextResponse.json({ ...newStory, id: nextId }, { status: 201 });
+    return NextResponse.json(
+      { id: newStory.id, name: newStory.name, label: newStory.label, type: newStory.type, palette: newStory.palette, image: newStory.image, viral: newStory.viral },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("POST /api/stories error:", error);
     return NextResponse.json(

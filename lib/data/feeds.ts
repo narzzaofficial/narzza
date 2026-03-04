@@ -1,67 +1,74 @@
 import { unstable_cache } from "next/cache";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { FeedModel } from "@/lib/models/Feed";
+import type { IFeed } from "@/lib/models/Feed";
 import type { Feed } from "@/types/content";
 import { feeds as dummyFeeds } from "@/data/content";
 import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
 import { slugify, parseSlugId } from "@/lib/slugify";
 
-/** Ensure every feed object has a computed slug */
+/**
+ * Ensure a feed from in-memory/dummy data has a slug.
+ * (Feeds from MongoDB always have a slug, but dummy data may not.)
+ */
 function ensureSlug(feed: Feed): Feed {
   return feed.slug ? feed : { ...feed, slug: slugify(feed.title, feed.id) };
 }
 
-function mapFeedDoc(d: Record<string, unknown>): Feed {
-  const id = d.id as number;
-  const title = d.title as string;
+/**
+ * Convert a raw Mongoose Feed document into a plain Feed object.
+ * Shared by loadFeeds() and loadFeedById() to avoid repeating the field mapping.
+ */
+function docToFeed(d: IFeed): Feed {
   return {
-    id,
-    slug: (d.slug as string) || slugify(title, id),
-    title,
+    id: d.id,
+    slug: d.slug || slugify(d.title, d.id),
+    title: d.title,
     category: d.category as Feed["category"],
-    createdAt: (d.createdAt as number) ?? Date.now(),
-    popularity: (d.popularity as number) ?? 0,
-    image: (d.image as string) ?? "",
-    lines: (d.lines as Feed["lines"]) ?? [],
-    takeaway: (d.takeaway as string) ?? "",
+    createdAt: d.createdAt ?? Date.now(),
+    popularity: d.popularity ?? 0,
+    image: d.image ?? "",
+    lines: (d.lines ?? []) as Feed["lines"],
+    takeaway: d.takeaway ?? "",
     source: d.source as Feed["source"],
-    storyId: (d.storyId as number | null | undefined) ?? null,
+    storyId: d.storyId ?? null,
   };
 }
 
 async function loadFeeds(category?: Feed["category"]): Promise<Feed[]> {
   try {
-    const db = await getDb();
-    if (!db)
-      return (category
+    const conn = await connectDB();
+    if (!conn) {
+      // DB not available — fall back to in-memory dummy data
+      const fallback = category
         ? dummyFeeds.filter((f) => f.category === category)
-        : dummyFeeds
-      ).map(ensureSlug);
+        : dummyFeeds;
+      return fallback.map(ensureSlug);
+    }
     const filter: Record<string, unknown> = {};
     if (category) filter.category = category;
-    const docs = await db
-      .collection("feeds")
-      .find(filter)
-      .sort({ createdAt: -1 })
-      .toArray();
+    const docs = await FeedModel.find(filter).sort({ createdAt: -1 }).lean();
+    // If DB is empty and no filter applied, fall back to dummy data
     if (docs.length === 0 && !category) return dummyFeeds.map(ensureSlug);
-    return docs.map(mapFeedDoc);
+    return docs.map(docToFeed);
   } catch {
-    return (category
+    // On any DB error, fall back to dummy data
+    const fallback = category
       ? dummyFeeds.filter((f) => f.category === category)
-      : dummyFeeds
-    ).map(ensureSlug);
+      : dummyFeeds;
+    return fallback.map(ensureSlug);
   }
 }
 
 async function loadFeedById(id: number): Promise<Feed | null> {
   try {
-    const db = await getDb();
-    if (!db) {
-      const f = dummyFeeds.find((f) => f.id === id);
-      return f ? ensureSlug(f) : null;
+    const conn = await connectDB();
+    if (!conn) {
+      const feed = dummyFeeds.find((f) => f.id === id);
+      return feed ? ensureSlug(feed) : null;
     }
-    const doc = await db.collection("feeds").findOne({ id });
-    return doc ? mapFeedDoc(doc) : null;
+    const doc = await FeedModel.findOne({ id }).lean();
+    return doc ? docToFeed(doc) : null;
   } catch {
     return null;
   }
@@ -79,13 +86,10 @@ export const getFeedById = unstable_cache(
   { revalidate: CONTENT_REVALIDATE_SECONDS, tags: [CACHE_TAGS.feeds] }
 );
 
-
 export async function getFeedBySlug(slug: string): Promise<Feed | null> {
   const feeds = await getFeeds();
-  // First try exact slug match
   const exact = feeds.find((f) => f.slug === slug);
   if (exact) return exact;
-  // Fallback: parse trailing ID from slug
   const id = parseSlugId(slug);
   if (id !== null) return feeds.find((f) => f.id === id) ?? null;
   return null;

@@ -1,38 +1,40 @@
 import { unstable_cache } from "next/cache";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { ProductModel } from "@/lib/models/Product";
+import type { IProduct } from "@/lib/models/Product";
 import { products as dummyProducts, type Product } from "@/types/products";
 import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
 
-function mapProductDoc(item: Record<string, unknown>): Product {
+/**
+ * Convert a raw Mongoose Product document into a plain Product object.
+ * Explicit field mapping avoids leaking internal Mongoose fields (like _id).
+ */
+function docToProduct(d: IProduct): Product {
   return {
-    _id: (item._id as { toString(): string } | undefined)?.toString(),
-    id: item.id as string,
-    name: item.name as string,
-    description: (item.description as string) ?? "",
-    price: item.price as number,
-    images: (item.images as string[]) ?? [],
-    category: item.category as string,
-    categoryId: item.categoryId as string | undefined,
-    stock: (item.stock as number) ?? 0,
-    featured: (item.featured as boolean) ?? false,
-    productType: (item.productType as "physical" | "digital") ?? "physical",
-    platforms: item.platforms as Product["platforms"],
-    createdAt: item.createdAt as number | undefined,
-    updatedAt: item.updatedAt as number | undefined,
+    id: d.id,
+    name: d.name,
+    description: d.description ?? "",
+    price: d.price,
+    images: d.images ?? [],
+    category: d.category,
+    categoryId: d.categoryId,
+    stock: d.stock ?? 0,
+    featured: d.featured ?? false,
+    productType: d.productType,
+    platforms: d.platforms,
+    createdAt: d.createdAt,
+    updatedAt: d.updatedAt,
   };
 }
 
 async function loadProducts(): Promise<Product[]> {
   try {
-    const db = await getDb();
-    if (!db) return dummyProducts;
-    const docs = await db
-      .collection("products")
-      .find()
-      .sort({ createdAt: -1 })
-      .toArray();
+    const conn = await connectDB();
+    if (!conn) return dummyProducts;
+    const docs = await ProductModel.find().sort({ createdAt: -1 }).lean();
+    // If DB is empty, fall back to in-memory dummy data
     if (docs.length === 0) return dummyProducts;
-    return docs.map(mapProductDoc);
+    return docs.map(docToProduct);
   } catch {
     return dummyProducts;
   }
@@ -45,16 +47,15 @@ export const getProducts = unstable_cache(
 );
 
 export async function getProductById(id: string): Promise<Product | null> {
-  // Direct DB lookup first
   try {
-    const db = await getDb();
-    if (db) {
-      const doc = await db.collection("products").findOne({ id });
-      if (doc) return mapProductDoc(doc);
+    const conn = await connectDB();
+    if (conn) {
+      const doc = await ProductModel.findOne({ id }).lean();
+      if (doc) return docToProduct(doc);
     }
-  } catch { /* fall through */ }
+  } catch { /* fall through to cache */ }
 
-  // Fallback: cached list covers dummy data & DB-down scenario
+  // Fall back to the cached list if DB lookup fails
   const all = await getProducts();
   return all.find((p) => p.id === id) ?? null;
 }

@@ -17,6 +17,18 @@ export function sanitizeSearchQuery(raw: string | null): string | null {
   return escapeRegex(trimmed);
 }
 
+/**
+ * Sanitize for MongoDB $text operator — no regex escaping needed.
+ * Strips characters that could confuse the text tokenizer ($, ", \\)
+ * but keeps normal punctuation intact.
+ */
+export function sanitizeTextQuery(raw: string | null): string | null {
+  if (raw == null || typeof raw !== "string") return null;
+  const trimmed = raw.trim().replace(/[$"\\]/g, "");
+  if (trimmed.length === 0 || trimmed.length > MAX_SEARCH_LENGTH) return null;
+  return trimmed;
+}
+
 /** Book create/update body */
 export const bookSchema = z.object({
   title: z.string().max(500).default(""),

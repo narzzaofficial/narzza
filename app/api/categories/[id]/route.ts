@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { CategoryModel } from "@/lib/models/Category";
 import { categorySchema } from "@/lib/validate";
 import {
   dbUnavailableResponse,
@@ -14,28 +15,20 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
-    const category = await db.collection("categories").findOne({ id });
-
+    const category = await CategoryModel.findOne({ id }).lean();
     if (!category) {
-      return NextResponse.json(
-        { error: "Category not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Category not found" }, { status: 404 });
     }
 
-    return NextResponse.json({
-      ...category,
-      _id: category._id?.toString(),
-    });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _id, ...rest } = category;
+    return NextResponse.json(rest);
   } catch (error) {
     console.error("Error fetching category:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch category" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch category" }, { status: 500 });
   }
 }
 
@@ -49,8 +42,8 @@ export async function PUT(
     const parsed = categorySchema.partial().safeParse(raw);
     if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
     const update: Record<string, unknown> = { updatedAt: Date.now() };
     if (body.name !== undefined) update.name = body.name;
@@ -58,27 +51,22 @@ export async function PUT(
     if (body.description !== undefined) update.description = body.description;
     if (body.icon !== undefined) update.icon = body.icon;
 
-    const result = await db
-      .collection("categories")
-      .updateOne({ id }, { $set: update });
+    const updated = await CategoryModel.findOneAndUpdate(
+      { id },
+      { $set: update },
+      { new: true, lean: true }
+    );
 
-    if (result.matchedCount === 0) {
-      return NextResponse.json(
-        { error: "Category not found" },
-        { status: 404 }
-      );
+    if (!updated) {
+      return NextResponse.json({ error: "Category not found" }, { status: 404 });
     }
 
-    const updated = await db.collection("categories").findOne({ id });
-    return NextResponse.json(
-      updated ? { ...updated, _id: updated._id?.toString() } : { success: true }
-    );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _id, ...rest } = updated;
+    return NextResponse.json(rest);
   } catch (error) {
     console.error("Error updating category:", error);
-    return NextResponse.json(
-      { error: "Failed to update category" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update category" }, { status: 500 });
   }
 }
 
@@ -88,24 +76,17 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
-    const result = await db.collection("categories").deleteOne({ id });
-
+    const result = await CategoryModel.deleteOne({ id });
     if (result.deletedCount === 0) {
-      return NextResponse.json(
-        { error: "Category not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Category not found" }, { status: 404 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting category:", error);
-    return NextResponse.json(
-      { error: "Failed to delete category" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete category" }, { status: 500 });
   }
 }

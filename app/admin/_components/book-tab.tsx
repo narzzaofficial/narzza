@@ -26,7 +26,14 @@ const BOOK_SCHEMA = `[
   }
 ]`;
 
-export function BookTab({ books, onRefresh, onDelete, flash }: any) {
+type BookTabProps = {
+  books: Book[];
+  onRefresh: () => void;
+  onDelete: (id: number) => void;
+  flash: (message: string) => void;
+};
+
+export function BookTab({ books, onRefresh, onDelete, flash }: BookTabProps) {
   const {
     editingItem: editingBook,
     showForm,

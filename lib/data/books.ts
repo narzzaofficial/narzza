@@ -1,34 +1,38 @@
 import { unstable_cache } from "next/cache";
-import { getDb } from "@/lib/mongodb";
-import type { Book, BookChapter, ChatLine } from "@/types/content";
+import { connectDB } from "@/lib/mongodb";
+import { BookModel } from "@/lib/models/Book";
+import type { IBook } from "@/lib/models/Book";
+import type { Book } from "@/types/content";
 import { books as dummyBooks } from "@/data/content";
 import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
 
-function mapBookDoc(d: Record<string, unknown>): Book {
+/**
+ * Convert a raw Mongoose Book document into a plain Book object.
+ * Using explicit field mapping avoids leaking internal Mongoose fields (like _id).
+ */
+function docToBook(d: IBook): Book {
   return {
-    id: d.id as number,
-    title: d.title as string,
-    author: d.author as string,
-    cover: (d.cover as string) ?? "",
-    genre: (d.genre as string) ?? "",
-    pages: (d.pages as number) ?? 0,
-    rating: (d.rating as number) ?? 0,
-    description: (d.description as string) ?? "",
-    chapters: ((d.chapters as BookChapter[]) ?? []).map((ch) => ({
-      title: ch.title,
-      lines: ch.lines as ChatLine[],
-    })),
-    storyId: (d.storyId as number | null | undefined) ?? null,
+    id: d.id,
+    title: d.title,
+    author: d.author,
+    cover: d.cover ?? "",
+    genre: d.genre ?? "",
+    pages: d.pages ?? 0,
+    rating: d.rating ?? 0,
+    description: d.description ?? "",
+    chapters: (d.chapters ?? []) as Book["chapters"],
+    storyId: d.storyId ?? null,
   };
 }
 
 async function loadBooks(): Promise<Book[]> {
   try {
-    const db = await getDb();
-    if (!db) return dummyBooks;
-    const docs = await db.collection("books").find().sort({ id: 1 }).toArray();
+    const conn = await connectDB();
+    if (!conn) return dummyBooks;
+    const docs = await BookModel.find().sort({ id: 1 }).lean();
+    // If DB is empty, fall back to in-memory dummy data
     if (docs.length === 0) return dummyBooks;
-    return docs.map(mapBookDoc);
+    return docs.map(docToBook);
   } catch {
     return dummyBooks;
   }
@@ -41,16 +45,15 @@ export const getBooks = unstable_cache(
 );
 
 export async function getBookById(id: number): Promise<Book | null> {
-  // Try direct DB first (avoids loading all books)
   try {
-    const db = await getDb();
-    if (db) {
-      const doc = await db.collection("books").findOne({ id });
-      if (doc) return mapBookDoc(doc);
+    const conn = await connectDB();
+    if (conn) {
+      const doc = await BookModel.findOne({ id }).lean();
+      if (doc) return docToBook(doc);
     }
-  } catch { /* fall through */ }
+  } catch { /* fall through to cache */ }
 
-  // Fallback to cached list (covers dummy data & when DB is down)
+  // Fall back to the cached list if DB lookup fails
   const books = await getBooks();
   return books.find((b) => b.id === id) ?? null;
 }

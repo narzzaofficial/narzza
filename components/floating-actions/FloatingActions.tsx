@@ -22,6 +22,7 @@ import {
   type ReactNode,
   type CSSProperties,
 } from "react";
+import Link from "next/link";
 
 /* ── Context ─────────────────────────────────────────────────────── */
 type FloatingCtx = { close: () => void };
@@ -205,38 +206,59 @@ FloatingActions.Footer = function Footer({ children }: { children: ReactNode }) 
 FloatingActions.Menu = function Menu({
   items,
 }: {
-  items: { icon: ReactNode; label: string; description?: string; onClick: () => void }[];
+  items: { icon: ReactNode; label: string; description?: string; href?: string; onClick: () => void }[];
 }) {
   return (
     <div className="flex flex-col gap-1 px-3 py-3">
-      {items.map((item, i) => (
-        <button
-          key={i}
-          type="button"
-          onClick={item.onClick}
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-white/5 active:scale-[0.98]"
-        >
-          <span
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg"
-            style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)" }}
-          >
-            {item.icon}
-          </span>
-          <div>
-            <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-              {item.label}
-            </p>
-            {item.description && (
-              <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-                {item.description}
+      {items.map((item, i) => {
+        const inner = (
+          <>
+            <span
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg"
+              style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)" }}
+            >
+              {item.icon}
+            </span>
+            <div className="flex-1">
+              <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                {item.label}
               </p>
-            )}
-          </div>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="ml-auto h-3.5 w-3.5 shrink-0" style={{ color: "var(--text-secondary)" }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-          </svg>
-        </button>
-      ))}
+              {item.description && (
+                <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+                  {item.description}
+                </p>
+              )}
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-3.5 w-3.5 shrink-0" style={{ color: "var(--text-secondary)" }}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </>
+        );
+
+        if (item.href) {
+          return (
+            <Link
+              key={i}
+              href={item.href}
+              onClick={item.onClick}
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-white/5 active:scale-[0.98]"
+            >
+              {inner}
+            </Link>
+          );
+        }
+
+        return (
+          <button
+            key={i}
+            type="button"
+            onClick={item.onClick}
+            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-white/5 active:scale-[0.98]"
+          >
+            {inner}
+          </button>
+        );
+      })}
     </div>
   );
 };

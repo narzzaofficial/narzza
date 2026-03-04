@@ -20,7 +20,14 @@ const FEED_SCHEMA = `[
   }
 ]`;
 
-export function FeedTab({ feeds, onRefresh, onDelete, flash }: any) {
+type FeedTabProps = {
+  feeds: Feed[];
+  onRefresh: () => void;
+  onDelete: (id: number) => void;
+  flash: (message: string) => void;
+};
+
+export function FeedTab({ feeds, onRefresh, onDelete, flash }: FeedTabProps) {
   const { editingItem: editingFeed, showForm, handleSave, startEdit, startCreate, cancelForm } =
     useAdminTab<Feed>("/api/feeds", "✅ Feed Tersimpan!", flash, onRefresh);
   const [showJsonModal, setShowJsonModal] = useState(false);

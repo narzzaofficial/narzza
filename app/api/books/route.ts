@@ -1,47 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { BookModel } from "@/lib/models/Book";
+import type { IBook } from "@/lib/models/Book";
 import { bookSchema, sanitizeSearchQuery } from "@/lib/validate";
 import { books as dummyBooks } from "@/data/content";
 import {
   dbUnavailableResponse,
   validationErrorResponse,
+  cachedJson,
 } from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
+/** Shapes a Mongoose Book document into the JSON response format. */
+function bookToJson(doc: IBook) {
+  return {
+    id: doc.id,
+    title: doc.title,
+    author: doc.author,
+    cover: doc.cover,
+    genre: doc.genre,
+    pages: doc.pages,
+    rating: doc.rating,
+    description: doc.description,
+    chapters: doc.chapters,
+    storyId: doc.storyId ?? null,
+  };
+}
+
 // GET /api/books — list all books, optional ?q= search
 export async function GET(request: NextRequest) {
   try {
-    const db = await getDb();
-
-    if (!db) {
-      console.warn("MongoDB not available, using dummy data");
-      return NextResponse.json(dummyBooks);
+    const { searchParams } = new URL(request.url);
+    const conn = await connectDB();
+    if (!conn) {
+      const q = searchParams.get("q")?.trim().toLowerCase() || "";
+      const filtered = q
+        ? dummyBooks.filter((b) => b.title.toLowerCase().includes(q))
+        : dummyBooks;
+      return NextResponse.json(filtered);
     }
 
-    const { searchParams } = new URL(request.url);
     const q = sanitizeSearchQuery(searchParams.get("q"));
 
     const filter: Record<string, unknown> = {};
+    if (q) filter.title = { $regex: q, $options: "i" };
 
-    if (q) {
-      filter.$or = [
-        { title: { $regex: q, $options: "i" } },
-        { author: { $regex: q, $options: "i" } },
-        { genre: { $regex: q, $options: "i" } },
-        { description: { $regex: q, $options: "i" } },
-      ];
-    }
-
-    const docs = await db
-      .collection("books")
-      .find(filter)
-      .sort({ id: 1 })
-      .toArray();
-    // Strip MongoDB _id
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const books = docs.map(({ _id: _removedId, ...rest }) => rest);
-    return NextResponse.json(books);
+    const books = await BookModel.find(filter).sort({ id: 1 }).lean();
+    return cachedJson(books.map(bookToJson), q ? 30 : 60);
   } catch (error) {
     console.error("GET /api/books error:", error);
     return NextResponse.json(dummyBooks, { status: 200 });
@@ -51,36 +57,20 @@ export async function GET(request: NextRequest) {
 // POST /api/books — create a new book
 export async function POST(request: NextRequest) {
   try {
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
+
     const raw = await request.json();
     const parsed = bookSchema.safeParse(raw);
     if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
 
-    const last = await db
-      .collection("books")
-      .find()
-      .sort({ id: -1 })
-      .limit(1)
-      .toArray();
-    const newId = last.length > 0 ? (last[0].id as number) + 1 : 1;
+    // Auto-increment numeric ID based on the highest existing ID
+    const last = await BookModel.findOne().sort({ id: -1 }).lean();
+    const newId = last ? last.id + 1 : 1;
 
-    const newBook = {
-      id: newId,
-      title: body.title,
-      author: body.author,
-      cover: body.cover,
-      genre: body.genre,
-      pages: body.pages,
-      rating: body.rating,
-      description: body.description,
-      chapters: body.chapters,
-      storyId: body.storyId,
-    };
-
-    await db.collection("books").insertOne(newBook);
-    return NextResponse.json(newBook, { status: 201 });
+    const newBook = await BookModel.create({ id: newId, ...body });
+    return NextResponse.json(bookToJson(newBook), { status: 201 });
   } catch (error) {
     console.error("POST /api/books error:", error);
     return NextResponse.json(

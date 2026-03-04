@@ -1,54 +1,63 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { ProductModel } from "@/lib/models/Product";
+import type { IProduct } from "@/lib/models/Product";
 import { productCreateSchema } from "@/lib/validate";
-import { products } from "@/types/products";
+import { products as dummyProducts } from "@/types/products";
 import {
   dbUnavailableResponse,
   validationErrorResponse,
 } from "@/lib/api-helpers";
 
+/** Shapes a Mongoose Product document into the JSON response format. */
+function productToJson(doc: IProduct) {
+  return {
+    id: doc.id,
+    name: doc.name,
+    description: doc.description,
+    price: doc.price,
+    images: doc.images,
+    category: doc.category,
+    categoryId: doc.categoryId,
+    stock: doc.stock,
+    featured: doc.featured ?? false,
+    productType: doc.productType,
+    platforms: doc.platforms ?? {},
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
+  };
+}
+
 // GET /api/products — list all products
 export async function GET() {
   try {
-    const db = await getDb();
-    if (!db) {
-      // Fallback to seed data
-      return NextResponse.json(products);
-    }
+    const conn = await connectDB();
+    if (!conn) return NextResponse.json(dummyProducts);
 
-    const data = await db
-      .collection("products")
-      .find({})
-      .sort({ createdAt: -1 })
-      .toArray();
+    const docs = await ProductModel.find().sort({ createdAt: -1 }).lean();
+    // If DB is empty, fall back to dummy data
+    if (docs.length === 0) return NextResponse.json(dummyProducts);
 
-    if (data.length === 0) {
-      return NextResponse.json(products);
-    }
-
-    const mapped = data.map((item) => {
-      const { _id, ...rest } = item;
-      return { ...rest, _id: _id?.toString() };
-    });
-    return NextResponse.json(mapped);
+    return NextResponse.json(docs.map(productToJson));
   } catch (error) {
     console.error("GET /api/products error:", error);
-    return NextResponse.json(products);
+    return NextResponse.json(dummyProducts);
   }
 }
 
 // POST /api/products — create new product
 export async function POST(req: Request) {
   try {
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
     const raw = await req.json();
     const parsed = productCreateSchema.safeParse(raw);
     if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
 
-    const existing = await db.collection("products").findOne({ id: body.id });
+    // Prevent duplicate product IDs
+    const existing = await ProductModel.findOne({ id: body.id }).lean();
     if (existing) {
       return NextResponse.json(
         { error: "Product ID already exists" },
@@ -57,24 +66,16 @@ export async function POST(req: Request) {
     }
 
     const now = Date.now();
-    const product = {
-      id: body.id,
-      name: body.name,
-      description: body.description,
-      price: body.price,
+    const product = await ProductModel.create({
+      ...body,
       images: body.images.filter(Boolean),
-      category: body.category,
       categoryId: body.categoryId ?? body.category,
-      stock: body.stock,
-      featured: body.featured,
-      productType: body.productType,
       platforms: body.platforms ?? {},
       createdAt: now,
       updatedAt: now,
-    };
+    });
 
-    await db.collection("products").insertOne(product);
-    return NextResponse.json({ success: true, id: body.id });
+    return NextResponse.json({ success: true, id: product.id });
   } catch (error) {
     console.error("POST /api/products error:", error);
     return NextResponse.json(

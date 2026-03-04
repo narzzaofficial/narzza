@@ -21,3 +21,20 @@ export function validationErrorResponse(error: ZodError): NextResponse {
 export function invalidIdResponse(): NextResponse {
   return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 }
+
+/**
+ * Returns a JSON response with CDN-friendly caching headers.
+ * s-maxage: cached by Vercel Edge for `ttl` seconds.
+ * stale-while-revalidate: serve stale while refreshing in background.
+ */
+export function cachedJson(
+  data: unknown,
+  ttl = 60,
+  swr = 300
+): NextResponse {
+  return NextResponse.json(data, {
+    headers: {
+      "Cache-Control": `public, s-maxage=${ttl}, stale-while-revalidate=${swr}`,
+    },
+  });
+}

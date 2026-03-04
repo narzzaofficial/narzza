@@ -15,8 +15,6 @@ import { Roadmap } from "@/types/roadmaps";
 
 export type HomeCategory = "Semua" | "Berita" | "Tutorial" | "Riset" | "Buku";
 
-// (Letakkan type Product & Roadmap di sini atau di file type terpisah)
-
 type FeedPageProps = {
   activePath: "/" | "/berita" | "/tutorial" | "/riset";
   badge: string;
@@ -52,16 +50,19 @@ export function FeedPage({
   // Panggil hook untuk shortcut keyboard
   useGlobalSearchFocus();
 
-  // Filter Data Data Logics
-  const isAllSection = isHome && activeCategory === "Semua";
-  const isBookSection = activeCategory === "Buku";
+  // Which tab is active on the home page
+  const isAllTab = isHome && activeCategory === "Semua";
+  const isBookTab = activeCategory === "Buku";
 
-  const filteredFeeds = isBookSection
+  // Feeds to show when a category tab is selected on the home page
+  const homeFeedsByTab = isBookTab
     ? []
-    : isAllSection
+    : isAllTab
       ? initialFeeds
       : initialFeeds.filter((f) => f.category === activeCategory);
-  const pageFeeds =
+
+  // Feeds to show on a dedicated category page (e.g. /berita, /tutorial, /riset)
+  const categoryPageFeeds =
     !isHome && category
       ? initialFeeds.filter((f) => f.category === category)
       : initialFeeds;
@@ -143,16 +144,16 @@ export function FeedPage({
 
       {/* CONTENT ROUTING */}
       {isHome ? (
-        isAllSection ? (
-          // Jika Tab "Semua" diklik
+        isAllTab ? (
+          // "Semua" tab — show all content sections
           <HomeAllSections
             feeds={initialFeeds}
             roadmaps={initialRoadmaps}
             products={initialProducts}
             books={initialBooks}
           />
-        ) : isBookSection ? (
-          // Jika Tab "Buku" diklik
+        ) : isBookTab ? (
+          // "Buku" tab — show book grid
           <section className="mt-4 grid gap-4">
             {initialBooks.length > 0 ? (
               initialBooks.map((book, index) => (
@@ -163,12 +164,12 @@ export function FeedPage({
             )}
           </section>
         ) : (
-          // Jika Tab Spesifik diklik (Berita, Tutorial, Riset)
-          renderFeedList(filteredFeeds, activeCategory)
+          // Specific category tab (Berita, Tutorial, Riset)
+          renderFeedList(homeFeedsByTab, activeCategory)
         )
       ) : (
-        // Jika bukan di halaman Home (misal langsung masuk /berita)
-        renderFeedList(pageFeeds, category)
+        // Dedicated category page (e.g. /berita, /tutorial) — show filtered feeds
+        renderFeedList(categoryPageFeeds, category)
       )}
     </>
   );

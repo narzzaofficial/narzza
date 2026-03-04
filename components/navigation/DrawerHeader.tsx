@@ -1,16 +1,31 @@
+"use client";
+import Image from "next/image";
+
 const DrawerHeader = ({ onClose }: { onClose: () => void }) => {
   return (
-    <div className="drawer-header flex items-center justify-between pb-4">
-      {/* Brand */}
-      <div className="flex items-center gap-2.5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-500/20 text-lg ring-1 ring-cyan-400/30">
-          N
-        </div>
-        <div>
-          <p className="drawer-brand-name text-sm font-bold leading-none">Narzza</p>
-          <p className="drawer-brand-sub text-[10px] leading-none mt-0.5">Media Digital</p>
-        </div>
-      </div>
+   <div className="drawer-header flex items-center justify-between pb-5 border-b border-gray-200">
+
+  {/* Brand */}
+  <div className="flex items-center gap-3">
+    <Image
+      src="/logo.png"
+      alt="Narzza Logo"
+      width={200}
+      height={200}
+      className="w-24 sm:w-18 object-contain transition-transform hover:scale-105"
+    />
+
+    <div>
+      <p className="text-base sm:text-lg font-semibold text-gray-900 leading-none">
+        Narzza
+      </p>
+      <p className="text-[11px] sm:text-xs text-gray-500 mt-1">
+        Media Digital
+      </p>
+    </div>
+  </div>
+ 
+
 
       {/* Close button */}
       <button

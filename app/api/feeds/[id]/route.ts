@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { FeedModel } from "@/lib/models/Feed";
+import type { IFeed } from "@/lib/models/Feed";
 import { feedUpdateSchema } from "@/lib/validate";
 import {
   dbUnavailableResponse,
   validationErrorResponse,
   invalidIdResponse,
 } from "@/lib/api-helpers";
+import { slugify } from "@/lib/slugify";
 
 export const dynamic = "force-dynamic";
 
@@ -13,33 +16,39 @@ type RouteContext = {
   params: Promise<{ id: string }>;
 };
 
-// GET single feed by id
+/** Shapes a Mongoose Feed document into the JSON response format. */
+function feedToJson(doc: IFeed) {
+  return {
+    id: doc.id,
+    slug: doc.slug || slugify(doc.title, doc.id),
+    title: doc.title,
+    category: doc.category,
+    createdAt: doc.createdAt ?? Date.now(),
+    popularity: doc.popularity,
+    image: doc.image,
+    lines: doc.lines,
+    takeaway: doc.takeaway,
+    source: doc.source ?? undefined,
+    storyId: doc.storyId ?? null,
+  };
+}
+
+// GET /api/feeds/[id] — returns a single feed by numeric ID
 export async function GET(_req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const feedId = Number(id);
     if (Number.isNaN(feedId)) return invalidIdResponse();
 
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
-    const feed = await db.collection("feeds").findOne({ id: feedId });
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
+    const feed = await FeedModel.findOne({ id: feedId }).lean();
     if (!feed) {
       return NextResponse.json({ error: "Feed not found" }, { status: 404 });
     }
 
-    return NextResponse.json({
-      id: feed.id,
-      title: feed.title,
-      category: feed.category,
-      createdAt: feed.createdAt ?? Date.now(),
-      popularity: feed.popularity,
-      image: feed.image,
-      lines: feed.lines,
-      takeaway: feed.takeaway,
-      source: feed.source ?? undefined,
-      storyId: feed.storyId ?? null,
-    });
+    return NextResponse.json(feedToJson(feed));
   } catch (error) {
     console.error("GET /api/feeds/[id] error:", error);
     return NextResponse.json(
@@ -49,44 +58,31 @@ export async function GET(_req: NextRequest, context: RouteContext) {
   }
 }
 
-// PUT update a feed
+// PUT /api/feeds/[id] — updates an existing feed
 export async function PUT(req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const feedId = Number(id);
     if (Number.isNaN(feedId)) return invalidIdResponse();
 
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
+
     const raw = await req.json();
     const parsed = feedUpdateSchema.safeParse(raw);
     if (!parsed.success) return validationErrorResponse(parsed.error);
-    const updateData = parsed.data;
 
-    const result = await db
-      .collection("feeds")
-      .findOneAndUpdate(
-        { id: feedId },
-        { $set: updateData },
-        { returnDocument: "after" }
-      );
+    const result = await FeedModel.findOneAndUpdate(
+      { id: feedId },
+      { $set: parsed.data },
+      { new: true, lean: true }
+    );
 
     if (!result) {
       return NextResponse.json({ error: "Feed not found" }, { status: 404 });
     }
 
-    return NextResponse.json({
-      id: result.id,
-      title: result.title,
-      category: result.category,
-      createdAt: result.createdAt ?? Date.now(),
-      popularity: result.popularity,
-      image: result.image,
-      lines: result.lines,
-      takeaway: result.takeaway,
-      source: result.source ?? undefined,
-      storyId: result.storyId ?? null,
-    });
+    return NextResponse.json(feedToJson(result));
   } catch (error) {
     console.error("PUT /api/feeds/[id] error:", error);
     return NextResponse.json(
@@ -96,17 +92,17 @@ export async function PUT(req: NextRequest, context: RouteContext) {
   }
 }
 
-// DELETE a feed
+// DELETE /api/feeds/[id] — deletes a feed
 export async function DELETE(_req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const feedId = Number(id);
     if (Number.isNaN(feedId)) return invalidIdResponse();
 
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
-    const result = await db.collection("feeds").deleteOne({ id: feedId });
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
+    const result = await FeedModel.deleteOne({ id: feedId });
     if (result.deletedCount === 0) {
       return NextResponse.json({ error: "Feed not found" }, { status: 404 });
     }

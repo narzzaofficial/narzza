@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
+import { BookModel } from "@/lib/models/Book";
+import type { IBook } from "@/lib/models/Book";
 import { bookSchema } from "@/lib/validate";
 import {
   dbUnavailableResponse,
@@ -11,24 +13,38 @@ export const dynamic = "force-dynamic";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
-// GET /api/books/:id
+/** Shapes a Mongoose Book document into the JSON response format. */
+function bookToJson(doc: IBook) {
+  return {
+    id: doc.id,
+    title: doc.title,
+    author: doc.author,
+    cover: doc.cover,
+    genre: doc.genre,
+    pages: doc.pages,
+    rating: doc.rating,
+    description: doc.description,
+    chapters: doc.chapters,
+    storyId: doc.storyId ?? null,
+  };
+}
+
+// GET /api/books/[id] — returns a single book by numeric ID
 export async function GET(_request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const bookId = Number(id);
     if (Number.isNaN(bookId)) return invalidIdResponse();
 
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
-    const doc = await db.collection("books").findOne({ id: bookId });
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
+    const doc = await BookModel.findOne({ id: bookId }).lean();
     if (!doc) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _id: _removedId, ...book } = doc;
-    return NextResponse.json(book);
+    return NextResponse.json(bookToJson(doc));
   } catch (error) {
     console.error("GET /api/books/[id] error:", error);
     return NextResponse.json(
@@ -38,46 +54,32 @@ export async function GET(_request: NextRequest, context: RouteContext) {
   }
 }
 
-// PUT /api/books/:id
+// PUT /api/books/[id] — updates an existing book (all fields optional)
 export async function PUT(request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const bookId = Number(id);
     if (Number.isNaN(bookId)) return invalidIdResponse();
 
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
+
     const raw = await request.json();
     const parsed = bookSchema.partial().safeParse(raw);
     if (!parsed.success) return validationErrorResponse(parsed.error);
-    const body = parsed.data;
 
-    const update: Record<string, unknown> = {};
-    if (body.title !== undefined) update.title = body.title;
-    if (body.author !== undefined) update.author = body.author;
-    if (body.cover !== undefined) update.cover = body.cover;
-    if (body.genre !== undefined) update.genre = body.genre;
-    if (body.pages !== undefined) update.pages = body.pages;
-    if (body.rating !== undefined) update.rating = body.rating;
-    if (body.description !== undefined) update.description = body.description;
-    if (body.chapters !== undefined) update.chapters = body.chapters;
-    if (body.storyId !== undefined) update.storyId = body.storyId;
-
-    const result = await db
-      .collection("books")
-      .findOneAndUpdate(
-        { id: bookId },
-        { $set: update },
-        { returnDocument: "after" }
-      );
+    // Use parsed.data directly — only the provided fields will be updated
+    const result = await BookModel.findOneAndUpdate(
+      { id: bookId },
+      { $set: parsed.data },
+      { new: true, lean: true }
+    );
 
     if (!result) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _id: _removedId, ...book } = result;
-    return NextResponse.json(book);
+    return NextResponse.json(bookToJson(result));
   } catch (error) {
     console.error("PUT /api/books/[id] error:", error);
     return NextResponse.json(
@@ -87,17 +89,17 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-// DELETE /api/books/:id
+// DELETE /api/books/[id] — deletes a book
 export async function DELETE(_request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const bookId = Number(id);
     if (Number.isNaN(bookId)) return invalidIdResponse();
 
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
-    const result = await db.collection("books").deleteOne({ id: bookId });
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
+    const result = await BookModel.deleteOne({ id: bookId });
     if (result.deletedCount === 0) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }

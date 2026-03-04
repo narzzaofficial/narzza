@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/mongodb";
-import type { Story } from "@/types/content";
+import { connectDB } from "@/lib/mongodb";
+import { StoryModel } from "@/lib/models/Story";
 import {
   dbUnavailableResponse,
   invalidIdResponse,
@@ -19,10 +19,10 @@ export async function GET(_req: NextRequest, context: RouteContext) {
     const storyId = Number(id);
     if (Number.isNaN(storyId)) return invalidIdResponse();
 
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
-    const story = await db.collection("stories").findOne({ id: storyId });
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
+    const story = await StoryModel.findOne({ id: storyId }).lean();
     if (!story) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
@@ -35,7 +35,6 @@ export async function GET(_req: NextRequest, context: RouteContext) {
       palette: story.palette,
       image: story.image || "",
       viral: story.viral,
-      _id: story._id.toString(),
     });
   } catch (error) {
     console.error("GET /api/stories/[id] error:", error);
@@ -53,19 +52,18 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     const storyId = Number(id);
     if (Number.isNaN(storyId)) return invalidIdResponse();
 
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
-    const body = (await req.json()) as Partial<Story>;
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
+
+    const body = await req.json();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: _removedId, ...updateData } = body;
 
-    const result = await db
-      .collection("stories")
-      .findOneAndUpdate(
-        { id: storyId },
-        { $set: updateData },
-        { returnDocument: "after" }
-      );
+    const result = await StoryModel.findOneAndUpdate(
+      { id: storyId },
+      { $set: updateData },
+      { new: true, lean: true }
+    );
 
     if (!result) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
@@ -79,7 +77,6 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       palette: result.palette,
       image: result.image || "",
       viral: result.viral,
-      _id: result._id.toString(),
     });
   } catch (error) {
     console.error("PUT /api/stories/[id] error:", error);
@@ -97,10 +94,10 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
     const storyId = Number(id);
     if (Number.isNaN(storyId)) return invalidIdResponse();
 
-    const db = await getDb();
-    if (!db) return dbUnavailableResponse();
-    const result = await db.collection("stories").deleteOne({ id: storyId });
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
 
+    const result = await StoryModel.deleteOne({ id: storyId });
     if (result.deletedCount === 0) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
