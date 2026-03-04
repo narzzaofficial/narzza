@@ -5,7 +5,17 @@
  * Example: slugify("AI Revolution: What's Next?", 42) → "ai-revolution-whats-next-42"
  */
 export function slugify(title: string, id: number): string {
-  const base = title
+  return `${slugifyBase(title)}-${id}`;
+}
+
+/**
+ * Generate a URL-safe slug without an ID suffix.
+ * Use for entities that manage their own unique slug (e.g. roadmaps).
+ *
+ * Example: slugifyBase("React & Next.js Starter") → "react-nextjs-starter"
+ */
+export function slugifyBase(title: string): string {
+  return title
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "") // strip accents
@@ -15,8 +25,6 @@ export function slugify(title: string, id: number): string {
     .replace(/-+/g, "-") // collapse multiple hyphens
     .slice(0, 60) // keep it short
     .replace(/-$/, ""); // no trailing hyphen
-
-  return `${base}-${id}`;
 }
 
 /**
@@ -27,4 +35,6 @@ export function parseSlugId(slug: string): number | null {
   const match = slug.match(/-(\d+)$/);
   return match ? Number(match[1]) : null;
 }
+
+
 

@@ -52,7 +52,7 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
       {/* 2. Overlay & Panel */}
       <div
         className={cn(
-          "fixed inset-0 z-40 xl:hidden transition-all duration-300",
+          "fixed inset-0 z-40 lg:hidden transition-all duration-300",
           isOpen
             ? "pointer-events-auto"
             : "pointer-events-none visibility-hidden"

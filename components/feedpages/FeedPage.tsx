@@ -106,7 +106,7 @@ export function FeedPage({
           </div>
         </div>
         {isHome && showStories && initialStories.length > 0 && (
-          <div className="hidden xl:block mt-4">
+          <div className="hidden lg:block mt-4">
             <StatusViralSection
               stories={initialStories}
               feeds={initialFeeds}
@@ -120,7 +120,7 @@ export function FeedPage({
       {isHome && (
         <div className="mt-4 flex flex-col gap-4">
           {showStories && initialStories.length > 0 && (
-            <section className="page-hero xl:hidden">
+            <section className="page-hero lg:hidden">
               <StatusViralSection
                 stories={initialStories}
                 feeds={initialFeeds}

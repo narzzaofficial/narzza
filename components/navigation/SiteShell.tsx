@@ -7,6 +7,7 @@ import {
   NavigationSection,
 } from ".";
 import { ThemeToggle } from "@/components/navigation/ThemeToggle";
+import { SiteFeedbackButton } from "@/components/floating-actions/SiteFeedbackButton";
 
 type SiteShellProps = {
   children: React.ReactNode;
@@ -67,6 +68,7 @@ export function SiteShell({ children }: SiteShellProps) {
       </div>
 
       <MobileNavDrawer activePath={activePath} />
+      <SiteFeedbackButton />
     </div>
   );
 }

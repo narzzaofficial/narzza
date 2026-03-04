@@ -12,6 +12,7 @@ import { StoryTab } from "./_components/story-tab";
 import { BookTab } from "./_components/book-tab";
 import { useAdmin } from "@/hooks/useAdmin";
 import { RoadmapTab, ProductTab, CategoryTab } from "./_components/simple-tab";
+import { MessageTab } from "./_components/message-tab";
 
 export default function AdminPage() {
   const [tab, setTab] = useState<AdminTab>("feeds");
@@ -22,8 +23,9 @@ export default function AdminPage() {
     message,
     flash,
     handleSeed,
-    fetchData,
+    refreshEntity,
     deleteItem,
+    deleteRoadmapItem,
   } = useAdmin();
 
   return (
@@ -70,6 +72,8 @@ export default function AdminPage() {
             roadmaps: data.roadmaps.length,
             products: data.products.length,
             categories: data.categories.length,
+            messages: data.messages.length,
+            unreadMessages: data.messages.filter((m) => m.status === "unread").length,
           }}
         />
 
@@ -82,7 +86,7 @@ export default function AdminPage() {
             {tab === "feeds" && (
               <FeedTab
                 feeds={data.feeds}
-                onRefresh={fetchData}
+                onRefresh={() => refreshEntity("feeds")}
                 onDelete={(id: number) => deleteItem("feeds", id)}
                 flash={flash}
               />
@@ -90,7 +94,7 @@ export default function AdminPage() {
             {tab === "stories" && (
               <StoryTab
                 stories={data.stories}
-                onRefresh={fetchData}
+                onRefresh={() => refreshEntity("stories")}
                 onDelete={(id: number) => deleteItem("stories", id)}
                 flash={flash}
               />
@@ -98,7 +102,7 @@ export default function AdminPage() {
             {tab === "books" && (
               <BookTab
                 books={data.books}
-                onRefresh={fetchData}
+                onRefresh={() => refreshEntity("books")}
                 onDelete={(id: number) => deleteItem("books", id)}
                 flash={flash}
               />
@@ -106,13 +110,18 @@ export default function AdminPage() {
             {tab === "roadmaps" && (
               <RoadmapTab
                 roadmaps={data.roadmaps}
-                onRefresh={fetchData}
-                onDelete={() => fetchData()}
+                onDelete={deleteRoadmapItem}
               />
             )}
             {tab === "products" && <ProductTab products={data.products} />}
             {tab === "categories" && (
               <CategoryTab categories={data.categories} />
+            )}
+            {tab === "messages" && (
+              <MessageTab
+                messages={data.messages}
+                onRefresh={() => refreshEntity("messages")}
+              />
             )}
           </main>
         )}

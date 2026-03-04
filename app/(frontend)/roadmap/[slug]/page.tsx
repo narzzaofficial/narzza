@@ -2,7 +2,7 @@
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getRoadmaps } from "@/lib/data";
+import { getRoadmaps, getRoadmapBySlug } from "@/lib/data";
 import { RoadmapCourseViewer } from "@/components/roadmap/RoadmapCourseViewer";
 
 export const revalidate = 300;
@@ -18,8 +18,7 @@ export async function generateMetadata({
   params,
 }: RoadmapDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const roadmaps = await getRoadmaps();
-  const roadmap = roadmaps.find((r) => r.slug === slug);
+  const roadmap = await getRoadmapBySlug(slug);
   if (!roadmap) return { title: "Roadmap tidak ditemukan" };
   return {
     title: roadmap.title,
@@ -43,15 +42,12 @@ export default async function RoadmapDetailPage({
   params,
 }: RoadmapDetailPageProps) {
   const { slug } = await params;
-  const roadmaps = await getRoadmaps();
-  const current = roadmaps.find((r) => r.slug === slug);
-  if (!current) notFound();
+  const roadmap = await getRoadmapBySlug(slug);
+  if (!roadmap) notFound();
 
   return (
     <div className="flex flex-1 flex-col">
-
-      {/* ── Coursera-style viewer (sidebar + player) ─────────────── */}
-      <RoadmapCourseViewer roadmap={current} />
+      <RoadmapCourseViewer roadmap={roadmap} />
     </div>
   );
 }

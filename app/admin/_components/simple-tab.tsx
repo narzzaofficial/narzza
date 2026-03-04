@@ -1,4 +1,5 @@
 "use client";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Category, Product } from "../_types";
 import { Roadmap } from "@/types/roadmaps";
@@ -6,24 +7,22 @@ import { Roadmap } from "@/types/roadmaps";
 export function RoadmapTab({
   roadmaps,
   onDelete,
-  onRefresh,
 }: {
   roadmaps: Roadmap[];
   onDelete?: (slug: string) => void;
-  onRefresh?: () => void;
 }) {
-  async function handleDelete(slug: string) {
-    if (!confirm("Hapus roadmap ini?")) return;
-    try {
-      const res = await fetch(`/api/roadmaps/${slug}`, { method: "DELETE" });
-      if (res.ok) {
-        onDelete?.(slug);
-        onRefresh?.();
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  const [search, setSearch] = useState("");
+
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    if (!q) return roadmaps;
+    return roadmaps.filter(
+      (r) =>
+        r.title.toLowerCase().includes(q) ||
+        r.level.toLowerCase().includes(q) ||
+        r.tags.some((t) => t.toLowerCase().includes(q))
+    );
+  }, [roadmaps, search]);
 
   return (
     <div>
@@ -36,8 +35,27 @@ export function RoadmapTab({
           + Tambah Roadmap
         </Link>
       </div>
+
+      {/* Search */}
+      {roadmaps.length > 0 && (
+        <div className="mb-3">
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Cari roadmap, level, atau tag..."
+            className="w-full rounded-xl border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm text-slate-200 placeholder-slate-500 outline-none focus:border-cyan-400/60"
+          />
+        </div>
+      )}
+
       <div className="space-y-3">
-        {roadmaps.map((roadmap) => (
+        {filtered.length === 0 && (
+          <p className="text-sm text-slate-400">
+            {search ? "Tidak ada hasil pencarian." : "Belum ada roadmap."}
+          </p>
+        )}
+        {filtered.map((roadmap) => (
           <div
             key={roadmap.slug}
             className="admin-list-card glass-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4"
@@ -66,7 +84,7 @@ export function RoadmapTab({
               </Link>
               <button
                 type="button"
-                onClick={() => handleDelete(roadmap.slug)}
+                onClick={() => onDelete?.(roadmap.slug)}
                 className="admin-btn rounded-lg border border-rose-500/50 px-3 py-1.5 text-xs text-rose-400 transition hover:bg-rose-500/10 hover:border-rose-400"
               >
                 Hapus

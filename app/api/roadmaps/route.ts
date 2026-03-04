@@ -2,16 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { roadmaps as seedRoadmaps } from "@/types/roadmaps";
 import { dbUnavailableResponse } from "@/lib/api-helpers";
+import { slugifyBase } from "@/lib/slugify";
 
 export const dynamic = "force-dynamic";
 
-function slugify(input: string) {
-  return input
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
+function normalizeTags(tags: unknown): string[] {
+  if (Array.isArray(tags)) return tags;
+  if (typeof tags === "string")
+    return tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+  return [];
 }
 
 // GET /api/roadmaps — list roadmaps
@@ -43,7 +45,7 @@ export async function POST(request: NextRequest) {
     const db = await getDb();
     if (!db) return dbUnavailableResponse();
 
-    const slug = body.slug?.trim() || slugify(body.title ?? "");
+    const slug = body.slug?.trim() || slugifyBase(body.title ?? "");
     if (!slug)
       return NextResponse.json(
         { error: "Slug or title required" },
@@ -64,14 +66,7 @@ export async function POST(request: NextRequest) {
       summary: body.summary ?? "",
       duration: body.duration ?? "",
       level: body.level ?? "Pemula",
-      tags: Array.isArray(body.tags)
-        ? body.tags
-        : typeof body.tags === "string"
-          ? body.tags
-              .split(",")
-              .map((t: string) => t.trim())
-              .filter(Boolean)
-          : [],
+      tags: normalizeTags(body.tags),
       image: body.image ?? "",
       steps: Array.isArray(body.steps) ? body.steps : [],
       createdAt: now,

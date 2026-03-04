@@ -8,6 +8,7 @@ export type AdminTab =
   | "roadmaps"
   | "products"
   | "categories"
+  | "messages"
   | "analytics";
 
 export type FeedForm = {

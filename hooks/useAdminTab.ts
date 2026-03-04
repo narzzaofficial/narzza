@@ -3,8 +3,8 @@ import { useState } from "react";
 
 /**
  * Shared state and save handler for admin tab components.
- * Handles the create/edit/cancel form flow and the fetch to
- * the backing API endpoint.
+ * After save, calls onRefresh (which should be scoped to a single entity)
+ * to avoid full-page data reload.
  */
 export function useAdminTab<T extends { id: number }>(
   endpoint: string,
@@ -14,23 +14,29 @@ export function useAdminTab<T extends { id: number }>(
 ) {
   const [editingItem, setEditingItem] = useState<T | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const handleSave = async (formData: unknown) => {
-    const res = await fetch(
-      editingItem ? `${endpoint}/${editingItem.id}` : endpoint,
-      {
-        method: editingItem ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+    setSaving(true);
+    try {
+      const res = await fetch(
+        editingItem ? `${endpoint}/${editingItem.id}` : endpoint,
+        {
+          method: editingItem ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+      if (res.ok) {
+        flash(successMessage);
+        setShowForm(false);
+        setEditingItem(null);
+        onRefresh(); // scoped single-entity refresh
+      } else {
+        flash("❌ Gagal simpan");
       }
-    );
-    if (res.ok) {
-      flash(successMessage);
-      setShowForm(false);
-      setEditingItem(null);
-      onRefresh();
-    } else {
-      flash("❌ Gagal simpan");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -49,5 +55,5 @@ export function useAdminTab<T extends { id: number }>(
     setEditingItem(null);
   };
 
-  return { editingItem, showForm, handleSave, startEdit, startCreate, cancelForm };
+  return { editingItem, showForm, saving, handleSave, startEdit, startCreate, cancelForm };
 }

@@ -8,7 +8,7 @@ export { getFeeds, getFeedById, getFeedBySlug, getFeedSlugs } from "./feeds";
 export { getBooks } from "./books";
 export { getBookPageData, getBookStaticIds, type BookPageData } from "./book-page";
 export { getStories } from "./stories";
-export { getRoadmaps } from "./roadmaps";
+export { getRoadmaps, getRoadmapBySlug } from "./roadmaps";
 export { getProducts, getProductById, getProductIds } from "./products";
 export {
   getTokoPageData,

@@ -7,6 +7,19 @@ export const dynamic = "force-dynamic";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
+function normalizeTags(tags: unknown): string[] {
+  if (Array.isArray(tags)) return tags;
+  if (typeof tags === "string")
+    return tags.split(",").map((t) => t.trim()).filter(Boolean);
+  return [];
+}
+
+function stripId<T extends { _id?: unknown }>(doc: T): Omit<T, "_id"> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { _id, ...rest } = doc;
+  return rest;
+}
+
 // GET /api/roadmaps/:slug
 export async function GET(_req: NextRequest, context: RouteContext) {
   try {
@@ -21,16 +34,10 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 
     const doc = await db.collection("roadmaps").findOne({ slug });
     if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _id, ...roadmap } = doc;
-    return NextResponse.json(roadmap);
+    return NextResponse.json(stripId(doc));
   } catch (error) {
     console.error("GET /api/roadmaps/[slug] error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch roadmap" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch roadmap" }, { status: 500 });
   }
 }
 
@@ -43,18 +50,11 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     if (!db) return dbUnavailableResponse();
 
     const update = {
-      title: body.title,
-      summary: body.summary,
-      duration: body.duration,
-      level: body.level,
-      tags: Array.isArray(body.tags)
-        ? body.tags
-        : typeof body.tags === "string"
-          ? body.tags
-              .split(",")
-              .map((t: string) => t.trim())
-              .filter(Boolean)
-          : [],
+      title: body.title ?? "",
+      summary: body.summary ?? "",
+      duration: body.duration ?? "",
+      level: body.level ?? "Pemula",
+      tags: normalizeTags(body.tags),
       image: body.image ?? "",
       steps: Array.isArray(body.steps) ? body.steps : [],
       updatedAt: Date.now(),
@@ -62,24 +62,15 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     const result = await db
       .collection("roadmaps")
-      .findOneAndUpdate(
-        { slug },
-        { $set: update },
-        { returnDocument: "after" }
-      );
+      .findOneAndUpdate({ slug }, { $set: update }, { returnDocument: "after" });
 
     if (!result)
       return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _id, ...roadmap } = result;
-    return NextResponse.json(roadmap);
+    return NextResponse.json(stripId(result));
   } catch (error) {
     console.error("PUT /api/roadmaps/[slug] error:", error);
-    return NextResponse.json(
-      { error: "Failed to update roadmap" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update roadmap" }, { status: 500 });
   }
 }
 
@@ -97,9 +88,6 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/roadmaps/[slug] error:", error);
-    return NextResponse.json(
-      { error: "Failed to delete roadmap" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete roadmap" }, { status: 500 });
   }
 }

@@ -322,7 +322,7 @@
     background: var(--surface);
     border: 1px solid var(--surface-border);
     @apply fixed inset-x-3 top-3 z-30 rounded-2xl px-4 py-3 backdrop-blur-[16px]
-      xl:hidden;
+      lg:hidden;
   }
 
   .hamburger-btn {
@@ -390,8 +390,8 @@
     @apply min-h-screen pt-20 pb-6 text-slate-100;
   }
 
-  /* Desktop xl+: lock the whole shell to viewport height so only main scrolls */
-  @media (min-width: 1280px) {
+  /* Desktop lg+: lock the whole shell to viewport height so only main scrolls */
+  @media (min-width: 1024px) {
     .page-shell {
       height: 100dvh;
       overflow: hidden;
@@ -408,7 +408,7 @@
   }
 
   /* Desktop: content-grid fills the locked shell height */
-  @media (min-width: 1280px) {
+  @media (min-width: 1024px) {
     .content-grid {
       flex: 1 1 0%;
       min-height: 0;
@@ -421,11 +421,11 @@
 
   .sidebar-sticky {
     /* Mobile: normal flow */
-    @apply hidden xl:flex xl:flex-col;
+    @apply hidden lg:flex lg:flex-col;
   }
 
   /* Desktop: sidebar fills full height and does NOT scroll */
-  @media (min-width: 1280px) {
+  @media (min-width: 1024px) {
     .sidebar-sticky {
       height: 100%;
       overflow-y: auto;
@@ -443,7 +443,7 @@
   }
 
   /* Desktop: main content scrolls independently */
-  @media (min-width: 1280px) {
+  @media (min-width: 1024px) {
     .page-shell > .content-grid > main {
       height: 100%;
       overflow-y: auto;

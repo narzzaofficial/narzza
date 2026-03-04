@@ -35,16 +35,16 @@ export function VideoPlayer({
       </div>
 
       {/* ── Meta ─────────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-5 px-6 py-6 md:px-8 md:py-7 overflow-y-auto">
+      <div className="flex flex-col gap-4 px-5 py-5 xl:px-8 xl:py-6 overflow-y-auto">
         {/* Title */}
         <div>
           <h2
-            className="text-2xl font-bold leading-snug md:text-3xl lg:text-4xl"
+            className="text-xl font-bold leading-snug xl:text-2xl 2xl:text-3xl"
             style={{ color: "var(--text-primary)" }}
           >
             {step.title}
           </h2>
-          <p className="mt-2 text-sm md:text-base" style={{ color: "var(--text-secondary)" }}>
+          <p className="mt-1.5 text-sm" style={{ color: "var(--text-secondary)" }}>
             Video {videoIndex + 1} • oleh{" "}
             <span className="font-semibold" style={{ color: "var(--text-accent)" }}>
               {video.author}
@@ -55,10 +55,10 @@ export function VideoPlayer({
         {/* Divider */}
         <div className="border-t" style={{ borderColor: "var(--surface-border)" }} />
 
-        {/* Tags row */}
+        {/* Focus + step counter */}
         <div className="flex flex-wrap items-center gap-2">
           <span
-            className="rounded-full border px-4 py-1.5 text-sm font-semibold"
+            className="rounded-full border px-3 py-1 text-xs font-semibold"
             style={{
               borderColor: "var(--surface-border)",
               color: "var(--text-secondary)",
@@ -67,7 +67,7 @@ export function VideoPlayer({
           >
             {step.focus}
           </span>
-          <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
             Langkah {stepIndex + 1} dari {totalSteps}
           </span>
         </div>
@@ -75,7 +75,7 @@ export function VideoPlayer({
         {/* Description */}
         {step.description && (
           <p
-            className="text-base leading-relaxed md:text-lg"
+            className="text-sm leading-relaxed xl:text-base"
             style={{ color: "var(--text-secondary)" }}
           >
             {step.description}

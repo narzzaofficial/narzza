@@ -19,8 +19,29 @@ async function loadRoadmaps(): Promise<Roadmap[]> {
   }
 }
 
+async function loadRoadmapBySlug(slug: string): Promise<Roadmap | null> {
+  try {
+    const db = await getDb();
+    if (!db) return dummyRoadmaps.find((r) => r.slug === slug) ?? null;
+    const doc = await db.collection("roadmaps").findOne({ slug });
+    if (!doc) return null;
+    const { _id, ...rest } = doc;
+    return rest as Roadmap;
+  } catch {
+    return dummyRoadmaps.find((r) => r.slug === slug) ?? null;
+  }
+}
+
 export const getRoadmaps = unstable_cache(
   async () => loadRoadmaps(),
   ["cached-roadmaps"],
   { revalidate: CONTENT_REVALIDATE_SECONDS, tags: [CACHE_TAGS.roadmaps] }
 );
+
+export const getRoadmapBySlug = unstable_cache(
+  async (slug: string) => loadRoadmapBySlug(slug),
+  ["cached-roadmap-by-slug"],
+  { revalidate: CONTENT_REVALIDATE_SECONDS, tags: [CACHE_TAGS.roadmaps] }
+);
+
+
