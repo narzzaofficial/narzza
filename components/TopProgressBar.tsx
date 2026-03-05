@@ -10,6 +10,22 @@ export function TopProgressBar() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const activeRef = useRef(false);
   const prevPathRef = useRef(pathname);
+  const [isLight, setIsLight] = useState(false);
+
+  // Track data-theme changes on <html>
+  useEffect(() => {
+    const update = () =>
+      setIsLight(
+        document.documentElement.getAttribute("data-theme") === "light"
+      );
+    update();
+    const observer = new MutationObserver(update);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   const finish = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -96,8 +112,12 @@ export function TopProgressBar() {
             : progress === 0
               ? "none"
               : "width 0.35s ease",
-        background: "linear-gradient(90deg, #0284c7, #06b6d4, #67e8f9)",
-        boxShadow: "0 0 8px rgba(6, 182, 212, 0.8)",
+        background: isLight
+          ? "linear-gradient(90deg, #0369a1, #0e7490, #06b6d4)"
+          : "linear-gradient(90deg, #0284c7, #06b6d4, #67e8f9)",
+        boxShadow: isLight
+          ? "0 0 8px rgba(14, 116, 144, 0.6)"
+          : "0 0 8px rgba(6, 182, 212, 0.8)",
       }}
     />
   );
