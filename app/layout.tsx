@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { TopProgressBar } from "@/components/TopProgressBar";
 import { ClerkProvider } from "@clerk/nextjs";
 import { JsonLd } from "@/components/JsonLd";
 import {
@@ -124,6 +125,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} antialiased bg-canvas min-h-screen`}>
+        <TopProgressBar />
         <ClerkProvider dynamic>
           <ThemeProvider>{children}</ThemeProvider>
         </ClerkProvider>
