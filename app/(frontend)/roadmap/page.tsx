@@ -3,30 +3,17 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-// 👇 Import data dari pu
 import { getRoadmaps } from "@/lib/data";
+import { createPageMeta } from "@/lib/metadata";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMeta({
   title: "Roadmap Belajar Programming",
   description:
     "Koleksi roadmap belajar: frontend dasar, React lanjutan, hingga fullstack Next.js. Panduan step-by-step untuk developer.",
-  openGraph: {
-    title: "Roadmap Belajar Programming — Narzza Media Digital",
-    description:
-      "Panduan step-by-step dari frontend dasar hingga fullstack Next.js.",
-    url: "https://narzza.com/roadmap",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Roadmap Belajar Programming",
-    description:
-      "Panduan step-by-step dari frontend dasar hingga fullstack Next.js.",
-  },
-  alternates: { canonical: "/roadmap" },
-};
+  path: "/roadmap",
+});
 
 export default async function RoadmapListPage() {
   const roadmaps = await getRoadmaps();

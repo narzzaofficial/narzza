@@ -12,26 +12,14 @@ import {
 } from "@/components/tentang";
 
 import type { Metadata } from "next";
+import { createPageMeta } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Tentang Narzza — Platform Media Digital Penyedia Informasi Umum",
+export const metadata: Metadata = createPageMeta({
+  title: "Tentang Kami",
   description:
     "Narzza adalah platform media digital yang menyajikan berita, tutorial, dan riset dari berbagai bidang dalam format yang mudah dipahami. Temukan informasi berkualitas untuk semua kalangan.",
-  openGraph: {
-    title: "Tentang Narzza — Platform Media Digital",
-    description:
-      "Platform penyedia informasi umum yang menghadirkan berita, tutorial, dan riset dalam format interaktif dan mudah dicerna.",
-    url: "https://narzza.com/tentang",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Tentang Narzza — Platform Media Digital",
-    description:
-      "Platform penyedia informasi umum yang menghadirkan berita, tutorial, dan riset dalam format interaktif dan mudah dicerna.",
-  },
-  alternates: { canonical: "/tentang" },
-};
+  path: "/tentang",
+});
 
 export default function TentangPage() {
   return (

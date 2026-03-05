@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { FeedModel } from "@/lib/models/Feed";
 import type { IFeed } from "@/lib/models/Feed";
@@ -92,6 +93,12 @@ export async function POST(req: NextRequest) {
 
     // Fire-and-forget: notify search engines without blocking the response
     void pingIndexNow(newFeed.slug || slugify(newFeed.title, newFeed.id));
+
+    // Invalidate cached pages immediately so new content appears right away
+    revalidatePath("/");
+    revalidatePath("/berita");
+    revalidatePath("/tutorial");
+    revalidatePath("/riset");
 
     return NextResponse.json(feedToJson(newFeed), { status: 201 });
   } catch (error) {

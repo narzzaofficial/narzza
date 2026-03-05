@@ -1,21 +1,16 @@
 import type { Metadata } from "next";
 import { getTokoPageData } from "@/lib/data";
 import { TokoShell } from "@/components/toko/toko-shell";
+import { createPageMeta } from "@/lib/metadata";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMeta({
   title: "Toko Merchandise Digital",
   description:
     "Belanja produk premium untuk developer dan tech enthusiast. Kaos, hoodie, stiker, dan merchandise digital berkualitas.",
-  openGraph: {
-    title: "Toko Merchandise — Narzza Media Digital",
-    description: "Produk premium untuk developer dan tech enthusiast.",
-    url: "https://narzza.com/toko",
-    type: "website",
-  },
-  alternates: { canonical: "/toko" },
-};
+  path: "/toko",
+});
 
 export default async function TokoPage() {
   const { products, featuredProducts, categories } = await getTokoPageData();

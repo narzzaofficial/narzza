@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { FeedModel } from "@/lib/models/Feed";
 import type { IFeed } from "@/lib/models/Feed";
@@ -82,6 +83,13 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Feed not found" }, { status: 404 });
     }
 
+    // Invalidate cached pages so edits appear immediately
+    revalidatePath("/");
+    revalidatePath("/berita");
+    revalidatePath("/tutorial");
+    revalidatePath("/riset");
+    revalidatePath(`/read/${result.slug || slugify(result.title, result.id)}`);
+
     return NextResponse.json(feedToJson(result));
   } catch (error) {
     console.error("PUT /api/feeds/[id] error:", error);
@@ -102,10 +110,21 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
 
-    const result = await FeedModel.deleteOne({ id: feedId });
-    if (result.deletedCount === 0) {
+    const feedToDelete = await FeedModel.findOne({ id: feedId }).lean();
+    if (!feedToDelete) {
       return NextResponse.json({ error: "Feed not found" }, { status: 404 });
     }
+
+    await FeedModel.deleteOne({ id: feedId });
+
+    // Invalidate cached pages so deleted content disappears immediately
+    revalidatePath("/");
+    revalidatePath("/berita");
+    revalidatePath("/tutorial");
+    revalidatePath("/riset");
+    const slug =
+      feedToDelete.slug || slugify(feedToDelete.title, feedToDelete.id);
+    revalidatePath(`/read/${slug}`);
 
     return NextResponse.json({ success: true });
   } catch (error) {

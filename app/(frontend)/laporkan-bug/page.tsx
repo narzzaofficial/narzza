@@ -6,14 +6,19 @@ import { sendMessage } from "@/lib/api/messages";
 import type { MessageCreatePayload } from "@/types/messages";
 
 const SEVERITY = [
-  { value: "Kecil", label: "🟡 Kecil — fitur minor terganggu" },
-  { value: "Sedang", label: "🟠 Sedang — fitur utama terganggu" },
-  { value: "Parah", label: "🔴 Parah — tidak bisa digunakan" },
+  { value: "Kecil", label: "🟡 Kecil - fitur minor terganggu" },
+  { value: "Sedang", label: "🟠 Sedang - fitur utama terganggu" },
+  { value: "Parah", label: "🔴 Parah - tidak bisa digunakan" },
 ] as const;
 type Severity = (typeof SEVERITY)[number]["value"];
 
-const fieldCls = "w-full rounded-xl border px-3.5 py-2.5 text-sm outline-none transition focus:border-rose-400/60";
-const fieldStyle = { background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" };
+const fieldCls =
+  "w-full rounded-xl border px-3.5 py-2.5 text-sm outline-none transition focus:border-rose-400/60";
+const fieldStyle = {
+  background: "var(--input-bg)",
+  borderColor: "var(--input-border)",
+  color: "var(--text-primary)",
+};
 const labelStyle = { color: "var(--text-secondary)" };
 
 export default function LaporkanBugPage() {
@@ -30,13 +35,20 @@ export default function LaporkanBugPage() {
 
   const handle =
     (k: keyof typeof form) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >
+    ) =>
       setForm((v) => ({ ...v, [k]: e.target.value }));
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (!form.message.trim()) { setError("Deskripsi bug tidak boleh kosong."); return; }
+    if (!form.message.trim()) {
+      setError("Deskripsi bug tidak boleh kosong.");
+      return;
+    }
     setLoading(true);
     try {
       const payload: MessageCreatePayload = {
@@ -58,22 +70,41 @@ export default function LaporkanBugPage() {
   if (done) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 px-4 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full text-4xl" style={{ border: "1px solid rgba(52,211,153,0.3)", background: "rgba(52,211,153,0.1)" }}>
+        <div
+          className="flex h-20 w-20 items-center justify-center rounded-full text-4xl"
+          style={{
+            border: "1px solid rgba(52,211,153,0.3)",
+            background: "rgba(52,211,153,0.1)",
+          }}
+        >
           ✅
         </div>
         <div>
-          <h2 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Laporan Terkirim!</h2>
-          <p className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
-            Terima kasih! Tim kami akan segera memeriksa masalah yang kamu laporkan.
+          <h2
+            className="text-2xl font-bold"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Laporan Terkirim!
+          </h2>
+          <p
+            className="mt-2 text-sm"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Terima kasih! Tim kami akan segera memeriksa masalah yang kamu
+            laporkan.
           </p>
         </div>
         <button
           type="button"
           onClick={() => router.back()}
           className="rounded-full px-6 py-2.5 text-sm transition"
-          style={{ border: "1px solid var(--input-border)", background: "var(--input-bg)", color: "var(--text-secondary)" }}
+          style={{
+            border: "1px solid var(--input-border)",
+            background: "var(--input-bg)",
+            color: "var(--text-secondary)",
+          }}
         >
-          ← Kembali
+          Kembali
         </button>
       </div>
     );
@@ -83,7 +114,13 @@ export default function LaporkanBugPage() {
     <div className="space-y-6">
       {/* Hero */}
       <header className="page-hero relative overflow-hidden">
-        <div className="absolute inset-0 opacity-60" style={{ background: "linear-gradient(to bottom right, rgba(244,63,94,0.1), rgba(234,88,12,0.1))" }} />
+        <div
+          className="absolute inset-0 opacity-60"
+          style={{
+            background:
+              "linear-gradient(to bottom right, rgba(244,63,94,0.1), rgba(234,88,12,0.1))",
+          }}
+        />
         <div className="relative">
           <button
             type="button"
@@ -91,22 +128,50 @@ export default function LaporkanBugPage() {
             className="mb-5 flex items-center gap-2 text-xs font-medium transition"
             style={{ color: "var(--text-secondary)" }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-3.5 w-3.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="h-3.5 w-3.5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+              />
             </svg>
             Kembali
           </button>
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-600/20 text-2xl" style={{ border: "1px solid rgba(251,113,133,0.4)" }}>
+            <div
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-600/20 text-2xl"
+              style={{ border: "1px solid rgba(251,113,133,0.4)" }}
+            >
               🐛
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-accent)" }}>Bug Report</p>
-              <h1 className="mt-0.5 text-2xl font-bold md:text-3xl" style={{ color: "var(--text-primary)" }}>Laporkan Bug</h1>
+              <p
+                className="text-xs font-semibold uppercase tracking-[0.2em]"
+                style={{ color: "var(--text-accent)" }}
+              >
+                Bug Report
+              </p>
+              <h1
+                className="mt-0.5 text-2xl font-bold md:text-3xl"
+                style={{ color: "var(--text-primary)" }}
+              >
+                Laporkan Bug
+              </h1>
             </div>
           </div>
-          <p className="mt-3 max-w-xl text-sm" style={{ color: "var(--text-secondary)" }}>
-            Bantu kami meningkatkan kualitas Narzza dengan melaporkan bug yang kamu temukan.
+          <p
+            className="mt-3 max-w-xl text-sm"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Bantu kami meningkatkan kualitas Narzza dengan melaporkan bug yang
+            kamu temukan.
           </p>
         </div>
       </header>
@@ -116,10 +181,19 @@ export default function LaporkanBugPage() {
           <div className="space-y-4">
             {/* Severity */}
             <label className="block">
-              <span className="mb-1.5 block text-xs" style={labelStyle}>Tingkat Keparahan</span>
-              <select className={fieldCls} style={fieldStyle} value={form.severity} onChange={handle("severity")}>
+              <span className="mb-1.5 block text-xs" style={labelStyle}>
+                Tingkat Keparahan
+              </span>
+              <select
+                className={fieldCls}
+                style={fieldStyle}
+                value={form.severity}
+                onChange={handle("severity")}
+              >
                 {SEVERITY.map((s) => (
-                  <option key={s.value} value={s.value}>{s.label}</option>
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
                 ))}
               </select>
             </label>
@@ -127,12 +201,29 @@ export default function LaporkanBugPage() {
             {/* Identity */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <label className="block">
-                <span className="mb-1.5 block text-xs" style={labelStyle}>Nama (opsional)</span>
-                <input className={fieldCls} style={fieldStyle} value={form.name} onChange={handle("name")} placeholder="Nama kamu" />
+                <span className="mb-1.5 block text-xs" style={labelStyle}>
+                  Nama (opsional)
+                </span>
+                <input
+                  className={fieldCls}
+                  style={fieldStyle}
+                  value={form.name}
+                  onChange={handle("name")}
+                  placeholder="Nama kamu"
+                />
               </label>
               <label className="block">
-                <span className="mb-1.5 block text-xs" style={labelStyle}>Email (opsional)</span>
-                <input type="email" className={fieldCls} style={fieldStyle} value={form.email} onChange={handle("email")} placeholder="email@contoh.com" />
+                <span className="mb-1.5 block text-xs" style={labelStyle}>
+                  Email (opsional)
+                </span>
+                <input
+                  type="email"
+                  className={fieldCls}
+                  style={fieldStyle}
+                  value={form.email}
+                  onChange={handle("email")}
+                  placeholder="email@contoh.com"
+                />
               </label>
             </div>
 

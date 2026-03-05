@@ -2,22 +2,16 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { FeedPage } from "@/components/feedpages/FeedPage";
 import { getFeedPageData } from "@/lib/data";
+import { createPageMeta } from "@/lib/metadata";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMeta({
   title: "Riset & Eksperimen",
   description:
     "Analisa mendalam, temuan menarik, dan eksperimen dari berbagai bidang. Temukan insight dari riset yang disajikan secara ringkas.",
-  openGraph: {
-    title: "Riset & Eksperimen — Narzza Media Digital",
-    description:
-      "Analisa mendalam dan eksperimen dari berbagai topik dalam format interaktif.",
-    url: "https://narzza.com/riset",
-    type: "website",
-  },
-  alternates: { canonical: "/riset" },
-};
+  path: "/riset",
+});
 
 export default async function RisetPage() {
   const { feeds, stories, books, roadmaps, products } =

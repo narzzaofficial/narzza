@@ -26,7 +26,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${tag} — Narzza Media Digital`,
       description: `Semua konten bertag ${tag} di Narzza Media Digital.`,
-      url: `https://narzza.com/tag/${slug}`,
+      url: `/tag/${slug}`,
       type: "website",
     },
     twitter: {

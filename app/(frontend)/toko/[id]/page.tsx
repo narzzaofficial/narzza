@@ -16,7 +16,9 @@ export async function generateStaticParams() {
   return ids.map((id) => ({ id }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { id } = await params;
   const data = await getTokoDetailData(id);
   if (!data) return { title: "Produk Tidak Ditemukan" };
@@ -56,7 +58,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
           name: product.name,
           description: product.description,
           image: product.images[0] ?? "",
-          url: `https://narzza.com/toko/${product.id}`,
+          url: `/toko/${product.id}`,
           offers: {
             "@type": "Offer",
             price: product.price,

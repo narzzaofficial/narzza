@@ -32,13 +32,36 @@ const nextConfig: NextConfig = {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
           },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
+          },
+          {
+            // Report-only: monitor violations without blocking anything.
+            // Upgrade to Content-Security-Policy once verified clean.
+            key: "Content-Security-Policy-Report-Only",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.narzza.studio https://*.clerk.accounts.dev https://challenges.cloudflare.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: blob: https://*.digitaloceanspaces.com https://picsum.photos https://img.clerk.com",
+              "connect-src 'self' https://*.clerk.accounts.dev https://*.digitaloceanspaces.com",
+              "frame-src https://challenges.cloudflare.com https://accounts.clerk.dev",
+              "worker-src 'self' blob:",
+            ].join("; "),
+          },
         ],
       },
       {
         // Static assets: cache 1 year
-        source: "/:path*\\.(js|css|woff2|woff|ttf|ico|svg|png|jpg|jpeg|webp|avif)",
+        source:
+          "/:path*\\.(js|css|woff2|woff|ttf|ico|svg|png|jpg|jpeg|webp|avif)",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
         ],
       },
     ];

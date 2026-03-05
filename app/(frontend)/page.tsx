@@ -2,22 +2,16 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { FeedPage } from "@/components/feedpages/FeedPage";
 import { getFeedPageData } from "@/lib/data";
+import { createPageMeta } from "@/lib/metadata";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: "Berita, Tutorial & Riset | Narzza Media Digital",
+export const metadata: Metadata = createPageMeta({
+  title: "Berita, Tutorial & Riset",
   description:
     "Platform media digital yang menyajikan informasi dari berbagai bidang dalam format interaktif dan mudah dipahami. Baca topik panjang jadi santai.",
-  openGraph: {
-    title: "Narzza Media Digital — Informasi dari Berbagai Bidang",
-    description:
-      "Platform media digital yang menyajikan berita, tutorial, dan riset dari berbagai bidang dalam format interaktif.",
-    url: "https://narzza.com",
-    type: "website",
-  },
-  alternates: { canonical: "/" },
-};
+  path: "/",
+});
 
 export default async function HomePage() {
   const { feeds, stories, books, roadmaps, products } = await getFeedPageData();

@@ -23,14 +23,20 @@ async function loadBookData(param: string) {
   if (parsedId) {
     const byId = all.find((b) => b.id === parsedId);
     if (byId) {
-      return { book: byId, otherBooks: all.filter((b) => b.id !== byId.id).slice(0, 3) };
+      return {
+        book: byId,
+        otherBooks: all.filter((b) => b.id !== byId.id).slice(0, 3),
+      };
     }
   }
 
   // 2. Match by exact slug  (slugify(title, id) === param)
   const bySlug = all.find((b) => slugify(b.title, b.id) === param);
   if (bySlug) {
-    return { book: bySlug, otherBooks: all.filter((b) => b.id !== bySlug.id).slice(0, 3) };
+    return {
+      book: bySlug,
+      otherBooks: all.filter((b) => b.id !== bySlug.id).slice(0, 3),
+    };
   }
 
   // 3. Fuzzy: match title-only slug, ignoring the trailing id number
@@ -38,7 +44,10 @@ async function loadBookData(param: string) {
   const titlePart = param.replace(/-\d+$/, "").replace(/-undefined$/, "");
   const byTitle = all.find((b) => slugifyBase(b.title) === titlePart);
   if (byTitle) {
-    return { book: byTitle, otherBooks: all.filter((b) => b.id !== byTitle.id).slice(0, 3) };
+    return {
+      book: byTitle,
+      otherBooks: all.filter((b) => b.id !== byTitle.id).slice(0, 3),
+    };
   }
 
   return null;
@@ -95,7 +104,7 @@ export default async function ReadBookPage({ params }: PageProps) {
           description: book.description,
           genre: book.genre,
           numberOfPages: book.pages,
-          url: `https://narzza.com/buku/${slug}`,
+          url: `/buku/${slug}`,
         }}
       />
       {/* Header Nav */}

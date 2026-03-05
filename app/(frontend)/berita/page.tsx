@@ -2,22 +2,16 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { FeedPage } from "@/components/feedpages/FeedPage";
 import { getFeedPageData } from "@/lib/data";
+import { createPageMeta } from "@/lib/metadata";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMeta({
   title: "Berita Terkini",
   description:
     "Informasi dan berita terkini dari berbagai topik, disajikan dalam format yang mudah dipahami dan cepat dicerna.",
-  openGraph: {
-    title: "Berita Terkini — Narzza Media Digital",
-    description:
-      "Informasi dan berita terkini dari berbagai topik dalam format interaktif.",
-    url: "https://narzza.com/berita",
-    type: "website",
-  },
-  alternates: { canonical: "/berita" },
-};
+  path: "/berita",
+});
 
 export default async function BeritaPage() {
   const { feeds, stories, books, roadmaps, products } =

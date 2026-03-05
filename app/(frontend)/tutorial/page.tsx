@@ -2,22 +2,16 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { FeedPage } from "@/components/feedpages/FeedPage";
 import { getFeedPageData } from "@/lib/data";
+import { createPageMeta } from "@/lib/metadata";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMeta({
   title: "Tutorial & Panduan",
   description:
     "Panduan praktis langkah demi langkah dari berbagai topik. Pelajari hal-hal baru dengan cara yang mudah dan menyenangkan.",
-  openGraph: {
-    title: "Tutorial & Panduan — Narzza Media Digital",
-    description:
-      "Panduan praktis langkah demi langkah dari berbagai topik dalam format interaktif.",
-    url: "https://narzza.com/tutorial",
-    type: "website",
-  },
-  alternates: { canonical: "/tutorial" },
-};
+  path: "/tutorial",
+});
 
 export default async function TutorialPage() {
   const { feeds, stories, books, roadmaps, products } =
