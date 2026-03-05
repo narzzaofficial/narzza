@@ -15,7 +15,10 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-export async function ProductRecommendSidebarLeft({ currentId, category }: Props) {
+export async function ProductRecommendSidebarLeft({
+  currentId,
+  category,
+}: Props) {
   const allProducts = await getProducts();
 
   // Prioritaskan produk dengan kategori sama
@@ -72,9 +75,10 @@ export async function ProductRecommendSidebarRight({ currentId }: Props) {
     .filter((p) => p.id !== currentId && p.featured)
     .slice(0, 4);
 
-  const fallback = featured.length > 0
-    ? featured
-    : allProducts.filter((p) => p.id !== currentId).slice(0, 4);
+  const fallback =
+    featured.length > 0
+      ? featured
+      : allProducts.filter((p) => p.id !== currentId).slice(0, 4);
 
   if (fallback.length === 0) return null;
 
@@ -116,9 +120,8 @@ export async function ProductRecommendSidebarRight({ currentId }: Props) {
         href="/toko"
         className="mt-3 block text-center text-xs text-cyan-400 hover:text-cyan-300 transition"
       >
-        Lihat Semua Produk →
+        Lihat Semua Produk
       </Link>
     </div>
   );
 }
-

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Product } from "@/types/products";
 
 export function ProductActions({ product }: { product: Product }) {
@@ -14,38 +15,84 @@ export function ProductActions({ product }: { product: Product }) {
         {isPhysical ? (
           <>
             {platforms.shopee && (
-              <PlatformLink
+              <a
                 href={platforms.shopee}
-                label="Beli di Shopee"
-                color="bg-orange-600"
-                icon="🛍️"
-              />
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 font-semibold text-white transition hover:brightness-110"
+                style={{ background: "#ee4d2d" }}
+              >
+                <Image
+                  src="/assets/shopee.png"
+                  alt="Shopee"
+                  width={20}
+                  height={20}
+                  className="shrink-0"
+                />
+                <span>Beli di Shopee</span>
+              </a>
             )}
             {platforms.tiktokshop && (
-              <PlatformLink
+              <a
                 href={platforms.tiktokshop}
-                label="Beli di TikTok Shop"
-                color="bg-slate-900"
-                icon="🎵"
-              />
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 font-semibold transition hover:brightness-110"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #010101 0%, #1a1a2e 100%)",
+                  border: "1px solid rgba(105,232,223,0.4)",
+                  color: "#ffffff",
+                  boxShadow: "inset 0 0 20px rgba(105,232,223,0.08)",
+                }}
+              >
+                <Image
+                  src="/assets/tiktok.png"
+                  alt="TikTok"
+                  width={20}
+                  height={20}
+                  className="shrink-0"
+                />
+                <span>Beli di TikTok Shop</span>
+              </a>
             )}
             {platforms.tokopedia && (
-              <PlatformLink
+              <a
                 href={platforms.tokopedia}
-                label="Beli di Tokopedia"
-                color="bg-emerald-600"
-                icon="🟢"
-              />
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 font-semibold text-white transition hover:brightness-110"
+                style={{ background: "#42b549" }}
+              >
+                <Image
+                  src="/assets/tokopedia.png"
+                  alt="Tokopedia"
+                  width={20}
+                  height={20}
+                  className="shrink-0"
+                />
+                <span>Beli di Tokopedia</span>
+              </a>
             )}
           </>
         ) : (
           platforms.lynk && (
-            <PlatformLink
+            <a
               href={platforms.lynk}
-              label="Download di Lynk"
-              color="bg-cyan-600"
-              icon="💎"
-            />
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 font-semibold text-white transition hover:brightness-110"
+              style={{ background: "#0a66c2" }}
+            >
+              <Image
+                src="/assets/lynkid.png"
+                alt="Lynk.id"
+                width={80}
+                height={24}
+                className="shrink-0 object-contain"
+              />
+              <span>Download di Lynk</span>
+            </a>
           )
         )}
       </div>
@@ -56,28 +103,5 @@ export function ProductActions({ product }: { product: Product }) {
           : "Produk digital akan tersedia setelah pembayaran via platform eksternal."}
       </p>
     </div>
-  );
-}
-
-function PlatformLink({
-  href,
-  label,
-  color,
-  icon,
-}: {
-  href: string;
-  label: string;
-  color: string;
-  icon: string;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`flex items-center justify-center gap-2 rounded-lg ${color} px-4 py-3 font-semibold text-white transition filter hover:brightness-110`}
-    >
-      {icon} {label}
-    </a>
   );
 }

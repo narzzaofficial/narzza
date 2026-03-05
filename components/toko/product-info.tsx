@@ -43,8 +43,8 @@ export function ProductInfo({ product }: { product: Product }) {
         <span
           className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${
             product.productType === "digital"
-              ? "bg-purple-500/20 text-purple-300"
-              : "bg-blue-500/20 text-blue-300"
+              ? "bg-purple-600/25 text-purple-800 dark:text-purple-300 ring-1 ring-purple-600/50"
+              : "bg-blue-500/20 text-blue-700 dark:text-blue-300 ring-1 ring-blue-400/40"
           }`}
         >
           {product.productType === "digital"

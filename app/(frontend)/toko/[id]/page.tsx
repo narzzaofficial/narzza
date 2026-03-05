@@ -72,7 +72,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       />
       <div className="mb-4">
         <Link href="/toko" className="detail-back-btn">
-          ← Kembali ke Toko
+          Kembali ke Toko
         </Link>
       </div>
       <div className="space-y-4">

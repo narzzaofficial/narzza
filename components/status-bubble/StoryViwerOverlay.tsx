@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Story } from "@/types/content";
 import { StoryContent } from "@/hooks/useStoryViwer";
+import { StorySidePreview } from "./StorySidePreview";
 
 type StoryViewerOverlayProps = {
   selectedStory: Story;
@@ -26,7 +27,7 @@ type StoryViewerOverlayProps = {
   onPrev: () => void;
 };
 
-const STORY_DURATION = 10000; // 10 seconds per card
+const STORY_DURATION = 10000;
 
 export function StoryViewerOverlay({
   selectedStory,
@@ -46,36 +47,35 @@ export function StoryViewerOverlay({
   onNext,
   onPrev,
 }: StoryViewerOverlayProps) {
-  // progress 0→100 for the active bar
   const [progress, setProgress] = useState(0);
   const rafRef = useRef<number | null>(null);
   const startRef = useRef<number>(0);
+
   const isLastFeed = currentIndex === popularFeeds.length - 1;
   const isFirstFeed = currentIndex === 0;
 
-  // Reset and start animation when currentIndex changes
   useEffect(() => {
-    setProgress(0);
     startRef.current = performance.now();
 
     const tick = (now: number) => {
       const elapsed = now - startRef.current;
       const pct = Math.min((elapsed / STORY_DURATION) * 100, 100);
+
       setProgress(pct);
+
       if (pct < 100) {
         rafRef.current = requestAnimationFrame(tick);
       } else {
-        // goNext() in the hook handles cross-story navigation and closing
         onNext();
       }
     };
 
     rafRef.current = requestAnimationFrame(tick);
+
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentIndex]);
+  }, [currentIndex, onNext]);
 
   return (
     <div className="fixed inset-0 z-140 flex items-center justify-center">
@@ -88,88 +88,27 @@ export function StoryViewerOverlay({
       />
 
       <div className="pointer-events-none relative z-10 flex w-full max-w-230 items-center justify-center gap-5 px-4">
-        {/* Tombol Sebelumnya (Desktop) */}
+        {/* LEFT PREVIEW */}
         {prevFeed ? (
-          <button
-            type="button"
+          <StorySidePreview
+            label="Prev"
+            title={prevFeed.title}
+            takeaway={prevFeed.takeaway}
             onClick={onPrev}
-            className="pointer-events-auto hidden w-50 shrink-0 cursor-pointer rounded-2xl border p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 xl:block"
-            style={{
-              background: "var(--story-card-bg)",
-              borderColor: "var(--story-card-border)",
-            }}
-          >
-            <p
-              className="text-[10px] uppercase tracking-wider"
-              style={{ color: "var(--story-subtext)" }}
-            >
-              Sebelumnya
-            </p>
-            <p
-              className="mt-2 overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
-              style={{ color: "var(--story-title)" }}
-            >
-              {prevFeed.title}
-            </p>
-            {prevFeed.takeaway ? (
-              <div
-                className="mt-2.5 rounded-lg border px-2.5 py-2 text-[10px] leading-relaxed"
-                style={{
-                  borderColor: "var(--story-takeaway-border)",
-                  background: "var(--story-takeaway-bg)",
-                  color: "var(--story-takeaway-text)",
-                }}
-              >
-                {prevFeed.takeaway}
-              </div>
-            ) : null}
-          </button>
+          />
         ) : prevStory && isFirstFeed ? (
-          <button
-            type="button"
+          <StorySidePreview
+            label={prevStory.name}
+            title={prevStoryTopFeed?.title}
+            takeaway={prevStoryTopFeed?.takeaway}
+            storyType={prevStory.type}
             onClick={onPrev}
-            className="pointer-events-auto hidden w-50 shrink-0 cursor-pointer rounded-2xl border p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 xl:block"
-            style={{
-              background: "var(--story-card-bg)",
-              borderColor: "var(--story-card-border)",
-            }}
-          >
-            <p
-              className="mb-2.5 text-[10px] font-semibold uppercase tracking-wider"
-              style={{ color: "var(--story-subtext)" }}
-            >
-              {prevStory.name}
-            </p>
-            {prevStoryTopFeed ? (
-              <>
-                <p
-                  className="overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
-                  style={{ color: "var(--story-title)" }}
-                >
-                  {prevStoryTopFeed.title}
-                </p>
-                <div
-                  className="mt-2.5 rounded-lg border px-2.5 py-2 text-[10px] leading-relaxed"
-                  style={{
-                    borderColor: "var(--story-takeaway-border)",
-                    background: "var(--story-takeaway-bg)",
-                    color: "var(--story-takeaway-text)",
-                  }}
-                >
-                  {prevStoryTopFeed.takeaway}
-                </div>
-              </>
-            ) : (
-              <p className="text-sm" style={{ color: "var(--story-subtext)" }}>
-                {prevStory.type}
-              </p>
-            )}
-          </button>
+          />
         ) : (
           <div className="hidden w-50 shrink-0 xl:block" />
         )}
 
-        {/* Modal Utama */}
+        {/* MAIN VIEWER */}
         <article
           className="pointer-events-auto relative h-[88vh] max-h-180 w-full max-w-100 overflow-hidden rounded-[28px] border shadow-[0_24px_80px_rgba(0,0,0,0.5)]"
           style={{
@@ -177,11 +116,10 @@ export function StoryViewerOverlay({
             borderColor: "var(--story-card-border)",
           }}
         >
-          {/* decorative gradient overlay — subtle, works on both themes */}
           <div className="pointer-events-none absolute inset-0 rounded-[28px] opacity-20 [data-theme=light]_&:opacity-10 bg-[radial-gradient(circle_at_18%_0%,rgba(56,189,248,0.3),transparent_45%),radial-gradient(circle_at_92%_0%,rgba(217,70,239,0.2),transparent_40%)]" />
 
           <div className="relative z-10 flex h-full flex-col p-5">
-            {/* Progress Bars */}
+            {/* PROGRESS */}
             <div className="mb-3 flex gap-1.5">
               {popularFeeds.map((feed, index) => (
                 <span
@@ -199,14 +137,13 @@ export function StoryViewerOverlay({
                           : index === currentIndex
                             ? `${progress}%`
                             : "0%",
-                      transition: index === currentIndex ? "none" : undefined,
                     }}
                   />
                 </span>
               ))}
             </div>
 
-            {/* Header Modal */}
+            {/* HEADER */}
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <p
@@ -215,6 +152,7 @@ export function StoryViewerOverlay({
                 >
                   Status Populer
                 </p>
+
                 <p
                   className="mt-1 text-sm font-medium"
                   style={{ color: "var(--story-subtext)" }}
@@ -222,9 +160,10 @@ export function StoryViewerOverlay({
                   {selectedStory.name} • {selectedStory.type}
                 </p>
               </div>
+
               <button
                 type="button"
-                className="rounded-full border px-3 py-1 text-[11px] transition"
+                className="rounded-full border px-3 py-1 text-[11px]"
                 style={{
                   borderColor: "var(--story-btn-border)",
                   color: "var(--story-btn-text)",
@@ -236,13 +175,12 @@ export function StoryViewerOverlay({
               </button>
             </div>
 
-            {/* Konten Utama — scrollable, touch-friendly */}
+            {/* CONTENT */}
             <div
               className="flex-1 overflow-y-auto overscroll-contain rounded-2xl border p-5"
               style={{
                 borderColor: "var(--story-inner-border)",
                 background: "var(--story-inner-bg)",
-                WebkitOverflowScrolling: "touch",
               }}
             >
               {viewerCover && (
@@ -261,31 +199,13 @@ export function StoryViewerOverlay({
                 </div>
               )}
 
-              <div className="flex items-center justify-between">
-                <span
-                  className="rounded-full border px-2.5 py-1 text-[11px] font-semibold"
-                  style={{
-                    borderColor: "var(--story-badge-border)",
-                    background: "var(--story-badge-bg)",
-                    color: "var(--story-badge-text)",
-                  }}
-                >
-                  #{currentIndex + 1} Populer
-                </span>
-                <span
-                  className="text-xs font-medium"
-                  style={{ color: "var(--story-accent)" }}
-                >
-                  Score {activeFeed.popularity}
-                </span>
-              </div>
-
               <h3
-                className="mt-4 text-2xl font-bold leading-tight"
+                className="mt-4 text-2xl font-bold"
                 style={{ color: "var(--story-title)" }}
               >
                 {activeFeed.title}
               </h3>
+
               <p
                 className="mt-4 text-sm leading-relaxed"
                 style={{ color: "var(--story-body)" }}
@@ -294,144 +214,62 @@ export function StoryViewerOverlay({
               </p>
 
               <div
-                className="mt-5 rounded-xl border px-3 py-2.5 text-xs leading-relaxed"
+                className="mt-5 rounded-xl border px-3 py-2.5 text-xs"
                 style={{
                   borderColor: "var(--story-takeaway-border)",
                   background: "var(--story-takeaway-bg)",
                   color: "var(--story-takeaway-text)",
                 }}
               >
-                <span
-                  className="mb-1 block text-[10px] font-bold uppercase tracking-wider"
-                  style={{ color: "var(--story-takeaway-label)" }}
-                >
-                  Ringkasan
-                </span>
                 {activeFeed.takeaway}
               </div>
             </div>
 
-            {/* Navigasi Bawah */}
+            {/* NAVIGATION */}
             <div className="mt-4 flex items-center justify-center gap-3">
               <button
-                type="button"
                 onClick={onPrev}
                 disabled={isFirstFeed && isFirstStory}
-                className="rounded-full border px-4 py-2 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-30"
-                style={{
-                  borderColor: "var(--story-nav-border)",
-                  color: "var(--story-nav-text)",
-                  background: "var(--story-nav-bg)",
-                }}
+                className="rounded-full border px-4 py-2 text-xs"
               >
-                Sebelumnya
+                prev
               </button>
+
               <Link
                 href={activeFeed.detailHref}
-                className="rounded-full border px-5 py-2 text-xs font-bold transition"
-                style={{
-                  borderColor: "var(--story-cta-border)",
-                  background: "var(--story-cta-bg)",
-                  color: "var(--story-cta-text)",
-                }}
                 onClick={onClose}
+                className="rounded-full border px-5 py-2 text-xs font-bold"
               >
                 {activeFeed.kind === "book" ? "Lihat Buku" : "Baca Artikel"}
               </Link>
+
               <button
-                type="button"
                 onClick={onNext}
                 disabled={isLastFeed && isLastStory}
-                className="rounded-full border px-4 py-2 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-30"
-                style={{
-                  borderColor: "var(--story-nav-border)",
-                  color: "var(--story-nav-text)",
-                  background: "var(--story-nav-bg)",
-                }}
+                className="rounded-full border px-4 py-2 text-xs"
               >
-                Selanjutnya
+                next
               </button>
             </div>
           </div>
         </article>
 
-        {/* Tombol Selanjutnya (Desktop) */}
+        {/* RIGHT PREVIEW */}
         {nextFeed ? (
-          <button
-            type="button"
+          <StorySidePreview
+            label="Selanjutnya"
+            title={nextFeed.title}
+            takeaway={nextFeed.takeaway}
             onClick={onNext}
-            className="pointer-events-auto hidden w-50 shrink-0 cursor-pointer rounded-2xl border p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 xl:block"
-            style={{
-              background: "var(--story-card-bg)",
-              borderColor: "var(--story-card-border)",
-            }}
-          >
-            <p
-              className="text-[10px] uppercase tracking-wider"
-              style={{ color: "var(--story-subtext)" }}
-            >
-              Selanjutnya
-            </p>
-            <p
-              className="mt-2 overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
-              style={{ color: "var(--story-title)" }}
-            >
-              {nextFeed.title}
-            </p>
-            {nextFeed.takeaway ? (
-              <div
-                className="mt-2.5 rounded-lg border px-2.5 py-2 text-[10px] leading-relaxed"
-                style={{
-                  borderColor: "var(--story-takeaway-border)",
-                  background: "var(--story-takeaway-bg)",
-                  color: "var(--story-takeaway-text)",
-                }}
-              >
-                {nextFeed.takeaway}
-              </div>
-            ) : null}
-          </button>
+          />
         ) : nextStory && isLastFeed ? (
-          <button
-            type="button"
+          <StorySidePreview
+            label={nextStory.name}
+            title={nextStoryTopFeed?.title}
+            takeaway={nextStoryTopFeed?.takeaway}
+            storyType={nextStory.type}
             onClick={onNext}
-            className="pointer-events-auto hidden w-50 shrink-0 cursor-pointer rounded-2xl border p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 xl:block"
-            style={{
-              background: "var(--story-card-bg)",
-              borderColor: "var(--story-card-border)",
-            }}
-          >
-            <p
-              className="mb-2.5 text-[10px] font-semibold uppercase tracking-wider"
-              style={{ color: "var(--story-subtext)" }}
-            >
-              {nextStory.name}
-            </p>
-            {nextStoryTopFeed ? (
-              <>
-                <p
-                  className="overflow-hidden text-sm font-semibold leading-snug [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
-                  style={{ color: "var(--story-title)" }}
-                >
-                  {nextStoryTopFeed.title}
-                </p>
-                <div
-                  className="mt-2.5 rounded-lg border px-2.5 py-2 text-[10px] leading-relaxed"
-                  style={{
-                    borderColor: "var(--story-takeaway-border)",
-                    background: "var(--story-takeaway-bg)",
-                    color: "var(--story-takeaway-text)",
-                  }}
-                >
-                  {nextStoryTopFeed.takeaway}
-                </div>
-              </>
-            ) : (
-              <p className="text-sm" style={{ color: "var(--story-subtext)" }}>
-                {nextStory.type}
-              </p>
-            )}
-          </button>
+          />
         ) : (
           <div className="hidden w-50 shrink-0 xl:block" />
         )}
