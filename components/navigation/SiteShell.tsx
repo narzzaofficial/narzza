@@ -1,7 +1,10 @@
-import { headers } from "next/headers";
+"use client";
+
+import { usePathname } from "next/navigation";
 import { AdsPlaceholder } from ".";
 import { ThemeLogo } from "./ThemeLogo";
 import { ShellActiveNav } from "./ShellActiveNav";
+import { SiteFeedbackButton } from "@/components/floating-actions/SiteFeedbackButton";
 
 type SiteShellProps = {
   children: React.ReactNode;
@@ -10,7 +13,7 @@ type SiteShellProps = {
 /** Rute detail konten — shell-nya dihandle oleh layout masing-masing */
 const DETAIL_PATTERNS = [
   /^\/read\/[^/]+$/,
-  /^\/buku\/[^/]+$/, // supports slug-with-id or legacy numeric
+  /^\/buku\/[^/]+$/,
   /^\/roadmap\/[^/]+$/,
   /^\/toko\/[^/]+$/,
 ];
@@ -19,9 +22,8 @@ function isDetailPage(path: string) {
   return DETAIL_PATTERNS.some((pattern) => pattern.test(path));
 }
 
-export async function SiteShell({ children }: SiteShellProps) {
-  const headersList = await headers();
-  const activePath = headersList.get("x-pathname") ?? "/";
+export function SiteShell({ children }: SiteShellProps) {
+  const activePath = usePathname();
 
   if (isDetailPage(activePath)) {
     return <>{children}</>;
@@ -66,6 +68,7 @@ export async function SiteShell({ children }: SiteShellProps) {
           </div>
         </aside>
       </div>
+      <SiteFeedbackButton />
     </div>
   );
 }
