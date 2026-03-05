@@ -49,8 +49,8 @@ export function ReadArticleBody({ feed }: ReadArticleBodyProps) {
                   line.role === "q" ? "chat-bubble-left" : "chat-bubble-right"
                 }`}
               >
-                <span className="mr-1 text-[11px] font-semibold text-slate-300">
-                  {line.role === "q" ? "Tanya:" : "Jawab:"}
+                <span className="mr-1.5 text-[11px] font-bold tracking-wide">
+                  {line.role === "q" ? "Q: " : "A: "}
                 </span>
                 {line.text}
                 {line.image ? <ChatImage src={line.image} /> : null}
