@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { AdsPlaceholder } from ".";
+import { AdsPlaceholder, MobileNavDrawer } from ".";
 import { ThemeLogo } from "./ThemeLogo";
 import { ShellActiveNav } from "./ShellActiveNav";
 import { SiteFeedbackButton } from "@/components/floating-actions/SiteFeedbackButton";
@@ -68,6 +68,7 @@ export function SiteShell({ children }: SiteShellProps) {
           </div>
         </aside>
       </div>
+      <MobileNavDrawer activePath={activePath} />
       <SiteFeedbackButton />
     </div>
   );

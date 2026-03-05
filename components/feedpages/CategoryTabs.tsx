@@ -9,27 +9,47 @@ const categoryButtons: {
   {
     key: "Semua",
     icon: "🌐",
-    activeStyle: { background: "#6366f1", borderColor: "#6366f1", color: "#fff" }, // indigo
+    activeStyle: {
+      background: "#6366f1",
+      borderColor: "#6366f1",
+      color: "#fff",
+    }, // indigo
   },
   {
     key: "Berita",
     icon: "📰",
-    activeStyle: { background: "#ef4444", borderColor: "#ef4444", color: "#fff" }, // red
+    activeStyle: {
+      background: "#ef4444",
+      borderColor: "#ef4444",
+      color: "#fff",
+    }, // red
   },
   {
     key: "Tutorial",
     icon: "🎓",
-    activeStyle: { background: "#10b981", borderColor: "#10b981", color: "#fff" }, // emerald
+    activeStyle: {
+      background: "#10b981",
+      borderColor: "#10b981",
+      color: "#fff",
+    }, // emerald
   },
   {
     key: "Riset",
     icon: "🔬",
-    activeStyle: { background: "#d946ef", borderColor: "#d946ef", color: "#fff" }, // fuchsia
+    activeStyle: {
+      background: "#d946ef",
+      borderColor: "#d946ef",
+      color: "#fff",
+    }, // fuchsia
   },
   {
     key: "Buku",
     icon: "📚",
-    activeStyle: { background: "#f59e0b", borderColor: "#f59e0b", color: "#fff" }, // amber
+    activeStyle: {
+      background: "#f59e0b",
+      borderColor: "#f59e0b",
+      color: "#fff",
+    }, // amber
   },
 ];
 

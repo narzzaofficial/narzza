@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           {
             key: "Permissions-Policy",
@@ -37,17 +37,19 @@ const nextConfig: NextConfig = {
             value: "same-origin",
           },
           {
-            // Report-only: monitor violations without blocking anything.
-            // Upgrade to Content-Security-Policy once verified clean.
             key: "Content-Security-Policy-Report-Only",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.narzza.studio https://*.clerk.accounts.dev https://challenges.cloudflare.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.narzza.studio https://*.clerk.accounts.dev https://challenges.cloudflare.com https://www.youtube.com https://s.ytimg.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: blob: https://*.digitaloceanspaces.com https://picsum.photos https://img.clerk.com",
-              "connect-src 'self' https://*.clerk.accounts.dev https://*.digitaloceanspaces.com",
-              "frame-src https://challenges.cloudflare.com https://accounts.clerk.dev",
+
+              "img-src 'self' data: blob: https://*.digitaloceanspaces.com https://picsum.photos https://img.clerk.com https://i.ytimg.com https://*.ytimg.com",
+
+              "connect-src 'self' https://*.clerk.accounts.dev https://*.digitaloceanspaces.com https://www.youtube.com https://youtube.com",
+
+              "frame-src https://challenges.cloudflare.com https://accounts.clerk.dev https://www.youtube.com https://www.youtube-nocookie.com",
+
               "worker-src 'self' blob:",
             ].join("; "),
           },

@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { NavigationSection, MobileNavDrawer } from ".";
+import { NavigationSection } from ".";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function ShellActiveNav() {
@@ -11,7 +11,6 @@ export function ShellActiveNav() {
       <NavigationSection activePath={activePath} />
       <div className="drawer-divider my-3" />
       <ThemeToggle />
-      <MobileNavDrawer activePath={activePath} />
     </>
   );
 }
