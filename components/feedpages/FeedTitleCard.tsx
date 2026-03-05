@@ -46,9 +46,12 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"
             sizes="50vw"
+            priority={index === 0}
           />
           {/* Category badge overlay */}
-          <span className={`absolute left-2 top-2 category-badge text-[9px] px-1.5 py-0.5 ${categoryConfig.badge}`}>
+          <span
+            className={`absolute left-2 top-2 category-badge text-[9px] px-1.5 py-0.5 ${categoryConfig.badge}`}
+          >
             {categoryConfig.icon}
           </span>
         </div>
@@ -170,6 +173,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"
             sizes="(max-width: 768px) 128px, 144px"
+            priority={index === 0}
           />
         </div>
       </div>

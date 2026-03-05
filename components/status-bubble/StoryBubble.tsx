@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { Story } from "@/types/content";
 
 type StoryBubbleProps = {
@@ -15,7 +16,6 @@ export function StoryBubble({
   active = false,
   onClick,
 }: StoryBubbleProps) {
-  const backgroundImage = coverImage ? `url(${coverImage})` : undefined;
   const hasImage = Boolean(coverImage);
 
   return (
@@ -33,27 +33,28 @@ export function StoryBubble({
       }}
       onMouseLeave={(e) => {
         if (!active)
-          (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+          (e.currentTarget as HTMLButtonElement).style.background =
+            "transparent";
       }}
     >
       <div className={`story-ring ${story.viral ? "story-live" : ""}`}>
         <div
           className={`story-core grid place-items-center overflow-hidden bg-linear-to-br ${story.palette} text-xs font-semibold text-white`}
-          style={
-            backgroundImage
-              ? {
-                  backgroundImage,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }
-              : undefined
-          }
         >
-          {!hasImage ? (
+          {hasImage ? (
+            <Image
+              src={coverImage!}
+              alt={story.name}
+              width={56}
+              height={56}
+              sizes="56px"
+              className="absolute inset-0 h-full w-full rounded-full object-cover"
+            />
+          ) : (
             <span className="text-sm font-semibold leading-none tracking-tight">
               {story.label}
             </span>
-          ) : null}
+          )}
         </div>
       </div>
       <p

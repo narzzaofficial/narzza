@@ -27,6 +27,7 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
             fill
             className="object-cover object-center transition-transform duration-500 group-hover:scale-110"
             sizes="(max-width: 640px) 112px, 224px"
+            priority={index === 0}
           />
 
           {/* Step badge on image */}

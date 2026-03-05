@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  console.warn("⚠️ MONGODB_URI is not defined — DB features will be unavailable");
+  console.warn(
+    "⚠️ MONGODB_URI is not defined — DB features will be unavailable"
+  );
 }
 
 let cached = (global as any).mongoose as {
@@ -28,8 +30,8 @@ export async function connectDB(): Promise<typeof mongoose | null> {
       .connect(MONGODB_URI, {
         bufferCommands: false,
         maxPoolSize: 10,
-        serverSelectionTimeoutMS: 10000,
-        connectTimeoutMS: 10000,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 5000,
         socketTimeoutMS: 30000,
       })
       .catch((err) => {

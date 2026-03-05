@@ -124,7 +124,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} antialiased bg-canvas min-h-screen`}>
-        <ClerkProvider>
+        <ClerkProvider dynamic>
           <ThemeProvider>{children}</ThemeProvider>
         </ClerkProvider>
       </body>
