@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
 import {
   Feed,
+  Story,
   FeedForm as FeedFormType,
   emptyFeedForm,
 } from "@/app/admin/_types";
@@ -24,9 +25,18 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
           author: initialData.author ?? "",
           lines: [...initialData.lines],
           source: initialData.source ? { ...initialData.source } : undefined,
+          storyId: initialData.storyId ?? null,
         }
       : emptyFeedForm
   );
+  const [stories, setStories] = useState<Story[]>([]);
+
+  useEffect(() => {
+    fetch("/api/stories")
+      .then((res) => res.json())
+      .then((data: Story[]) => setStories(data))
+      .catch(() => setStories([]));
+  }, []);
 
   const addLine = () =>
     setForm((p) => ({
@@ -69,6 +79,29 @@ export function FeedForm({ initialData, onSave, onCancel }: Props) {
           <option value="Tutorial">Tutorial</option>
           <option value="Riset">Riset</option>
         </select>
+        <div className="sm:col-span-2">
+          <label className="mb-1 block text-xs text-slate-400">
+            Assign ke Story (Opsional)
+          </label>
+          <select
+            title="story"
+            value={form.storyId ?? ""}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                storyId: e.target.value === "" ? null : Number(e.target.value),
+              })
+            }
+            className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400"
+          >
+            <option value="">— Tidak di-assign —</option>
+            {stories.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name} ({s.type})
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="sm:col-span-2">
           <label className="mb-1 block text-xs text-slate-400">
             Cover Image

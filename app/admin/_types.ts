@@ -19,6 +19,7 @@ export type FeedForm = {
   author?: string;
   lines: ChatLine[];
   source?: { title: string; url: string };
+  storyId?: number | null;
 };
 
 export type StoryForm = {
@@ -39,6 +40,7 @@ export type BookForm = {
   rating: number;
   description: string;
   chapters: BookChapter[];
+  storyId?: number | null;
 };
 
 export type CategoryForm = {
@@ -87,6 +89,7 @@ export const emptyFeedForm: FeedForm = {
     { role: "q", text: "" },
     { role: "a", text: "" },
   ],
+  storyId: null,
 };
 
 export const emptyStoryForm: StoryForm = {
@@ -106,6 +109,7 @@ export const emptyBookForm: BookForm = {
   pages: 0,
   rating: 0,
   description: "",
+  storyId: null,
   chapters: [
     {
       title: "",

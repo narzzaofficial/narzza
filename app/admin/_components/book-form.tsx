@@ -1,7 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
-import { BookForm as BookFormType, emptyBookForm } from "@/app/admin/_types";
+import {
+  BookForm as BookFormType,
+  Story,
+  emptyBookForm,
+} from "@/app/admin/_types";
 import type { Book } from "@/types/content";
 
 interface Props {
@@ -14,6 +18,14 @@ export function BookForm({ initialData, onSave, onCancel }: Props) {
   const [form, setForm] = useState<BookFormType>(
     initialData ? JSON.parse(JSON.stringify(initialData)) : emptyBookForm
   );
+  const [stories, setStories] = useState<Story[]>([]);
+
+  useEffect(() => {
+    fetch("/api/stories")
+      .then((res) => res.json())
+      .then((data: Story[]) => setStories(data))
+      .catch(() => setStories([]));
+  }, []);
 
   // Chapter Helpers
   const addChapter = () =>
@@ -131,6 +143,29 @@ export function BookForm({ initialData, onSave, onCancel }: Props) {
           placeholder="Deskripsi Singkat"
           className="w-full sm:col-span-2 rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
         />
+        <div className="sm:col-span-2">
+          <label className="mb-1 block text-xs text-slate-400">
+            Assign ke Story (Opsional)
+          </label>
+          <select
+            title="story"
+            value={form.storyId ?? ""}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                storyId: e.target.value === "" ? null : Number(e.target.value),
+              })
+            }
+            className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
+          >
+            <option value="">— Tidak di-assign —</option>
+            {stories.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name} ({s.type})
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Chapters Section */}
