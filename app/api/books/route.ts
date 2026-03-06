@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     const newId = last ? last.id + 1 : 1;
 
     const newBook = await BookModel.create({ id: newId, ...body });
-    revalidateTag("books");
+    revalidateTag("books", {});
     return NextResponse.json(bookToJson(newBook), { status: 201 });
   } catch (error) {
     console.error("POST /api/books error:", error);

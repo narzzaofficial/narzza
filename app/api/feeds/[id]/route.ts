@@ -84,7 +84,7 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     }
 
     // Invalidate both the data cache (unstable_cache) and the ISR page cache
-    revalidateTag("feeds");
+    revalidateTag("feeds", {});
     revalidatePath("/");
     revalidatePath("/berita");
     revalidatePath("/tutorial");
@@ -119,7 +119,7 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
     await FeedModel.deleteOne({ id: feedId });
 
     // Invalidate both the data cache (unstable_cache) and the ISR page cache
-    revalidateTag("feeds");
+    revalidateTag("feeds", {});
     revalidatePath("/");
     revalidatePath("/berita");
     revalidatePath("/tutorial");

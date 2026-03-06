@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       id: nextId,
     });
 
-    revalidateTag("stories");
+    revalidateTag("stories", {});
     return NextResponse.json(
       {
         id: newStory.id,

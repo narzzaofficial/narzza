@@ -76,7 +76,7 @@ export async function POST(req: Request) {
       updatedAt: now,
     });
 
-    revalidateTag("products");
+    revalidateTag("products", {});
     return NextResponse.json({ success: true, id: product.id });
   } catch (error) {
     console.error("POST /api/products error:", error);

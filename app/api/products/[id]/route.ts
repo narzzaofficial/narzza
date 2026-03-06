@@ -96,7 +96,7 @@ export async function PUT(
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    revalidateTag("products");
+    revalidateTag("products", {});
     return NextResponse.json(productToJson(result));
   } catch (error) {
     console.error("PUT /api/products/[id] error:", error);
@@ -122,7 +122,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    revalidateTag("products");
+    revalidateTag("products", {});
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/products/[id] error:", error);

@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
     void pingIndexNow(newFeed.slug || slugify(newFeed.title, newFeed.id));
 
     // Invalidate both the data cache (unstable_cache) and the ISR page cache
-    revalidateTag("feeds");
+    revalidateTag("feeds", {});
     revalidatePath("/");
     revalidatePath("/berita");
     revalidatePath("/tutorial");

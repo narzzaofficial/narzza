@@ -67,7 +67,7 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
-    revalidateTag("stories");
+    revalidateTag("stories", {});
     return NextResponse.json({
       id: result.id,
       name: result.name,
@@ -101,7 +101,7 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
-    revalidateTag("stories");
+    revalidateTag("stories", {});
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/stories/[id] error:", error);
