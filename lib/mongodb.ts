@@ -4,7 +4,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   console.warn(
-    "⚠️ MONGODB_URI is not defined — DB features will be unavailable"
+    "⚠️ MONGODB_URI is not defined - DB features will be unavailable"
   );
 }
 
@@ -43,7 +43,7 @@ export async function connectDB(): Promise<typeof mongoose | null> {
   try {
     cached.conn = await cached.promise;
   } catch (error) {
-    console.error("❌ MongoDB connection error:", error);
+    console.error(" MongoDB connection error:", error);
     cached.conn = null;
     return null;
   }
