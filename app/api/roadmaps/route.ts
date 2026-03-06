@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { RoadmapModel } from "@/lib/models/Roadmap";
 import { roadmaps as seedRoadmaps } from "@/types/roadmaps";
@@ -92,6 +93,7 @@ export async function POST(request: NextRequest) {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id, ...result } = doc.toObject();
+    revalidateTag("roadmaps");
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
     console.error("POST /api/roadmaps error:", error);

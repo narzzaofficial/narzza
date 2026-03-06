@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { ProductModel } from "@/lib/models/Product";
 import type { IProduct } from "@/lib/models/Product";
@@ -75,6 +76,7 @@ export async function POST(req: Request) {
       updatedAt: now,
     });
 
+    revalidateTag("products");
     return NextResponse.json({ success: true, id: product.id });
   } catch (error) {
     console.error("POST /api/products error:", error);

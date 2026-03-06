@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { ProductModel } from "@/lib/models/Product";
 import type { IProduct } from "@/lib/models/Product";
@@ -84,6 +85,7 @@ export async function PUT(
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
+    revalidateTag("products");
     return NextResponse.json(productToJson(result));
   } catch (error) {
     console.error("PUT /api/products/[id] error:", error);
@@ -106,6 +108,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
+    revalidateTag("products");
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/products/[id] error:", error);

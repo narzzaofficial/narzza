@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { BookModel } from "@/lib/models/Book";
 import type { IBook } from "@/lib/models/Book";
@@ -79,6 +80,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }
 
+    revalidateTag("books");
     return NextResponse.json(bookToJson(result));
   } catch (error) {
     console.error("PUT /api/books/[id] error:", error);
@@ -104,6 +106,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }
 
+    revalidateTag("books");
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/books/[id] error:", error);

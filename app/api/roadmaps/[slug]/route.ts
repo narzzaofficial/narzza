@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { RoadmapModel } from "@/lib/models/Roadmap";
 import { roadmaps as seedRoadmaps } from "@/types/roadmaps";
@@ -68,6 +69,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id, ...rest } = result;
+    revalidateTag("roadmaps");
     return NextResponse.json(rest);
   } catch (error) {
     console.error("PUT /api/roadmaps/[slug] error:", error);
@@ -86,6 +88,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     if (result.deletedCount === 0)
       return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+    revalidateTag("roadmaps");
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/roadmaps/[slug] error:", error);

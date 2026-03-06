@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { FeedModel } from "@/lib/models/Feed";
 import type { IFeed } from "@/lib/models/Feed";
@@ -94,7 +94,8 @@ export async function POST(req: NextRequest) {
     // Fire-and-forget: notify search engines without blocking the response
     void pingIndexNow(newFeed.slug || slugify(newFeed.title, newFeed.id));
 
-    // Invalidate cached pages immediately so new content appears right away
+    // Invalidate both the data cache (unstable_cache) and the ISR page cache
+    revalidateTag("feeds");
     revalidatePath("/");
     revalidatePath("/berita");
     revalidatePath("/tutorial");

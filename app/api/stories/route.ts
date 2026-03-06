@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { StoryModel } from "@/lib/models/Story";
 import { storyCreateSchema } from "@/lib/validate";
@@ -60,6 +61,7 @@ export async function POST(req: NextRequest) {
       id: nextId,
     });
 
+    revalidateTag("stories");
     return NextResponse.json(
       { id: newStory.id, name: newStory.name, label: newStory.label, type: newStory.type, palette: newStory.palette, image: newStory.image, viral: newStory.viral },
       { status: 201 }

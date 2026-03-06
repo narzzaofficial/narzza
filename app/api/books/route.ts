@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { BookModel } from "@/lib/models/Book";
 import type { IBook } from "@/lib/models/Book";
@@ -66,6 +67,7 @@ export async function POST(request: NextRequest) {
     const newId = last ? last.id + 1 : 1;
 
     const newBook = await BookModel.create({ id: newId, ...body });
+    revalidateTag("books");
     return NextResponse.json(bookToJson(newBook), { status: 201 });
   } catch (error) {
     console.error("POST /api/books error:", error);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { FeedModel } from "@/lib/models/Feed";
 import type { IFeed } from "@/lib/models/Feed";
@@ -83,7 +83,8 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Feed not found" }, { status: 404 });
     }
 
-    // Invalidate cached pages so edits appear immediately
+    // Invalidate both the data cache (unstable_cache) and the ISR page cache
+    revalidateTag("feeds");
     revalidatePath("/");
     revalidatePath("/berita");
     revalidatePath("/tutorial");
@@ -117,7 +118,8 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
 
     await FeedModel.deleteOne({ id: feedId });
 
-    // Invalidate cached pages so deleted content disappears immediately
+    // Invalidate both the data cache (unstable_cache) and the ISR page cache
+    revalidateTag("feeds");
     revalidatePath("/");
     revalidatePath("/berita");
     revalidatePath("/tutorial");

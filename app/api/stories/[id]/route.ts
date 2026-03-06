@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { StoryModel } from "@/lib/models/Story";
 import {
@@ -69,6 +70,7 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
+    revalidateTag("stories");
     return NextResponse.json({
       id: result.id,
       name: result.name,
@@ -102,6 +104,7 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
+    revalidateTag("stories");
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/stories/[id] error:", error);
