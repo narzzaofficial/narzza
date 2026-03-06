@@ -63,7 +63,15 @@ export async function POST(req: NextRequest) {
 
     revalidateTag("stories");
     return NextResponse.json(
-      { id: newStory.id, name: newStory.name, label: newStory.label, type: newStory.type, palette: newStory.palette, image: newStory.image, viral: newStory.viral },
+      {
+        id: newStory.id,
+        name: newStory.name,
+        label: newStory.label,
+        type: newStory.type,
+        palette: newStory.palette,
+        image: newStory.image,
+        viral: newStory.viral,
+      },
       { status: 201 }
     );
   } catch (error) {

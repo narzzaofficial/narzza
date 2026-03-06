@@ -41,7 +41,11 @@ export async function GET(
     if (!conn) {
       // DB not available — fall back to in-memory dummy data
       const product = getDummyProductById(id);
-      if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      if (!product)
+        return NextResponse.json(
+          { error: "Product not found" },
+          { status: 404 }
+        );
       return NextResponse.json(product);
     }
 
@@ -49,14 +53,21 @@ export async function GET(
     if (!doc) {
       // Not in DB — try dummy data as last resort
       const fallback = getDummyProductById(id);
-      if (!fallback) return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      if (!fallback)
+        return NextResponse.json(
+          { error: "Product not found" },
+          { status: 404 }
+        );
       return NextResponse.json(fallback);
     }
 
     return NextResponse.json(productToJson(doc));
   } catch (error) {
     console.error("GET /api/products/[id] error:", error);
-    return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch product" },
+      { status: 500 }
+    );
   }
 }
 
@@ -89,7 +100,10 @@ export async function PUT(
     return NextResponse.json(productToJson(result));
   } catch (error) {
     console.error("PUT /api/products/[id] error:", error);
-    return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update product" },
+      { status: 500 }
+    );
   }
 }
 
@@ -112,7 +126,9 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/products/[id] error:", error);
-    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to delete product" },
+      { status: 500 }
+    );
   }
 }
-

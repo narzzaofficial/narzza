@@ -2,10 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { StoryModel } from "@/lib/models/Story";
-import {
-  dbUnavailableResponse,
-  invalidIdResponse,
-} from "@/lib/api-helpers";
+import { dbUnavailableResponse, invalidIdResponse } from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 

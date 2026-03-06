@@ -12,7 +12,10 @@ type RouteContext = { params: Promise<{ slug: string }> };
 function normalizeTags(tags: unknown): string[] {
   if (Array.isArray(tags)) return tags;
   if (typeof tags === "string")
-    return tags.split(",").map((t) => t.trim()).filter(Boolean);
+    return tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
   return [];
 }
 
@@ -35,7 +38,10 @@ export async function GET(_req: NextRequest, context: RouteContext) {
     return NextResponse.json(rest);
   } catch (error) {
     console.error("GET /api/roadmaps/[slug] error:", error);
-    return NextResponse.json({ error: "Failed to fetch roadmap" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch roadmap" },
+      { status: 500 }
+    );
   }
 }
 
@@ -73,7 +79,10 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     return NextResponse.json(rest);
   } catch (error) {
     console.error("PUT /api/roadmaps/[slug] error:", error);
-    return NextResponse.json({ error: "Failed to update roadmap" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update roadmap" },
+      { status: 500 }
+    );
   }
 }
 
@@ -92,6 +101,9 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/roadmaps/[slug] error:", error);
-    return NextResponse.json({ error: "Failed to delete roadmap" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to delete roadmap" },
+      { status: 500 }
+    );
   }
 }
