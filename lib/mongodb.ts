@@ -17,10 +17,6 @@ if (!cached) {
   cached = (global as any).mongoose = { conn: null, promise: null };
 }
 
-/**
- * Connect to MongoDB using Mongoose.
- * Reuses cached connection across HMR & serverless invocations.
- */
 export async function connectDB(): Promise<typeof mongoose | null> {
   if (!MONGODB_URI) return null;
   if (cached.conn) return cached.conn;
@@ -30,8 +26,8 @@ export async function connectDB(): Promise<typeof mongoose | null> {
       .connect(MONGODB_URI, {
         bufferCommands: false,
         maxPoolSize: 10,
-        serverSelectionTimeoutMS: 5000,
-        connectTimeoutMS: 5000,
+        serverSelectionTimeoutMS: 10000,
+        connectTimeoutMS: 10000,
         socketTimeoutMS: 30000,
       })
       .catch((err) => {

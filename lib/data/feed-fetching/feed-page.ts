@@ -6,10 +6,10 @@
 
 import type { FeedCategory } from "@/types/content";
 import { getFeeds } from "./feeds";
-import { getStories } from "./stories";
-import { getBooks } from "./books";
-import { getRoadmaps } from "./roadmaps";
-import { getProducts } from "./products";
+import { getStories } from "../stories";
+import { getBooks } from "../books";
+import { getRoadmaps } from "../roadmaps";
+import { getProducts } from "../products";
 
 export type FeedPageData = {
   feeds: Awaited<ReturnType<typeof getFeeds>>;
@@ -36,4 +36,3 @@ export async function getFeedPageData(
 
   return { feeds, stories, books, roadmaps, products };
 }
-
