@@ -66,7 +66,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
               <RelativeTime timestamp={feed.createdAt} />
             </span>
             <span className="text-[9px] font-semibold text-cyan-400 group-hover:text-cyan-300">
-              Baca →
+              Baca
             </span>
           </div>
         </div>
