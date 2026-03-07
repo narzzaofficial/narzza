@@ -15,12 +15,12 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="bg-canvas flex min-h-screen items-center justify-center px-4 py-12 text-slate-100">
+    <div className="page-center">
       <div className="mx-auto w-full max-w-lg text-center">
-        <div className="glass-panel rounded-3xl p-8 md:p-12">
-          {/* Error Icon */}
-          <div className="mb-6 flex justify-center">
-            <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-rose-500/20 to-red-600/20 ring-1 ring-rose-500/30">
+        <div className="glass-panel">
+          {/* icon */}
+          <div className="error-icon-wrapper">
+            <div className="error-icon-circle">
               <svg
                 className="h-16 w-16 text-rose-400"
                 fill="none"
@@ -37,59 +37,48 @@ export default function Error({
             </div>
           </div>
 
-          {/* Error Title */}
-          <h1 className="mb-3 text-2xl font-bold text-slate-50 md:text-3xl">
-            Oops! Terjadi Kesalahan
-          </h1>
+          {/* title */}
+          <h1 className="error-title">Oops! Terjadi Kesalahan</h1>
 
-          {/* Error Message */}
-          <p className="mb-6 text-slate-400">
-            Maaf, terjadi kesalahan yang tidak terduga. Silakan coba lagi atau hubungi kami jika masalah berlanjut.
+          {/* text */}
+          <p className="error-text">
+            Maaf, terjadi kesalahan yang tidak terduga.
           </p>
 
-          {/* Error Details (dev mode only) */}
+          {/* dev error */}
           {process.env.NODE_ENV === "development" && (
-            <div className="mb-6 rounded-lg border border-rose-500/30 bg-rose-500/10 p-4 text-left">
-              <p className="mb-1 text-xs font-semibold text-rose-300">Error Details (Dev Mode):</p>
+            <div className="error-dev-box">
+              <p className="text-xs font-semibold text-rose-300">
+                Error Details
+              </p>
+
               <p className="text-xs font-mono text-rose-200">{error.message}</p>
-              {error.digest && (
-                <p className="mt-2 text-xs text-slate-400">Digest: {error.digest}</p>
-              )}
             </div>
           )}
 
-          {/* Action Buttons */}
+          {/* buttons */}
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <button
-              onClick={() => reset()}
-              className="rounded-lg bg-cyan-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-cyan-400"
-            >
+            <button onClick={() => reset()} className="btn-primary">
               🔄 Coba Lagi
             </button>
-            <Link
-              href="/"
-              className="rounded-lg border border-cyan-400/40 bg-cyan-500/10 px-6 py-3 text-sm font-semibold text-cyan-200 transition hover:border-cyan-300/60 hover:bg-cyan-500/20"
-            >
+
+            <Link href="/" className="btn-secondary">
               ← Kembali ke Beranda
             </Link>
           </div>
 
-          {/* Help Section */}
+          {/* help */}
           <div className="mt-8 border-t border-slate-700/60 pt-6">
             <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
               Butuh Bantuan?
             </p>
+
             <div className="flex flex-wrap justify-center gap-2">
-              <Link
-                href="/tentang"
-                className="rounded-full bg-slate-800/60 px-3 py-1.5 text-xs text-slate-300 transition hover:bg-slate-700/60 hover:text-cyan-300"
-              >
+              <Link href="/tentang" className="chip-link">
                 📧 Hubungi Kami
               </Link>
-              <Link
-                href="/"
-                className="rounded-full bg-slate-800/60 px-3 py-1.5 text-xs text-slate-300 transition hover:bg-slate-700/60 hover:text-cyan-300"
-              >
+
+              <Link href="/" className="chip-link">
                 🏠 Beranda
               </Link>
             </div>

@@ -40,7 +40,7 @@ const FeedSchema = new Schema<IFeed>(
       enum: ["Berita", "Tutorial", "Riset"],
       required: true,
     },
-    createdAt: { type: Number, default: () => Date.now() },
+    createdAt: { type: Number, default: Date.now, index: true },
     popularity: { type: Number, default: 0 },
     image: { type: String, default: "" },
     lines: { type: [ChatLineSchema], default: [] },

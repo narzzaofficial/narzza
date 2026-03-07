@@ -4,7 +4,7 @@ import { FeedModel } from "@/lib/models/Feed";
 import type { IFeed } from "@/lib/models/Feed";
 import type { Feed } from "@/types/content";
 import { feeds as dummyFeeds } from "@/constants/content";
-import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
+import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "../constants";
 import { slugify, parseSlugId } from "@/lib/slugify";
 
 /**
@@ -35,23 +35,28 @@ function docToFeed(d: IFeed): Feed {
     storyId: d.storyId ?? null,
   };
 }
-
 async function loadFeeds(category?: Feed["category"]): Promise<Feed[]> {
   try {
     const conn = await connectDB();
     if (!conn) {
-      // DB not available — fall back to in-memory dummy data
       const fallback = category
         ? dummyFeeds.filter((f) => f.category === category)
         : dummyFeeds;
       return fallback.map(ensureSlug);
     }
+
     const filter: Record<string, unknown> = {};
     if (category) filter.category = category;
-    const docs = await FeedModel.find(filter).sort({ createdAt: -1 }).lean();
+
+    const docs = await FeedModel.find(filter)
+      // Hapus '-takeaway' dari sini. Kita butuh takeaway untuk "Inti Cepat".
+      // Kita cuma buang '-lines' (isi chat yang berat).
+      .select("-lines")
+      .sort({ createdAt: -1 })
+      .lean();
+
     return docs.map(docToFeed);
-  } catch {
-    // On any DB error, fall back to dummy data
+  } catch (error) {
     const fallback = category
       ? dummyFeeds.filter((f) => f.category === category)
       : dummyFeeds;
@@ -86,15 +91,38 @@ export const getFeedById = unstable_cache(
 );
 
 export async function getFeedBySlug(slug: string): Promise<Feed | null> {
-  const feeds = await getFeeds();
-  const exact = feeds.find((f) => f.slug === slug);
-  if (exact) return exact;
-  const id = parseSlugId(slug);
-  if (id !== null) return feeds.find((f) => f.id === id) ?? null;
-  return null;
+  try {
+    const conn = await connectDB();
+    if (!conn) return null; // Biarkan dia mencoba ambil dari cache/dummy di level atas
+
+    // Langsung cari satu dokumen saja di MongoDB berdasarkan slug
+    const doc = await FeedModel.findOne({ slug }).lean();
+    if (doc) return docToFeed(doc);
+
+    // Jika slug tidak ketemu, coba cari berdasarkan ID (seperti logika lamamu)
+    const id = parseSlugId(slug);
+    if (id !== null) {
+      const docById = await FeedModel.findOne({ id }).lean();
+      return docById ? docToFeed(docById) : null;
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error fetching slug:", error);
+    return null;
+  }
 }
 
 export async function getFeedSlugs(): Promise<string[]> {
-  const feeds = await getFeeds();
-  return feeds.map((f) => f.slug);
+  try {
+    const conn = await connectDB();
+    if (!conn) return []; // Jangan lari ke dummy data di sini agar build tidak salah
+
+    // Hanya ambil field 'slug', abaikan yang lain. Sangat cepat!
+    const docs = await FeedModel.find({}).select("slug").lean();
+    return docs.map((d) => d.slug).filter(Boolean);
+  } catch (error) {
+    console.error("Error fetching slugs:", error);
+    return [];
+  }
 }
