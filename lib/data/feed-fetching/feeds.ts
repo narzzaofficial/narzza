@@ -38,12 +38,7 @@ function docToFeed(d: IFeed): Feed {
 async function loadFeeds(category?: Feed["category"]): Promise<Feed[]> {
   try {
     const conn = await connectDB();
-    if (!conn) {
-      const fallback = category
-        ? dummyFeeds.filter((f) => f.category === category)
-        : dummyFeeds;
-      return fallback.map(ensureSlug);
-    }
+    if (!conn) return [];
 
     const filter: Record<string, unknown> = {};
     if (category) filter.category = category;
@@ -57,23 +52,19 @@ async function loadFeeds(category?: Feed["category"]): Promise<Feed[]> {
 
     return docs.map(docToFeed);
   } catch (error) {
-    const fallback = category
-      ? dummyFeeds.filter((f) => f.category === category)
-      : dummyFeeds;
-    return fallback.map(ensureSlug);
+    console.error("DB Error:", error);
+    return [];
   }
 }
 
 async function loadFeedById(id: number): Promise<Feed | null> {
   try {
     const conn = await connectDB();
-    if (!conn) {
-      const feed = dummyFeeds.find((f) => f.id === id);
-      return feed ? ensureSlug(feed) : null;
-    }
+    if (!conn) return null;
     const doc = await FeedModel.findOne({ id }).lean();
     return doc ? docToFeed(doc) : null;
-  } catch {
+  } catch (error) {
+    console.error("DB Error:", error);
     return null;
   }
 }
