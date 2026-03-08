@@ -1,4 +1,4 @@
-import { CONTENT_REVALIDATE_SECONDS, getFeeds } from "@/lib/data";
+import { getFeeds } from "@/lib/data";
 import {
   SITE_NAME,
   BASE_URL,
@@ -7,7 +7,7 @@ import {
   SITE_LOGO,
 } from "@/lib/site-config";
 
-export const revalidate = CONTENT_REVALIDATE_SECONDS; // 5 menit
+export const revalidate = 1600;
 
 function xmlEscape(str: string): string {
   return str

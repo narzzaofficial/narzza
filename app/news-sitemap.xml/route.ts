@@ -1,10 +1,10 @@
-import { CONTENT_REVALIDATE_SECONDS, getFeeds } from "@/lib/data";
+import { getFeeds } from "@/lib/data";
 import { BASE_URL, SITE_NAME, SITE_LANGUAGE } from "@/lib/site-config";
 
 // Google News only indexes articles published within the last 48 hours
 const NEWS_WINDOW_MS = 48 * 60 * 60 * 1000;
 
-export const revalidate = CONTENT_REVALIDATE_SECONDS;
+export const revalidate = 1600;
 
 function xmlEscape(str: string): string {
   return str
