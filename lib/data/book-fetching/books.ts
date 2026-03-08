@@ -4,7 +4,7 @@ import { BookModel } from "@/lib/models/Book";
 import type { IBook } from "@/lib/models/Book";
 import type { Book } from "@/types/content";
 import { books as dummyBooks } from "@/constants/content";
-import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
+import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "../constants";
 
 /**
  * Convert a raw Mongoose Book document into a plain Book object.
@@ -31,7 +31,8 @@ async function loadBooks(): Promise<Book[]> {
     if (!conn) return dummyBooks;
     const docs = await BookModel.find().sort({ id: 1 }).lean();
     return docs.map(docToBook);
-  } catch {
+  } catch (error) {
+    console.error("DB Error:", error);
     return dummyBooks;
   }
 }
@@ -49,7 +50,9 @@ export async function getBookById(id: number): Promise<Book | null> {
       const doc = await BookModel.findOne({ id }).lean();
       if (doc) return docToBook(doc);
     }
-  } catch { /* fall through to cache */ }
+  } catch {
+    /* fall through to cache */
+  }
 
   // Fall back to the cached list if DB lookup fails
   const books = await getBooks();

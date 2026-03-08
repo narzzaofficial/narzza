@@ -4,7 +4,6 @@ import { BASE_URL, SITE_NAME, SITE_LANGUAGE } from "@/lib/site-config";
 // Google News only indexes articles published within the last 48 hours
 const NEWS_WINDOW_MS = 48 * 60 * 60 * 1000;
 
-export const dynamic = "force-dynamic";
 export const revalidate = 300;
 
 function xmlEscape(str: string): string {

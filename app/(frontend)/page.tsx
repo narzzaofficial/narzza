@@ -4,8 +4,6 @@ import { FeedPage } from "@/components/feedpages/FeedPage";
 import { getFeedPageData } from "@/lib/data";
 import { createPageMeta } from "@/lib/metadata";
 
-export const revalidate = 300;
-
 export const metadata: Metadata = createPageMeta({
   title: "Berita, Tutorial & Riset",
   description:

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import {
-  getFeeds,
   getFeedById,
   getFeedBySlug,
   getFeedSlugs,
@@ -23,11 +22,19 @@ import {
   SITE_OG_IMAGE_HEIGHT,
   SITE_LANGUAGE,
 } from "@/lib/site-config";
+import { getSimilarFeeds } from "@/lib/data/feed-fetching/feeds";
 
-export const revalidate = 300;
+// ✅ TIDAK ada export revalidate di sini
+// generateStaticParams di bawah sudah cukup → Next.js otomatis SSG
+// Halaman detail artikel = static selamanya, tidak perlu revalidate berkala
 
 type PageProps = { params: Promise<{ slug: string }> };
 
+/**
+ * Pre-render semua slug saat build time → SSG murni.
+ * Slug baru yang ditambahkan setelah build akan di-render on-demand
+ * (fallback: "blocking" adalah default Next.js App Router).
+ */
 export async function generateStaticParams() {
   const slugs = await getFeedSlugs();
   return slugs.map((slug) => ({ slug }));
@@ -38,12 +45,12 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  // For old numeric URLs, try lookup by ID
   const feed = /^\d+$/.test(slug)
     ? await getFeedById(Number(slug))
     : await getFeedBySlug(slug);
 
   if (!feed) return { title: `Konten tidak ditemukan | ${SITE_NAME}` };
+
   return {
     title: feed.title,
     description: feed.takeaway,
@@ -80,7 +87,7 @@ export async function generateMetadata({
 export default async function ReadPage({ params }: PageProps) {
   const { slug } = await params;
 
-  // 301 redirect: old numeric URLs like /read/42 → /read/actual-slug-42
+  // 301 redirect: URL lama numerik /read/42 → /read/actual-slug-42
   if (/^\d+$/.test(slug)) {
     const feedById = await getFeedById(Number(slug));
     if (feedById) permanentRedirect(`/read/${feedById.slug}`);
@@ -90,15 +97,16 @@ export default async function ReadPage({ params }: PageProps) {
   const feed = await getFeedBySlug(slug);
   if (!feed) notFound();
 
-  const [allFeeds, products] = await Promise.all([getFeeds(), getProducts()]);
+  // ✅ getSimilarFeeds langsung query DB dengan filter — tidak fetch semua feed
+  // ✅ getProducts tetap paralel via Promise.all
+  const [similarFeeds, products] = await Promise.all([
+    getSimilarFeeds(feed.category, feed.id),
+    getProducts(),
+  ]);
 
-  const similarFeeds = allFeeds
-    .filter((item) => item.category === feed.category && item.id !== feed.id)
-    .sort((a, b) => b.popularity - a.popularity)
-    .slice(0, 8);
   const storePreview = products.slice(0, 8);
 
-  // Build FAQPage schema from Q/A chat lines
+  // Build FAQPage schema dari Q/A chat lines
   const qaLines = feed.lines.reduce<{ q: string; a: string }[]>(
     (acc, line, idx, arr) => {
       if (line.role === "q") {

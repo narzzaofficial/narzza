@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BookCard } from "@/components/books/book-card";
-import { getBooks } from "@/lib/data";
 import { createPageMeta } from "@/lib/metadata";
+import { getBooks } from "@/lib/data";
 
 export const revalidate = 300;
 

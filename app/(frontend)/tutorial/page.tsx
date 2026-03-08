@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { FeedPage } from "@/components/feedpages/FeedPage";
-import { getFeedPageData } from "@/lib/data";
 import { createPageMeta } from "@/lib/metadata";
+import { getCategoryFeeds } from "@/lib/data";
 
 export const revalidate = 300;
 
@@ -14,8 +14,7 @@ export const metadata: Metadata = createPageMeta({
 });
 
 export default async function TutorialPage() {
-  const { feeds, stories, books, roadmaps, products } =
-    await getFeedPageData("Tutorial");
+  const { feeds } = await getCategoryFeeds("Tutorial");
 
   return (
     <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
@@ -26,10 +25,10 @@ export default async function TutorialPage() {
         description="Panduan praktis langkah demi langkah dari berbagai topik."
         category="Tutorial"
         initialFeeds={feeds}
-        initialStories={stories}
-        initialBooks={books}
-        initialRoadmaps={roadmaps}
-        initialProducts={products}
+        initialStories={[]}
+        initialBooks={[]}
+        initialRoadmaps={[]}
+        initialProducts={[]}
       />
     </Suspense>
   );

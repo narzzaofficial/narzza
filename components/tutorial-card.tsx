@@ -9,7 +9,12 @@ type TutorialCardProps = {
 };
 
 export function TutorialCard({ feed, index }: TutorialCardProps) {
-  const stepCount = feed.lines.filter((l) => l.role === "q").length;
+  // ✅ Pakai lineCount (integer ringan) — bukan feed.lines.filter(...)
+  const stepCount = feed.lineCount ?? 0;
+
+  // ✅ Pakai previewLines (2 item) — bukan feed.lines[0] dan feed.lines[1]
+  const previewQ = feed.previewLines?.[0];
+  const previewA = feed.previewLines?.[1];
 
   return (
     <Link
@@ -17,7 +22,6 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
       className="tutorial-card group block w-full overflow-hidden rounded-2xl border border-slate-700/50 bg-linear-to-br from-slate-900/80 via-[#0d1b3a]/80 to-slate-900/80 transition-all duration-300 hover:border-cyan-400/40 hover:shadow-[0_0_32px_-8px_rgba(34,211,238,0.15)]"
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      {/* Horizontal layout for all screen sizes */}
       <div className="flex flex-row">
         {/* Thumbnail */}
         <div className="relative h-36 w-28 shrink-0 overflow-hidden bg-slate-800/40 sm:h-auto sm:w-48 md:w-56">
@@ -78,31 +82,35 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
             </h3>
 
             {/* Preview Q&A - Only on desktop */}
-            <div className="mt-3 hidden space-y-2 sm:block">
-              <div className="flex items-start gap-2 text-[13px]">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-[10px] font-bold text-blue-300">
-                  Q
-                </span>
-                <p className="line-clamp-1 text-slate-400">
-                  {feed.lines[0]?.text}
-                </p>
+            {(previewQ || previewA) && (
+              <div className="mt-3 hidden space-y-2 sm:block">
+                {previewQ && (
+                  <div className="flex items-start gap-2 text-[13px]">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-[10px] font-bold text-blue-300">
+                      Q
+                    </span>
+                    <p className="line-clamp-1 text-slate-400">
+                      {previewQ.text}
+                    </p>
+                  </div>
+                )}
+                {previewA && (
+                  <div className="flex items-start gap-2 text-[13px]">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-[10px] font-bold text-emerald-300">
+                      A
+                    </span>
+                    <p className="line-clamp-2 text-slate-300">
+                      {previewA.text}
+                    </p>
+                  </div>
+                )}
               </div>
-              {feed.lines[1] ? (
-                <div className="flex items-start gap-2 text-[13px]">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-[10px] font-bold text-emerald-300">
-                    A
-                  </span>
-                  <p className="line-clamp-2 text-slate-300">
-                    {feed.lines[1].text}
-                  </p>
-                </div>
-              ) : null}
-            </div>
+            )}
           </div>
 
           {/* Bottom row */}
           <div className="mt-3 flex items-center justify-between border-t border-slate-700/50 pt-2 sm:mt-4 sm:pt-3">
-            {/* Step indicators — visible on all screen sizes */}
+            {/* Step indicators */}
             <div className="flex items-center gap-1">
               {Array.from({ length: Math.min(stepCount, 5) }).map((_, i) => (
                 <div
@@ -112,11 +120,11 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
                   }`}
                 />
               ))}
-              {stepCount > 5 ? (
+              {stepCount > 5 && (
                 <span className="ml-1 text-[10px] text-slate-500">
                   +{stepCount - 5}
                 </span>
-              ) : null}
+              )}
             </div>
 
             <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-cyan-300 transition-colors group-hover:text-cyan-200 sm:gap-1.5">

@@ -7,7 +7,6 @@ import {
   SITE_LOGO,
 } from "@/lib/site-config";
 
-export const dynamic = "force-dynamic";
 export const revalidate = 300;
 
 function xmlEscape(str: string): string {

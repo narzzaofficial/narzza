@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { FeedModel } from "@/lib/models/Feed";
 import type { IFeed } from "@/lib/models/Feed";
@@ -17,6 +17,16 @@ type RouteContext = {
   params: Promise<{ id: string }>;
 };
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Hitung lineCount dan previewLines dari array lines. */
+function computeLineFields(lines: IFeed["lines"]) {
+  return {
+    lineCount: lines.filter((l) => l.role === "q").length,
+    previewLines: lines.slice(0, 2),
+  };
+}
+
 /** Shapes a Mongoose Feed document into the JSON response format. */
 function feedToJson(doc: IFeed) {
   return {
@@ -28,13 +38,25 @@ function feedToJson(doc: IFeed) {
     popularity: doc.popularity,
     image: doc.image,
     lines: doc.lines,
+    lineCount: doc.lineCount ?? 0,
+    previewLines: doc.previewLines ?? [],
     takeaway: doc.takeaway,
     source: doc.source ?? undefined,
     storyId: doc.storyId ?? null,
   };
 }
 
-// GET /api/feeds/[id] — returns a single feed by numeric ID
+/**
+ * Invalidate semua cache setelah perubahan data.
+ * revalidatePath("/", "layout") cukup untuk invalidate semua halaman sekaligus.
+ */
+function revalidateAllFeedCaches(slug?: string) {
+  revalidatePath("/", "layout");
+  if (slug) revalidatePath(`/read/${slug}`, "page");
+}
+
+// ─── GET /api/feeds/[id] ──────────────────────────────────────────────────────
+
 export async function GET(_req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
@@ -59,7 +81,8 @@ export async function GET(_req: NextRequest, context: RouteContext) {
   }
 }
 
-// PUT /api/feeds/[id] — updates an existing feed
+// ─── PUT /api/feeds/[id] ──────────────────────────────────────────────────────
+
 export async function PUT(req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
@@ -73,9 +96,15 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     const parsed = feedUpdateSchema.safeParse(raw);
     if (!parsed.success) return validationErrorResponse(parsed.error);
 
+    const updateData = {
+      ...parsed.data,
+      // Kalau lines diupdate, hitung ulang lineCount dan previewLines otomatis
+      ...(parsed.data.lines ? computeLineFields(parsed.data.lines) : {}),
+    };
+
     const result = await FeedModel.findOneAndUpdate(
       { id: feedId },
-      { $set: parsed.data },
+      { $set: updateData },
       { new: true, lean: true }
     );
 
@@ -83,13 +112,8 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Feed not found" }, { status: 404 });
     }
 
-    // Invalidate both the data cache (unstable_cache) and the ISR page cache
-    revalidateTag("feeds", {});
-    revalidatePath("/");
-    revalidatePath("/berita");
-    revalidatePath("/tutorial");
-    revalidatePath("/riset");
-    revalidatePath(`/read/${result.slug || slugify(result.title, result.id)}`);
+    const slug = result.slug || slugify(result.title, result.id);
+    revalidateAllFeedCaches(slug);
 
     return NextResponse.json(feedToJson(result));
   } catch (error) {
@@ -101,7 +125,8 @@ export async function PUT(req: NextRequest, context: RouteContext) {
   }
 }
 
-// DELETE /api/feeds/[id] — deletes a feed
+// ─── DELETE /api/feeds/[id] ───────────────────────────────────────────────────
+
 export async function DELETE(_req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
@@ -118,15 +143,9 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
 
     await FeedModel.deleteOne({ id: feedId });
 
-    // Invalidate both the data cache (unstable_cache) and the ISR page cache
-    revalidateTag("feeds", {});
-    revalidatePath("/");
-    revalidatePath("/berita");
-    revalidatePath("/tutorial");
-    revalidatePath("/riset");
     const slug =
       feedToDelete.slug || slugify(feedToDelete.title, feedToDelete.id);
-    revalidatePath(`/read/${slug}`);
+    revalidateAllFeedCaches(slug);
 
     return NextResponse.json({ success: true });
   } catch (error) {

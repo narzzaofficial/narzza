@@ -15,6 +15,10 @@ export interface IFeed {
   popularity: number;
   image: string;
   lines: IChatLine[];
+  // ─── Field baru ───────────────────────────────────────────────────────────
+  lineCount: number; // jumlah pertanyaan (role:"q") — untuk "X langkah"
+  previewLines: IChatLine[]; // 2 lines pertama — untuk preview Q&A di card
+  // ──────────────────────────────────────────────────────────────────────────
   takeaway: string;
   author?: string;
   source?: { title: string; url: string };
@@ -40,10 +44,12 @@ const FeedSchema = new Schema<IFeed>(
       enum: ["Berita", "Tutorial", "Riset"],
       required: true,
     },
-    createdAt: { type: Number, default: Date.now, index: true },
+    createdAt: { type: Number, default: Date.now },
     popularity: { type: Number, default: 0 },
     image: { type: String, default: "" },
     lines: { type: [ChatLineSchema], default: [] },
+    lineCount: { type: Number, default: 0 },
+    previewLines: { type: [ChatLineSchema], default: [] },
     takeaway: { type: String, default: "" },
     author: { type: String, default: "" },
     source: {
@@ -55,7 +61,13 @@ const FeedSchema = new Schema<IFeed>(
   { versionKey: false }
 );
 
-// Text index for fast full-text search (server-side, no client-side filtering needed)
+// ─── Indexes ──────────────────────────────────────────────────────────────────
+
+FeedSchema.index({ createdAt: -1 });
+FeedSchema.index({ category: 1, createdAt: -1 });
+FeedSchema.index({ category: 1, popularity: -1 });
+FeedSchema.index({ popularity: -1 });
+
 FeedSchema.index(
   { title: "text", takeaway: "text", "lines.text": "text" },
   {
