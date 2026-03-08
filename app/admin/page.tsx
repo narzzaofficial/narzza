@@ -73,7 +73,8 @@ export default function AdminPage() {
             products: data.products.length,
             categories: data.categories.length,
             messages: data.messages.length,
-            unreadMessages: data.messages.filter((m) => m.status === "unread").length,
+            unreadMessages: data.messages.filter((m) => m.status === "unread")
+              .length,
           }}
         />
 

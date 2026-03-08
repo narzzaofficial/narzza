@@ -2,6 +2,7 @@ import mongoose, { Schema, model, models } from "mongoose";
 
 interface IRoadmapVideo {
   id: string;
+  title: string; // ← tambah field title
   author: string;
 }
 
@@ -26,7 +27,11 @@ export interface IRoadmap {
 }
 
 const RoadmapVideoSchema = new Schema<IRoadmapVideo>(
-  { id: String, author: String },
+  {
+    id: { type: String, default: "" },
+    title: { type: String, default: "" }, // ← tambah field title
+    author: { type: String, default: "" },
+  },
   { _id: false }
 );
 
@@ -46,7 +51,11 @@ const RoadmapSchema = new Schema<IRoadmap>(
     title: { type: String, required: true },
     summary: { type: String, default: "" },
     duration: { type: String, default: "" },
-    level: { type: String, enum: ["Pemula", "Menengah", "Lanjutan"], default: "Pemula" },
+    level: {
+      type: String,
+      enum: ["Pemula", "Menengah", "Lanjutan"],
+      default: "Pemula",
+    },
     tags: { type: [String], default: [] },
     image: { type: String, default: "" },
     steps: { type: [RoadmapStepSchema], default: [] },
@@ -56,11 +65,15 @@ const RoadmapSchema = new Schema<IRoadmap>(
   { versionKey: false }
 );
 
-// Text index for fast full-text search
 RoadmapSchema.index(
   { title: "text", summary: "text", tags: "text" },
-  { weights: { title: 10, tags: 6, summary: 2 }, default_language: "none", name: "roadmap_text_idx" }
+  {
+    weights: { title: 10, tags: 6, summary: 2 },
+    default_language: "none",
+    name: "roadmap_text_idx",
+  }
 );
 
 export const RoadmapModel =
-  (models.Roadmap as mongoose.Model<IRoadmap>) || model<IRoadmap>("Roadmap", RoadmapSchema);
+  (models.Roadmap as mongoose.Model<IRoadmap>) ||
+  model<IRoadmap>("Roadmap", RoadmapSchema);

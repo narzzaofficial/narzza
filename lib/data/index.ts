@@ -24,7 +24,7 @@ export {
 
 export { getStories } from "./stories";
 
-export { getRoadmaps, getRoadmapBySlug } from "./roadmaps";
+export { getRoadmaps, getRoadmapBySlug } from "./roadmap/roadmaps";
 
 export { getProducts, getProductById, getProductIds } from "./products";
 

@@ -85,12 +85,16 @@ function VideoItem({
 }: {
   videoIndex: number;
   step: RoadmapStep;
-  video: { id: string; author: string };
+  video: { id: string; title?: string; author: string };
   isActive: boolean;
   isWatched: boolean;
-  globalIndex?: number; // kept for compat, unused
   onClick: () => void;
 }) {
+  // Pakai video.title kalau ada, fallback ke step.title
+  const displayTitle = video.title?.trim() || step.title;
+  console.log("video:", video); // ← tambah ini
+  console.log("displayTitle:", displayTitle); // ← dan ini
+
   return (
     <button
       type="button"
@@ -130,7 +134,7 @@ function VideoItem({
               color: isActive ? "var(--text-accent)" : "var(--text-primary)",
             }}
           >
-            {step.title}
+            {displayTitle}
           </p>
           <p
             className="mt-0.5 text-xs truncate"
@@ -180,9 +184,7 @@ export function RoadmapSidebar({
   active,
   watched,
   onSelect,
-  onClose,
 }: RoadmapSidebarProps) {
-  // track which sections are open (all open by default)
   const [openSections, setOpenSections] = useState<Set<number>>(
     () => new Set(roadmap.steps.map((_, i) => i))
   );
@@ -201,17 +203,16 @@ export function RoadmapSidebar({
   return (
     <aside
       className="flex flex-col"
-      style={{
-        height: "100%",
-        background: "var(--surface)",
-      }}
+      style={{ height: "100%", background: "var(--surface)" }}
     >
       {/* Sidebar header */}
       <div
         className="sticky top-0 z-10 border-b"
-        style={{ borderColor: "var(--surface-border)", background: "var(--surface)" }}
+        style={{
+          borderColor: "var(--surface-border)",
+          background: "var(--surface)",
+        }}
       >
-        {/* Title row */}
         <div className="flex items-center gap-3 px-4 py-3">
           <Link
             href="/roadmap"
@@ -227,10 +228,16 @@ export function RoadmapSidebar({
             Roadmap
           </Link>
           <div>
-            <h2 className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>
+            <h2
+              className="text-sm font-bold"
+              style={{ color: "var(--text-primary)" }}
+            >
               Kurikulum
             </h2>
-            <p className="text-[11px] mt-0.5" style={{ color: "var(--text-secondary)" }}>
+            <p
+              className="text-[11px] mt-0.5"
+              style={{ color: "var(--text-secondary)" }}
+            >
               {roadmap.steps.length} bagian • {totalVids} video
             </p>
           </div>
@@ -251,19 +258,19 @@ export function RoadmapSidebar({
 
             {openSections.has(si) && (
               <div>
-                {step.videos.map((video, vi) => {
-                  return (
-                    <VideoItem
-                      key={`${si}-${vi}`}
-                      videoIndex={vi}
-                      step={step}
-                      video={video}
-                      isActive={active.stepIndex === si && active.videoIndex === vi}
-                      isWatched={watched.has(`${si}-${vi}`)}
-                      onClick={() => onSelect(si, vi)}
-                    />
-                  );
-                })}
+                {step.videos.map((video, vi) => (
+                  <VideoItem
+                    key={`${si}-${vi}`}
+                    videoIndex={vi}
+                    step={step}
+                    video={video}
+                    isActive={
+                      active.stepIndex === si && active.videoIndex === vi
+                    }
+                    isWatched={watched.has(`${si}-${vi}`)}
+                    onClick={() => onSelect(si, vi)}
+                  />
+                ))}
               </div>
             )}
           </div>
