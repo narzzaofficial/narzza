@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { RoadmapModel } from "@/lib/models/Roadmap";
-import { roadmaps as seedRoadmaps } from "@/types/roadmaps";
+import type { IRoadmap } from "@/lib/models/Roadmap";
 import { dbUnavailableResponse, cachedJson } from "@/lib/api-helpers";
 import { slugifyBase } from "@/lib/slugify";
 import { sanitizeSearchQuery } from "@/lib/validate";
 
 export const dynamic = "force-dynamic";
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function normalizeTags(tags: unknown): string[] {
   if (Array.isArray(tags)) return tags;
@@ -19,44 +21,54 @@ function normalizeTags(tags: unknown): string[] {
   return [];
 }
 
-// Lean projection for search results — omits heavy `steps` array
-const SEARCH_PROJECTION = { _id: 0, steps: 0 };
+function roadmapToJson(doc: IRoadmap) {
+  return {
+    slug: doc.slug,
+    title: doc.title,
+    summary: doc.summary ?? "",
+    duration: doc.duration ?? "",
+    level: doc.level ?? "Pemula",
+    tags: doc.tags ?? [],
+    image: doc.image ?? "",
+    steps: doc.steps ?? [],
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
+  };
+}
 
-// GET /api/roadmaps — list roadmaps, optional ?q= search
+function revalidateRoadmapCaches() {
+  revalidatePath("/", "layout");
+}
+
+// ─── GET /api/roadmaps ────────────────────────────────────────────────────────
+
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = request.nextUrl;
-    const q = sanitizeSearchQuery(searchParams.get("q"));
+    const q = sanitizeSearchQuery(request.nextUrl.searchParams.get("q"));
 
     const conn = await connectDB();
-    if (!conn) {
-      const results = q
-        ? seedRoadmaps.filter((r) =>
-            r.title.toLowerCase().includes(q.toLowerCase())
-          )
-        : seedRoadmaps;
-      if (q) return NextResponse.json(results.map(({ steps: _s, ...r }) => r));
-      return NextResponse.json(results);
-    }
+    if (!conn) return dbUnavailableResponse();
 
     const filter: Record<string, unknown> = {};
     if (q) filter.title = { $regex: q, $options: "i" };
 
-    const projection = q ? SEARCH_PROJECTION : {};
-    const docs = await RoadmapModel.find(filter, projection)
+    // Kalau search, exclude steps yang berat
+    const docs = await RoadmapModel.find(filter, q ? { steps: 0 } : {})
       .sort({ createdAt: -1 })
       .lean();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const roadmaps = docs.map(({ _id, ...rest }) => rest);
-    return cachedJson(roadmaps, q ? 30 : 60);
+    return cachedJson(docs.map(roadmapToJson), q ? 30 : 60);
   } catch (error) {
     console.error("GET /api/roadmaps error:", error);
-    return NextResponse.json(seedRoadmaps, { status: 200 });
+    return NextResponse.json(
+      { error: "Failed to fetch roadmaps" },
+      { status: 500 }
+    );
   }
 }
 
-// POST /api/roadmaps — create
+// ─── POST /api/roadmaps ───────────────────────────────────────────────────────
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -91,10 +103,8 @@ export async function POST(request: NextRequest) {
       updatedAt: now,
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _id, ...result } = doc.toObject();
-    revalidateTag("roadmaps", {});
-    return NextResponse.json(result, { status: 201 });
+    revalidateRoadmapCaches();
+    return NextResponse.json(roadmapToJson(doc), { status: 201 });
   } catch (error) {
     console.error("POST /api/roadmaps error:", error);
     return NextResponse.json(

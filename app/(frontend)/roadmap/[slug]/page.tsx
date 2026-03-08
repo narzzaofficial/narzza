@@ -1,13 +1,12 @@
-// FILE: app/(frontend)/roadmap/[slug]/page.tsx
-
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getRoadmaps, getRoadmapBySlug } from "@/lib/data";
 import { RoadmapCourseViewer } from "@/components/roadmap/RoadmapCourseViewer";
 
-export const revalidate = 300;
+// ✅ Tidak ada revalidate — generateStaticParams sudah cukup untuk SSG
+export const dynamicParams = true;
 
-type RoadmapDetailPageProps = { params: Promise<{ slug: string }> };
+type PageProps = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   const roadmaps = await getRoadmaps();
@@ -16,10 +15,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
   params,
-}: RoadmapDetailPageProps): Promise<Metadata> {
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const roadmap = await getRoadmapBySlug(slug);
   if (!roadmap) return { title: "Roadmap tidak ditemukan" };
+
   return {
     title: roadmap.title,
     description: roadmap.summary,
@@ -38,9 +38,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function RoadmapDetailPage({
-  params,
-}: RoadmapDetailPageProps) {
+export default async function RoadmapDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const roadmap = await getRoadmapBySlug(slug);
   if (!roadmap) notFound();

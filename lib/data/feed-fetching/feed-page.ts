@@ -11,7 +11,7 @@ import type { FeedCategory } from "@/types/content";
 import { getFeeds } from "./feeds";
 import { getStories } from "../stories";
 import { getBooks } from "../book-fetching/books";
-import { getRoadmaps } from "../roadmaps";
+import { getRoadmaps } from "../roadmap/roadmaps";
 import { getProducts } from "../products";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
