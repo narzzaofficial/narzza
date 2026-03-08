@@ -10,9 +10,9 @@
 import type { FeedCategory } from "@/types/content";
 import { getFeeds } from "./feeds";
 import { getStories } from "../stories";
+import { getBooks } from "../book-fetching/books";
 import { getRoadmaps } from "../roadmaps";
 import { getProducts } from "../products";
-import { getBooks } from "../book-fetching/books";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -42,7 +42,6 @@ export async function getFeedPageData(): Promise<FeedPageData> {
     getRoadmaps(),
     getProducts(),
   ]);
-
   return { feeds, stories, books, roadmaps, products };
 }
 
