@@ -9,10 +9,7 @@ type TutorialCardProps = {
 };
 
 export function TutorialCard({ feed, index }: TutorialCardProps) {
-  // ✅ Pakai lineCount (integer ringan) — bukan feed.lines.filter(...)
   const stepCount = feed.lineCount ?? 0;
-
-  // ✅ Pakai previewLines (2 item) — bukan feed.lines[0] dan feed.lines[1]
   const previewQ = feed.previewLines?.[0];
   const previewA = feed.previewLines?.[1];
 
@@ -23,18 +20,18 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
       style={{ animationDelay: `${index * 100}ms` }}
     >
       <div className="flex flex-row">
-        {/* Thumbnail */}
-        <div className="relative h-36 w-28 shrink-0 overflow-hidden bg-slate-800/40 sm:h-auto sm:w-48 md:w-56">
+        {/* Thumbnail — aspect ratio crop, always fills and crops */}
+        <div className="relative aspect-[4/3] w-32 sm:w-48 md:w-56 shrink-0 overflow-hidden bg-slate-800/40">
           <Image
             src={feed.image}
             alt={feed.title}
             fill
             className="object-cover object-center transition-transform duration-500 group-hover:scale-110"
-            sizes="(max-width: 640px) 112px, 224px"
+            sizes="(max-width: 640px) 128px, (max-width: 768px) 192px, 224px"
             priority={index === 0}
           />
 
-          {/* Step badge on image */}
+          {/* Step badge */}
           <div className="absolute right-2 top-2 flex items-center gap-1 rounded-lg bg-black/70 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
             <svg
               className="h-3 w-3 text-cyan-400"
@@ -57,7 +54,7 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
         {/* Content */}
         <div className="flex flex-1 flex-col justify-between p-3 sm:p-5">
           <div>
-            {/* Top row: badge + time */}
+            {/* Badge + time */}
             <div className="mb-2 flex items-center gap-2">
               <span className="inline-flex items-center gap-1 rounded-md bg-cyan-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-cyan-300 ring-1 ring-cyan-500/25 sm:text-[11px]">
                 <svg
@@ -81,7 +78,7 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
               {feed.title}
             </h3>
 
-            {/* Preview Q&A - Only on desktop */}
+            {/* Preview Q&A — desktop only */}
             {(previewQ || previewA) && (
               <div className="mt-3 hidden space-y-2 sm:block">
                 {previewQ && (
