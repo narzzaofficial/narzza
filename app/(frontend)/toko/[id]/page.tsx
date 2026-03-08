@@ -1,19 +1,17 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getTokoDetailData, getProductStaticIds } from "@/lib/data";
+import { getTokoDetailData, getProducts } from "@/lib/data";
 import { ProductImageGallery } from "@/components/product-image-gallery";
 import { ProductActions } from "@/components/toko/product-actions";
 import { ProductInfo } from "@/components/toko/product-info";
 import { JsonLd } from "@/components/JsonLd";
 
-export const revalidate = 300;
-
 type PageProps = { params: Promise<{ id: string }> };
 
 export async function generateStaticParams() {
-  const ids = await getProductStaticIds();
-  return ids.map((id) => ({ id }));
+  const products = await getProducts();
+  return products.map((p) => ({ id: p.id }));
 }
 
 export async function generateMetadata({

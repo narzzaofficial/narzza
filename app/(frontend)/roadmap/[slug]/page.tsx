@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { getRoadmaps, getRoadmapBySlug } from "@/lib/data";
 import { RoadmapCourseViewer } from "@/components/roadmap/RoadmapCourseViewer";
 
-// ✅ Tidak ada revalidate — generateStaticParams sudah cukup untuk SSG
 export const dynamicParams = true;
 
 type PageProps = { params: Promise<{ slug: string }> };

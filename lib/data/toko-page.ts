@@ -4,7 +4,7 @@
  */
 
 import type { Product } from "@/types/products";
-import { getProductById, getProducts } from "./products";
+import { getProducts } from "./products";
 
 export type TokoPageData = {
   products: Product[];
@@ -29,10 +29,8 @@ export async function getTokoPageData(): Promise<TokoPageData> {
 export async function getTokoDetailData(
   id: string
 ): Promise<TokoDetailData | null> {
-  const [product, allProducts] = await Promise.all([
-    getProductById(id),
-    getProducts(),
-  ]);
+  const allProducts = await getProducts(); // ← fetch sekali saja
+  const product = allProducts.find((p) => p.id === id);
   if (!product) return null;
 
   const relatedProducts = allProducts
@@ -46,4 +44,3 @@ export async function getProductStaticIds(): Promise<string[]> {
   const products = await getProducts();
   return products.map((p) => p.id);
 }
-

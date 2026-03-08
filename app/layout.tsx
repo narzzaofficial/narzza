@@ -15,6 +15,7 @@ import {
   SITE_LOCALE,
 } from "@/lib/site-config";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -131,6 +132,7 @@ export default function RootLayout({
           <ThemeProvider>{children}</ThemeProvider>
         </ClerkProvider>
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );

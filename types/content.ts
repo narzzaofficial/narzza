@@ -49,11 +49,3 @@ export type Book = {
   chapters: BookChapter[];
   storyId?: number | null;
 };
-
-export type Product = {
-  id: string;
-  name: string;
-  price: number;
-  images: string[];
-  category: string;
-};

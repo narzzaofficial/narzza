@@ -22,3 +22,14 @@ export const navLink: NavLink[] = [
   { title: "Toko", note: "Belanja merchandise", href: "/toko" },
   { title: "Tentang", note: "Misi, tim, kontak", href: "/tentang" },
 ];
+
+export const navIcons: Record<string, string> = {
+  "/": "🏠",
+  "/berita": "📰",
+  "/tutorial": "🎓",
+  "/roadmap": "🗺️",
+  "/riset": "🔬",
+  "/buku": "📚",
+  "/toko": "🛍️",
+  "/tentang": "ℹ️",
+};

@@ -4,13 +4,11 @@ import { connectDB } from "@/lib/mongodb";
 import { ProductModel } from "@/lib/models/Product";
 import type { IProduct } from "@/lib/models/Product";
 import { productCreateSchema } from "@/lib/validate";
-import { products as dummyProducts } from "@/types/products";
 import {
   dbUnavailableResponse,
   validationErrorResponse,
 } from "@/lib/api-helpers";
 
-/** Shapes a Mongoose Product document into the JSON response format. */
 function productToJson(doc: IProduct) {
   return {
     id: doc.id,
@@ -29,24 +27,19 @@ function productToJson(doc: IProduct) {
   };
 }
 
-// GET /api/products — list all products
 export async function GET() {
   try {
     const conn = await connectDB();
-    if (!conn) return NextResponse.json(dummyProducts);
+    if (!conn) return NextResponse.json([]);
 
     const docs = await ProductModel.find().sort({ createdAt: -1 }).lean();
-    // If DB is empty, fall back to dummy data
-    if (docs.length === 0) return NextResponse.json(dummyProducts);
-
     return NextResponse.json(docs.map(productToJson));
   } catch (error) {
     console.error("GET /api/products error:", error);
-    return NextResponse.json(dummyProducts);
+    return NextResponse.json([]);
   }
 }
 
-// POST /api/products — create new product
 export async function POST(req: Request) {
   try {
     const conn = await connectDB();
@@ -57,7 +50,6 @@ export async function POST(req: Request) {
     if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
 
-    // Prevent duplicate product IDs
     const existing = await ProductModel.findOne({ id: body.id }).lean();
     if (existing) {
       return NextResponse.json(
@@ -76,7 +68,7 @@ export async function POST(req: Request) {
       updatedAt: now,
     });
 
-    revalidateTag("products", {});
+    revalidateTag("products", "");
     return NextResponse.json({ success: true, id: product.id });
   } catch (error) {
     console.error("POST /api/products error:", error);

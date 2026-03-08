@@ -3,8 +3,6 @@ import { BookCard } from "@/components/books/book-card";
 import { createPageMeta } from "@/lib/metadata";
 import { getBooks } from "@/lib/data";
 
-export const revalidate = 300;
-
 export const metadata: Metadata = createPageMeta({
   title: "Buku Q&A Interaktif",
   description:

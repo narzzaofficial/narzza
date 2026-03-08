@@ -5,8 +5,6 @@ import { FeedPage } from "@/components/feedpages/FeedPage";
 import { createPageMeta } from "@/lib/metadata";
 import { getCategoryFeeds } from "@/lib/data/feed-fetching/feed-page";
 
-export const revalidate = 300;
-
 export const metadata: Metadata = createPageMeta({
   title: "Berita Terkini",
   description:

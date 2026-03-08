@@ -26,7 +26,7 @@ export { getStories } from "./stories";
 
 export { getRoadmaps, getRoadmapBySlug } from "./roadmap/roadmaps";
 
-export { getProducts, getProductById, getProductIds } from "./products";
+export { getProducts } from "./products";
 
 export {
   getTokoPageData,

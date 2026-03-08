@@ -7,8 +7,6 @@ import {
   SITE_LOGO,
 } from "@/lib/site-config";
 
-export const revalidate = 300;
-
 function xmlEscape(str: string): string {
   return str
     .replace(/&/g, "&amp;")

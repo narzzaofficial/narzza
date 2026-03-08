@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { CategoryModel } from "@/lib/models/Category";
 import { categorySchema } from "@/lib/validate";
-import { categories } from "@/types/products";
 import {
   dbUnavailableResponse,
   validationErrorResponse,
@@ -13,16 +12,14 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const conn = await connectDB();
-    if (!conn) return NextResponse.json(categories);
+    if (!conn) return NextResponse.json([]);
 
     const data = await CategoryModel.find().sort({ name: 1 }).lean();
-    if (data.length === 0) return NextResponse.json(categories);
-
     const formattedData = data.map(({ _id, ...rest }) => rest);
     return NextResponse.json(formattedData);
   } catch (error) {
     console.error("Error fetching categories:", error);
-    return NextResponse.json(categories);
+    return NextResponse.json([]);
   }
 }
 

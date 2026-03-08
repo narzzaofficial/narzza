@@ -6,8 +6,6 @@ import Link from "next/link";
 import { getRoadmaps } from "@/lib/data";
 import { createPageMeta } from "@/lib/metadata";
 
-export const revalidate = 300;
-
 export const metadata: Metadata = createPageMeta({
   title: "Roadmap Belajar Programming",
   description:

@@ -10,7 +10,6 @@ import { JsonLd } from "@/components/JsonLd";
 import { parseSlugId, slugify, slugifyBase } from "@/lib/slugify";
 import { getBooks, getBookPageData, getBookStaticSlugs } from "@/lib/data";
 
-// ✅ Tidak ada revalidate — generateStaticParams sudah cukup untuk SSG
 export const dynamicParams = true;
 
 type PageProps = { params: Promise<{ id: string }> };

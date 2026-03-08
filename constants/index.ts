@@ -1,4 +1,4 @@
 import { navLink } from "./NavLink";
 import { tags } from "./NavTags";
-
-export { navLink, tags}
+import { navIcons } from "./NavLink";
+export { navLink, tags, navIcons };

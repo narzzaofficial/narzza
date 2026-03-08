@@ -5,7 +5,6 @@ import { getFeeds } from "@/lib/data";
 import { tags } from "@/constants";
 
 export const dynamicParams = false;
-export const revalidate = 300;
 
 export function generateStaticParams() {
   return tags.map((tag) => ({ slug: tag.replace(/^#/, "") }));

@@ -4,13 +4,11 @@ import { connectDB } from "@/lib/mongodb";
 import { ProductModel } from "@/lib/models/Product";
 import type { IProduct } from "@/lib/models/Product";
 import { productUpdateSchema } from "@/lib/validate";
-import { getProductById as getDummyProductById } from "@/types/products";
 import {
   dbUnavailableResponse,
   validationErrorResponse,
 } from "@/lib/api-helpers";
 
-/** Shapes a Mongoose Product document into the JSON response format. */
 function productToJson(doc: IProduct) {
   return {
     id: doc.id,
@@ -29,7 +27,6 @@ function productToJson(doc: IProduct) {
   };
 }
 
-// GET /api/products/[id] — returns a single product by string ID
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -37,29 +34,12 @@ export async function GET(
   try {
     const { id } = await params;
     const conn = await connectDB();
-
-    if (!conn) {
-      // DB not available — fall back to in-memory dummy data
-      const product = getDummyProductById(id);
-      if (!product)
-        return NextResponse.json(
-          { error: "Product not found" },
-          { status: 404 }
-        );
-      return NextResponse.json(product);
-    }
+    if (!conn)
+      return NextResponse.json({ error: "DB unavailable" }, { status: 503 });
 
     const doc = await ProductModel.findOne({ id }).lean();
-    if (!doc) {
-      // Not in DB — try dummy data as last resort
-      const fallback = getDummyProductById(id);
-      if (!fallback)
-        return NextResponse.json(
-          { error: "Product not found" },
-          { status: 404 }
-        );
-      return NextResponse.json(fallback);
-    }
+    if (!doc)
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
 
     return NextResponse.json(productToJson(doc));
   } catch (error) {
@@ -71,7 +51,6 @@ export async function GET(
   }
 }
 
-// PUT /api/products/[id] — updates an existing product (all fields optional)
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -85,18 +64,16 @@ export async function PUT(
     const parsed = productUpdateSchema.safeParse(raw);
     if (!parsed.success) return validationErrorResponse(parsed.error);
 
-    // Merge validated fields with an auto-updated timestamp
     const result = await ProductModel.findOneAndUpdate(
       { id },
       { $set: { ...parsed.data, updatedAt: Date.now() } },
-      { new: true, lean: true }
+      { returnDocument: "after", lean: true }
     );
 
-    if (!result) {
+    if (!result)
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
-    }
 
-    revalidateTag("products", {});
+    revalidateTag("products", "");
     return NextResponse.json(productToJson(result));
   } catch (error) {
     console.error("PUT /api/products/[id] error:", error);
@@ -107,7 +84,6 @@ export async function PUT(
   }
 }
 
-// DELETE /api/products/[id] — deletes a product
 export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -118,11 +94,10 @@ export async function DELETE(
     if (!conn) return dbUnavailableResponse();
 
     const result = await ProductModel.deleteOne({ id });
-    if (result.deletedCount === 0) {
+    if (result.deletedCount === 0)
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
-    }
 
-    revalidateTag("products", {});
+    revalidateTag("products", "");
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/products/[id] error:", error);

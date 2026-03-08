@@ -24,10 +24,6 @@ import {
 } from "@/lib/site-config";
 import { getSimilarFeeds } from "@/lib/data/feed-fetching/feeds";
 
-// ✅ TIDAK ada export revalidate di sini
-// generateStaticParams di bawah sudah cukup → Next.js otomatis SSG
-// Halaman detail artikel = static selamanya, tidak perlu revalidate berkala
-
 type PageProps = { params: Promise<{ slug: string }> };
 
 /**
