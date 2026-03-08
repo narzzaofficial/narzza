@@ -3,12 +3,13 @@ import { connectDB } from "@/lib/mongodb";
 import { BookModel } from "@/lib/models/Book";
 import type { IBook } from "@/lib/models/Book";
 import type { Book } from "@/types/content";
-import { books as dummyBooks } from "@/constants/content";
 import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "../constants";
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
 /**
- * Convert a raw Mongoose Book document into a plain Book object.
- * Using explicit field mapping avoids leaking internal Mongoose fields (like _id).
+ * Convert raw Mongoose Book document → plain Book object.
+ * Explicit field mapping menghindari leak internal Mongoose fields (_id, dll).
  */
 function docToBook(d: IBook): Book {
   return {
@@ -25,17 +26,35 @@ function docToBook(d: IBook): Book {
   };
 }
 
+// ─── Private loaders ─────────────────────────────────────────────────────────
+
 async function loadBooks(): Promise<Book[]> {
   try {
     const conn = await connectDB();
-    if (!conn) return dummyBooks;
+    if (!conn) return [];
+
     const docs = await BookModel.find().sort({ id: 1 }).lean();
     return docs.map(docToBook);
   } catch (error) {
-    console.error("DB Error:", error);
-    return dummyBooks;
+    console.error("❌ loadBooks error:", error);
+    return [];
   }
 }
+
+async function loadBookById(id: number): Promise<Book | null> {
+  try {
+    const conn = await connectDB();
+    if (!conn) return null;
+
+    const doc = await BookModel.findOne({ id }).lean();
+    return doc ? docToBook(doc) : null;
+  } catch (error) {
+    console.error("❌ loadBookById error:", error);
+    return null;
+  }
+}
+
+// ─── Cached exports ───────────────────────────────────────────────────────────
 
 export const getBooks = unstable_cache(
   async () => loadBooks(),
@@ -43,23 +62,8 @@ export const getBooks = unstable_cache(
   { revalidate: CONTENT_REVALIDATE_SECONDS, tags: [CACHE_TAGS.books] }
 );
 
-export async function getBookById(id: number): Promise<Book | null> {
-  try {
-    const conn = await connectDB();
-    if (conn) {
-      const doc = await BookModel.findOne({ id }).lean();
-      if (doc) return docToBook(doc);
-    }
-  } catch {
-    /* fall through to cache */
-  }
-
-  // Fall back to the cached list if DB lookup fails
-  const books = await getBooks();
-  return books.find((b) => b.id === id) ?? null;
-}
-
-export async function getBookIds(): Promise<number[]> {
-  const books = await getBooks();
-  return books.map((b) => b.id);
-}
+export const getBookById = unstable_cache(
+  async (id: number) => loadBookById(id),
+  ["cached-book-by-id"],
+  { revalidate: CONTENT_REVALIDATE_SECONDS, tags: [CACHE_TAGS.books] }
+);

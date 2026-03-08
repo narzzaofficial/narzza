@@ -3,69 +3,70 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ShareButton } from "@/components/share-button";
 import { BookCard } from "@/components/books/book-card";
-import { getBookStaticSlugs, getBooks } from "@/lib/data";
 import { BookHero } from "@/components/books/book-hero";
 import { ChapterView } from "@/components/books/chapter-view";
 import { TableOfContents } from "@/components/books/table-of-content";
 import { JsonLd } from "@/components/JsonLd";
 import { parseSlugId, slugify, slugifyBase } from "@/lib/slugify";
+import { getBooks, getBookPageData, getBookStaticSlugs } from "@/lib/data";
 
-export const revalidate = 300;
+// ✅ Tidak ada revalidate — generateStaticParams sudah cukup untuk SSG
 export const dynamicParams = true;
 
 type PageProps = { params: Promise<{ id: string }> };
 
-async function loadBookData(param: string) {
-  const all = await getBooks();
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-  // 1. Match by numeric id parsed from slug end (e.g. "judul-buku-1" → id 1)
+/**
+ * Resolve book dari slug/id param.
+ * Urutan lookup:
+ * 1. Parse numeric ID dari slug → getBookPageData(id)
+ * 2. Match by exact slug
+ * 3. Fuzzy match by title slug (tanpa trailing ID)
+ */
+async function resolveBook(param: string) {
+  // 1. Cari by numeric ID
   const parsedId = parseSlugId(param);
   if (parsedId) {
-    const byId = all.find((b) => b.id === parsedId);
-    if (byId) {
-      return {
-        book: byId,
-        otherBooks: all.filter((b) => b.id !== byId.id).slice(0, 3),
-      };
-    }
+    const data = await getBookPageData(parsedId);
+    if (data) return data;
   }
 
-  // 2. Match by exact slug  (slugify(title, id) === param)
-  const bySlug = all.find((b) => slugify(b.title, b.id) === param);
-  if (bySlug) {
-    return {
-      book: bySlug,
-      otherBooks: all.filter((b) => b.id !== bySlug.id).slice(0, 3),
-    };
-  }
-
-  // 3. Fuzzy: match title-only slug, ignoring the trailing id number
-  //    Handles case where DB ids differ from URL ids but title matches
+  // 2 & 3. Fallback — cari by slug atau title
+  const all = await getBooks();
   const titlePart = param.replace(/-\d+$/, "").replace(/-undefined$/, "");
-  const byTitle = all.find((b) => slugifyBase(b.title) === titlePart);
-  if (byTitle) {
-    return {
-      book: byTitle,
-      otherBooks: all.filter((b) => b.id !== byTitle.id).slice(0, 3),
-    };
-  }
 
-  return null;
+  const book =
+    all.find((b) => slugify(b.title, b.id) === param) ??
+    all.find((b) => slugifyBase(b.title) === titlePart);
+
+  if (!book) return null;
+
+  return {
+    book,
+    otherBooks: all.filter((b) => b.id !== book.id).slice(0, 3),
+  };
 }
+
+// ─── Static params ────────────────────────────────────────────────────────────
 
 export async function generateStaticParams() {
   const slugs = await getBookStaticSlugs();
   return slugs.map((id) => ({ id }));
 }
 
+// ─── Metadata ─────────────────────────────────────────────────────────────────
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const data = await loadBookData(id);
+  const data = await resolveBook(id);
   if (!data) return { title: "Buku tidak ditemukan" };
+
   const { book } = data;
   const slug = slugify(book.title, book.id);
+
   return {
     title: book.title,
     description: `${book.description.slice(0, 155)}...`,
@@ -85,10 +86,13 @@ export async function generateMetadata({
   };
 }
 
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
 export default async function ReadBookPage({ params }: PageProps) {
   const { id } = await params;
-  const data = await loadBookData(id);
+  const data = await resolveBook(id);
   if (!data) notFound();
+
   const { book, otherBooks } = data;
   const slug = slugify(book.title, book.id);
 
@@ -107,6 +111,7 @@ export default async function ReadBookPage({ params }: PageProps) {
           url: `/buku/${slug}`,
         }}
       />
+
       {/* Header Nav */}
       <div className="mb-4 flex flex-wrap items-center gap-3 sm:justify-between">
         <Link
@@ -124,7 +129,6 @@ export default async function ReadBookPage({ params }: PageProps) {
       </div>
 
       <BookHero book={book} />
-
       <TableOfContents chapters={book.chapters} />
 
       <div className="mt-6 space-y-6">
