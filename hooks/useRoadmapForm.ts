@@ -146,7 +146,7 @@ export function useRoadmapForm(mode: Mode, initialData?: Roadmap) {
       } else {
         await createRoadmap(form);
       }
-      router.push("/admin/roadmap");
+      router.push("/admin/roadmaps");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal menyimpan");
