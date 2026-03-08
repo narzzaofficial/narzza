@@ -3,8 +3,6 @@ import { getTokoPageData } from "@/lib/data";
 import { TokoShell } from "@/components/toko/toko-shell";
 import { createPageMeta } from "@/lib/metadata";
 
-export const revalidate = 300;
-
 export const metadata: Metadata = createPageMeta({
   title: "Toko Merchandise Digital",
   description:
