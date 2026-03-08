@@ -25,12 +25,13 @@ export type Feed = {
   popularity: number;
   image: string;
   lines: ChatLine[];
+  lineCount: number; // jumlah pertanyaan — untuk "X langkah"
+  previewLines: ChatLine[]; // 2 lines pertama — untuk preview Q&A di card
   takeaway: string;
   author?: string;
   source?: { title: string; url: string };
   storyId?: number | null;
 };
-
 export type BookChapter = {
   title: string;
   lines: ChatLine[];

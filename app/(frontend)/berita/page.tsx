@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { FeedPage } from "@/components/feedpages/FeedPage";
-import { getFeedPageData } from "@/lib/data";
+
 import { createPageMeta } from "@/lib/metadata";
+import { getCategoryFeeds } from "@/lib/data/feed-fetching/feed-page";
 
 export const revalidate = 300;
 
@@ -14,8 +15,7 @@ export const metadata: Metadata = createPageMeta({
 });
 
 export default async function BeritaPage() {
-  const { feeds, stories, books, roadmaps, products } =
-    await getFeedPageData("Berita");
+  const { feeds } = await getCategoryFeeds("Berita");
 
   return (
     <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
@@ -26,10 +26,10 @@ export default async function BeritaPage() {
         description="Informasi dan berita terkini dari berbagai topik."
         category="Berita"
         initialFeeds={feeds}
-        initialStories={stories}
-        initialBooks={books}
-        initialRoadmaps={roadmaps}
-        initialProducts={products}
+        initialStories={[]}
+        initialBooks={[]}
+        initialRoadmaps={[]}
+        initialProducts={[]}
       />
     </Suspense>
   );

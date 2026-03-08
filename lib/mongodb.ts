@@ -19,8 +19,11 @@ if (!cached) {
 
 export async function connectDB(): Promise<typeof mongoose | null> {
   if (!MONGODB_URI) return null;
+
+  // Return existing connection immediately
   if (cached.conn) return cached.conn;
 
+  // Create new connection promise if not already pending
   if (!cached.promise) {
     cached.promise = mongoose
       .connect(MONGODB_URI, {
@@ -30,8 +33,16 @@ export async function connectDB(): Promise<typeof mongoose | null> {
         connectTimeoutMS: 10000,
         socketTimeoutMS: 30000,
       })
+      .then((m) => {
+        // Cache the connection on success
+        cached.conn = m;
+        return m;
+      })
       .catch((err) => {
+        // Reset promise so next request will retry — but don't retry infinitely
         cached.promise = null;
+        cached.conn = null;
+        console.error("❌ MongoDB connection failed:", err);
         throw err;
       });
   }
@@ -39,8 +50,7 @@ export async function connectDB(): Promise<typeof mongoose | null> {
   try {
     cached.conn = await cached.promise;
   } catch (error) {
-    console.error(" MongoDB connection error:", error);
-    cached.conn = null;
+    // Promise already rejected and reset above — just return null here
     return null;
   }
 

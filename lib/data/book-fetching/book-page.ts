@@ -13,7 +13,9 @@ export type BookPageData = {
   otherBooks: Book[];
 };
 
-export async function getBookPageData(id: number): Promise<BookPageData | null> {
+export async function getBookPageData(
+  id: number
+): Promise<BookPageData | null> {
   const [book, allBooks] = await Promise.all([getBookById(id), getBooks()]);
   if (!book) return null;
   const otherBooks = allBooks.filter((b) => b.id !== id).slice(0, 3);
@@ -31,4 +33,3 @@ export async function getBookStaticSlugs(): Promise<string[]> {
     .filter((b) => b.id != null && !isNaN(b.id))
     .map((b) => slugify(b.title, b.id));
 }
-

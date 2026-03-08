@@ -9,7 +9,9 @@ type TutorialCardProps = {
 };
 
 export function TutorialCard({ feed, index }: TutorialCardProps) {
-  const stepCount = feed.lines.filter((l) => l.role === "q").length;
+  const stepCount = feed.lineCount ?? 0;
+  const previewQ = feed.previewLines?.[0];
+  const previewA = feed.previewLines?.[1];
 
   return (
     <Link
@@ -17,20 +19,19 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
       className="tutorial-card group block w-full overflow-hidden rounded-2xl border border-slate-700/50 bg-linear-to-br from-slate-900/80 via-[#0d1b3a]/80 to-slate-900/80 transition-all duration-300 hover:border-cyan-400/40 hover:shadow-[0_0_32px_-8px_rgba(34,211,238,0.15)]"
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      {/* Horizontal layout for all screen sizes */}
       <div className="flex flex-row">
-        {/* Thumbnail */}
-        <div className="relative h-36 w-28 shrink-0 overflow-hidden bg-slate-800/40 sm:h-auto sm:w-48 md:w-56">
+        {/* Thumbnail — aspect ratio crop, always fills and crops */}
+        <div className="relative aspect-[4/3] w-32 sm:w-48 md:w-56 shrink-0 overflow-hidden bg-slate-800/40">
           <Image
             src={feed.image}
             alt={feed.title}
             fill
             className="object-cover object-center transition-transform duration-500 group-hover:scale-110"
-            sizes="(max-width: 640px) 112px, 224px"
+            sizes="(max-width: 640px) 128px, (max-width: 768px) 192px, 224px"
             priority={index === 0}
           />
 
-          {/* Step badge on image */}
+          {/* Step badge */}
           <div className="absolute right-2 top-2 flex items-center gap-1 rounded-lg bg-black/70 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
             <svg
               className="h-3 w-3 text-cyan-400"
@@ -53,7 +54,7 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
         {/* Content */}
         <div className="flex flex-1 flex-col justify-between p-3 sm:p-5">
           <div>
-            {/* Top row: badge + time */}
+            {/* Badge + time */}
             <div className="mb-2 flex items-center gap-2">
               <span className="inline-flex items-center gap-1 rounded-md bg-cyan-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-cyan-300 ring-1 ring-cyan-500/25 sm:text-[11px]">
                 <svg
@@ -77,32 +78,36 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
               {feed.title}
             </h3>
 
-            {/* Preview Q&A - Only on desktop */}
-            <div className="mt-3 hidden space-y-2 sm:block">
-              <div className="flex items-start gap-2 text-[13px]">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-[10px] font-bold text-blue-300">
-                  Q
-                </span>
-                <p className="line-clamp-1 text-slate-400">
-                  {feed.lines[0]?.text}
-                </p>
+            {/* Preview Q&A — desktop only */}
+            {(previewQ || previewA) && (
+              <div className="mt-3 hidden space-y-2 sm:block">
+                {previewQ && (
+                  <div className="flex items-start gap-2 text-[13px]">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-[10px] font-bold text-blue-300">
+                      Q
+                    </span>
+                    <p className="line-clamp-1 text-slate-400">
+                      {previewQ.text}
+                    </p>
+                  </div>
+                )}
+                {previewA && (
+                  <div className="flex items-start gap-2 text-[13px]">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-[10px] font-bold text-emerald-300">
+                      A
+                    </span>
+                    <p className="line-clamp-2 text-slate-300">
+                      {previewA.text}
+                    </p>
+                  </div>
+                )}
               </div>
-              {feed.lines[1] ? (
-                <div className="flex items-start gap-2 text-[13px]">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-[10px] font-bold text-emerald-300">
-                    A
-                  </span>
-                  <p className="line-clamp-2 text-slate-300">
-                    {feed.lines[1].text}
-                  </p>
-                </div>
-              ) : null}
-            </div>
+            )}
           </div>
 
           {/* Bottom row */}
           <div className="mt-3 flex items-center justify-between border-t border-slate-700/50 pt-2 sm:mt-4 sm:pt-3">
-            {/* Step indicators — visible on all screen sizes */}
+            {/* Step indicators */}
             <div className="flex items-center gap-1">
               {Array.from({ length: Math.min(stepCount, 5) }).map((_, i) => (
                 <div
@@ -112,11 +117,11 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
                   }`}
                 />
               ))}
-              {stepCount > 5 ? (
+              {stepCount > 5 && (
                 <span className="ml-1 text-[10px] text-slate-500">
                   +{stepCount - 5}
                 </span>
-              ) : null}
+              )}
             </div>
 
             <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-cyan-300 transition-colors group-hover:text-cyan-200 sm:gap-1.5">
