@@ -47,27 +47,22 @@ export function FeedPage({
     isHome ? "Semua" : "Berita"
   );
 
-  // Panggil hook untuk shortcut keyboard
   useGlobalSearchFocus();
 
-  // Which tab is active on the home page
   const isAllTab = isHome && activeCategory === "Semua";
   const isBookTab = activeCategory === "Buku";
 
-  // Feeds to show when a category tab is selected on the home page
   const homeFeedsByTab = isBookTab
     ? []
     : isAllTab
       ? initialFeeds
       : initialFeeds.filter((f) => f.category === activeCategory);
 
-  // Feeds to show on a dedicated category page (e.g. /berita, /tutorial, /riset)
   const categoryPageFeeds =
     !isHome && category
       ? initialFeeds.filter((f) => f.category === category)
       : initialFeeds;
 
-  // Komponen Helper untuk me-render list feed/tutorial
   const renderFeedList = (feeds: Feed[], targetCategory?: string) => {
     if (feeds.length === 0) {
       return (
@@ -77,7 +72,9 @@ export function FeedPage({
       );
     }
     return (
-      <section className={`mt-4 grid ${targetCategory === "Tutorial" ? "gap-4" : "grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-4"}`}>
+      <section
+        className={`mt-4 grid ${targetCategory === "Tutorial" ? "gap-4" : "grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-4"}`}
+      >
         {feeds.map((feed, index) =>
           targetCategory === "Tutorial" ? (
             <TutorialCard key={feed.id} feed={feed} index={index} />
@@ -91,7 +88,6 @@ export function FeedPage({
 
   return (
     <>
-      {/* HEADER HERO */}
       <section className="page-hero">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -117,7 +113,6 @@ export function FeedPage({
         )}
       </section>
 
-      {/* MOBILE STORIES & SEARCH */}
       {isHome && (
         <div className="mt-4 flex flex-col gap-4">
           {showStories && initialStories.length > 0 && (
@@ -134,7 +129,6 @@ export function FeedPage({
         </div>
       )}
 
-      {/* CATEGORY TABS (Hanya di Home) */}
       {isHome && (
         <CategoryTabs
           activeCategory={activeCategory}
@@ -142,10 +136,8 @@ export function FeedPage({
         />
       )}
 
-      {/* CONTENT ROUTING */}
       {isHome ? (
         isAllTab ? (
-          // "Semua" tab — show all content sections
           <HomeAllSections
             feeds={initialFeeds}
             roadmaps={initialRoadmaps}
@@ -153,7 +145,6 @@ export function FeedPage({
             books={initialBooks}
           />
         ) : isBookTab ? (
-          // "Buku" tab — show book grid
           <section className="mt-4 grid gap-4">
             {initialBooks.length > 0 ? (
               initialBooks.map((book, index) => (
@@ -164,11 +155,9 @@ export function FeedPage({
             )}
           </section>
         ) : (
-          // Specific category tab (Berita, Tutorial, Riset)
           renderFeedList(homeFeedsByTab, activeCategory)
         )
       ) : (
-        // Dedicated category page (e.g. /berita, /tutorial) — show filtered feeds
         renderFeedList(categoryPageFeeds, category)
       )}
     </>

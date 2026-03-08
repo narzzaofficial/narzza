@@ -1,40 +1,53 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useRoadmapForm } from "@/hooks/useRoadmapForm";
-
-import { JsonImportModal } from "@/components/JsonImportModal";
-import { createRoadmap } from "@/lib/api/roadmaps";
-import type { Roadmap } from "@/types/roadmaps";
 import { RoadmapFormFields } from "@/app/admin/_components/RoadmapForm";
+import { fetchRoadmapBySlug } from "@/lib/api/roadmaps";
+import type { Roadmap } from "@/types/roadmaps";
 
-const ROADMAP_SCHEMA = `[
-  {
-    "slug": "react-specialist",
-    "title": "React Specialist",
-    "summary": "Deskripsi singkat roadmap...",
-    "duration": "3-6 bulan",
-    "level": "Pemula",
-    "tags": ["React", "JavaScript"],
-    "image": "https://...",
-    "steps": [
-      {
-        "title": "Dasar React",
-        "description": "Belajar JSX, props, state...",
-        "focus": "Komponen dasar",
-        "videos": [
-          { "id": "VIDEO_ID_YOUTUBE", "title": "Judul Video", "author": "Nama Channel" }
-        ]
-      }
-    ]
+export default function EditRoadmapPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const [initialData, setInitialData] = useState<Roadmap | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchRoadmapBySlug(slug)
+      .then(setInitialData)
+      .catch(() => setLoadError("Roadmap tidak ditemukan"));
+  }, [slug]);
+
+  if (loadError) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4">
+        <p className="text-rose-400">{loadError}</p>
+        <Link
+          href="/admin/roadmaps"
+          style={{ color: "var(--text-accent)" }}
+          className="text-sm hover:opacity-80"
+        >
+          Kembali ke Roadmaps
+        </Link>
+      </div>
+    );
   }
-]`;
 
-export default function NewRoadmapPage() {
-  const router = useRouter();
-  const [showJsonModal, setShowJsonModal] = useState(false);
+  if (!initialData) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          Memuat...
+        </p>
+      </div>
+    );
+  }
+
+  return <EditForm initialData={initialData} />;
+}
+
+function EditForm({ initialData }: { initialData: Roadmap }) {
   const {
     form,
     setForm,
@@ -48,55 +61,26 @@ export default function NewRoadmapPage() {
     removeVideo,
     updateVideo,
     handleSave,
-  } = useRoadmapForm("create");
-
-  const handleJsonImport = async (items: unknown[]): Promise<string | null> => {
-    let failCount = 0;
-    for (const item of items) {
-      try {
-        await createRoadmap(item as Roadmap);
-      } catch {
-        failCount++;
-      }
-    }
-    if (failCount > 0)
-      return `${failCount} dari ${items.length} roadmap gagal disimpan.`;
-    router.push("/admin/roadmaps");
-    router.refresh();
-    return null;
-  };
+  } = useRoadmapForm("edit", initialData);
 
   return (
     <>
-      {showJsonModal && (
-        <JsonImportModal
-          title="Roadmap"
-          schemaHint={ROADMAP_SCHEMA}
-          onImport={handleJsonImport}
-          onClose={() => setShowJsonModal(false)}
-        />
-      )}
-
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1
-          className="text-2xl font-bold"
-          style={{ color: "var(--text-primary)" }}
-        >
-          Tambah Roadmap
-        </h1>
-        <button
-          type="button"
-          onClick={() => setShowJsonModal(true)}
-          className="rounded-lg px-3 py-1.5 text-xs font-semibold transition hover:opacity-80"
-          style={{
-            background: "var(--input-bg)",
-            border: "1px solid var(--input-border)",
-            color: "var(--text-primary)",
-          }}
-        >
-          + Import JSON
-        </button>
+      <div className="flex items-start justify-between mb-6 gap-4">
+        <div>
+          <h1
+            className="text-2xl font-bold"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Edit Roadmap
+          </h1>
+          <p
+            className="text-sm mt-0.5"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            /{initialData.slug}
+          </p>
+        </div>
       </div>
 
       {/* Form */}
@@ -104,7 +88,7 @@ export default function NewRoadmapPage() {
         <RoadmapFormFields
           form={form}
           setForm={setForm}
-          editingSlug={null}
+          editingSlug={initialData.slug}
           onAddStep={addStep}
           onRemoveStep={removeStep}
           onUpdateStep={updateStep}
@@ -123,7 +107,7 @@ export default function NewRoadmapPage() {
             className="rounded-xl px-5 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
             style={{ background: "var(--text-accent)" }}
           >
-            {saving ? "Menyimpan..." : "Simpan Roadmap"}
+            {saving ? "Menyimpan..." : "Simpan Perubahan"}
           </button>
           <Link
             href="/admin/roadmaps"
