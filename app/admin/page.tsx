@@ -19,10 +19,8 @@ export default function AdminPage() {
   const {
     data,
     loading,
-    seeding,
     message,
     flash,
-    handleSeed,
     refreshEntity,
     deleteItem,
     deleteRoadmapItem,
@@ -44,15 +42,8 @@ export default function AdminPage() {
               href="/"
               className="rounded-xl border border-slate-600/50 px-3 py-2 text-xs sm:text-sm text-slate-300 transition hover:border-cyan-400/50 hover:text-cyan-200"
             >
-              ← Home
+              Home
             </Link>
-            <button
-              onClick={handleSeed}
-              disabled={seeding}
-              className="rounded-xl bg-amber-600/80 px-3 py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-amber-500 disabled:opacity-50"
-            >
-              {seeding ? "⏳ Migrating..." : "🔄 Migrate DB"}
-            </button>
           </div>
         </div>
 

@@ -1,3 +1,4 @@
+import { formatPrice } from "@/lib/format-price";
 import type { Product } from "@/types/products";
 
 export function ProductInfo({ product }: { product: Product }) {
@@ -9,7 +10,7 @@ export function ProductInfo({ product }: { product: Product }) {
 
       <div className="product-price-box mb-4 rounded-lg p-3">
         <p className="text-2xl font-bold text-orange-500">
-          Rp {product.price.toLocaleString("id-ID")}
+          Rp {formatPrice(product.price)}
         </p>
       </div>
 

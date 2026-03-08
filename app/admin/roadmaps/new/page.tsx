@@ -79,12 +79,14 @@ export default function NewRoadmapPage() {
 
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1
-          className="text-2xl font-bold"
-          style={{ color: "var(--text-primary)" }}
+        <Link
+          href="/admin/roadmaps"
+          style={{ color: "var(--text-accent)" }}
+          className="text-sm hover:opacity-80"
         >
-          Tambah Roadmap
-        </h1>
+          Kembali ke Roadmaps
+        </Link>
+
         <button
           type="button"
           onClick={() => setShowJsonModal(true)}

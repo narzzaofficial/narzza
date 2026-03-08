@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/types/products";
+import { formatPrice } from "@/lib/format-price";
 
 export function ProductCard({
   product,
@@ -36,7 +37,7 @@ export function ProductCard({
           {product.name}
         </h3>
         <p className="mt-1 text-lg font-bold text-orange-500">
-          Rp {product.price.toLocaleString("id-ID")}
+          Rp {formatPrice(product.price)}
         </p>
         <div className="mt-2 flex items-center justify-between text-[10px] uppercase tracking-wider text-slate-500 font-semibold">
           <span>{product.category}</span>

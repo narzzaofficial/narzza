@@ -7,6 +7,7 @@ import { Roadmap } from "@/types/roadmaps";
 import { Product } from "@/types/products";
 import Image from "next/image";
 import SectionHeader from "./SectionHeader";
+import { formatPrice } from "@/lib/format-price";
 
 export function HomeAllSections({
   feeds,
@@ -162,9 +163,11 @@ export function HomeAllSections({
                   </h3>
                   <div className="mt-auto flex items-center justify-between pt-2">
                     <span className="text-xs font-bold text-orange-400">
-                      Rp {product.price.toLocaleString("id-ID")}
+                      Rp {formatPrice(product.price)}
                     </span>
-                    <span className={`text-[9px] font-semibold ${product.stock > 0 ? "text-emerald-400" : "text-rose-400"}`}>
+                    <span
+                      className={`text-[9px] font-semibold ${product.stock > 0 ? "text-emerald-400" : "text-rose-400"}`}
+                    >
                       {product.stock > 0 ? "Ready" : "Habis"}
                     </span>
                   </div>
