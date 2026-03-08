@@ -14,6 +14,7 @@ import {
   SITE_OG_IMAGE_HEIGHT,
   SITE_LOCALE,
 } from "@/lib/site-config";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -129,6 +130,7 @@ export default function RootLayout({
         <ClerkProvider dynamic>
           <ThemeProvider>{children}</ThemeProvider>
         </ClerkProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
