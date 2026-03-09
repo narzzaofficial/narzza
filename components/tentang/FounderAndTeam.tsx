@@ -46,7 +46,9 @@ const FounderAndTeam = () => {
               key={employee.name}
               className="rounded-lg border border-slate-700/60 bg-slate-900/40 p-4 text-center transition hover:border-cyan-500/40 hover:bg-slate-800/60"
             >
-              <div className="mb-2 text-3xl">{employee.avatar}</div>
+              <div className="mb-2 flex justify-center text-3xl">
+                <employee.icon style={{ color: employee.color }} />
+              </div>
               <h4 className="mb-1 font-semibold text-slate-50">
                 {employee.name}
               </h4>

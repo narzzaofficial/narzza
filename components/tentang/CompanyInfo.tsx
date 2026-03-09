@@ -1,6 +1,4 @@
 import { TEAMS } from "@/constants/about";
-import React from "react";
-
 const CompanyInfo = () => {
   return (
     <section className="glass-panel rounded-2xl p-6 ring-1 ring-white/5">
@@ -14,10 +12,10 @@ const CompanyInfo = () => {
         {TEAMS.map((item) => (
           <div
             key={item.label}
-            className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-4"
+            className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-4 transition hover:border-slate-500/60 hover:bg-slate-800/60"
           >
             <div className="mb-2 flex items-center gap-2">
-              <span className="text-xl">{item.icon}</span>
+              <item.icon className="text-xl" style={{ color: item.color }} />
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                 {item.label}
               </p>

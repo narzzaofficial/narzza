@@ -1,5 +1,23 @@
 // @/app/lib/constants/about.ts
 
+import { AiFillOpenAI } from "react-icons/ai";
+import { BsCalendarFill, BsBriefcaseFill } from "react-icons/bs";
+import {
+  FaLinkedin,
+  FaInstagram,
+  FaTiktok,
+  FaYoutube,
+  FaWhatsapp,
+  FaRobot,
+  FaGlobe,
+  FaUsers,
+} from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { HiOfficeBuilding } from "react-icons/hi";
+import { MdEmail, MdTrackChanges } from "react-icons/md";
+import { RiOpenaiFill } from "react-icons/ri";
+import { SiClaude, SiGithubcopilot, SiGooglegemini } from "react-icons/si";
+
 export const ABOUT_HIGHLIGHTS = [
   {
     title: "Visi Perusahaan",
@@ -66,29 +84,84 @@ export const AI_TEAM = [
   {
     name: "GitHub Copilot",
     role: "Engineering Assistant",
-    avatar: "💻",
+    icon: SiGithubcopilot,
+    color: "#6E40C9",
     team: "Engineering",
   },
-  { name: "ChatGPT", role: "Content Writer", avatar: "🤖", team: "Content" },
-  { name: "Gemini", role: "Research Analyst", avatar: "💎", team: "Research" },
+  {
+    name: "ChatGPT",
+    role: "Content Writer",
+    icon: RiOpenaiFill,
+    color: "#10A37F",
+    team: "Content",
+  },
+  {
+    name: "Gemini",
+    role: "Research Analyst",
+    icon: SiGooglegemini,
+    color: "#1A73E8",
+    team: "Research",
+  },
   {
     name: "Claude Sonnet",
     role: "Writing Assistant",
-    avatar: "🧠",
+    icon: SiClaude,
+    color: "#D97757",
     team: "Content",
   },
-  { name: "Midjourney", role: "Visual Designer", avatar: "🎨", team: "Design" },
+  {
+    name: "Midjourney",
+    role: "Visual Designer",
+    icon: AiFillOpenAI,
+    color: "#333333",
+    team: "Design",
+  },
 ];
 
 export const CONTACT_INFO = [
-  { label: "Email Bisnis", value: "contact@narzza.com", icon: "📧" },
-  { label: "Email Umum", value: "narzzaofficial@gmail.com", icon: "✉️" },
-  { label: "GitHub", value: "github.com/narzza-media", icon: "💻" },
-  { label: "LinkedIn", value: "linkedin.com/company/narzza-media", icon: "🔗" },
-  { label: "Twitter/X", value: "@narzzamedia", icon: "🐦" },
-  { label: "Instagram", value: "@narzza.media", icon: "📸" },
+  {
+    label: "Email",
+    value: "narzzaofficial@gmail.com",
+    icon: MdEmail,
+    href: "mailto:narzzaofficial@gmail.com",
+    color: "#EA4335",
+  },
+  {
+    label: "LinkedIn",
+    value: "Narzza Media Digital",
+    icon: FaLinkedin,
+    href: "https://linkedin.com/in/narzza-media-digital-9701353b6",
+    color: "#0A66C2",
+  },
+  {
+    label: "WhatsApp",
+    value: "+62 851-7214-0815",
+    icon: FaWhatsapp,
+    href: "https://wa.me/6285172140815",
+    color: "#25D366",
+  },
+  {
+    label: "Instagram",
+    value: "@narzzaofficial",
+    icon: FaInstagram,
+    href: "https://www.instagram.com/narzzaofficial",
+    color: "#E1306C",
+  },
+  {
+    label: "TikTok",
+    value: "@narzzaofficial",
+    icon: FaTiktok,
+    href: "https://www.tiktok.com/@narzzaofficial",
+    color: "#010101",
+  },
+  {
+    label: "YouTube",
+    value: "@narzzaofficial",
+    icon: FaYoutube,
+    href: "https://youtube.com/@narzzaofficial",
+    color: "#FF0000",
+  },
 ];
-
 export const ACHIEVEMENTS = [
   { number: "500+", label: "Pembaca Aktif", icon: "👁️" },
   { number: "30+", label: "Konten Diterbitkan", icon: "📝" },
@@ -124,11 +197,31 @@ export const CORE_VALUES = [
 ];
 
 export const PLATFORM_FEATURES = [
-  { icon: "📰", label: "Berita & Artikel", desc: "Informasi terkini dari berbagai topik" },
-  { icon: "🎓", label: "Tutorial Interaktif", desc: "Panduan langkah demi langkah" },
-  { icon: "🔬", label: "Riset & Analisis", desc: "Konten mendalam berbasis data" },
-  { icon: "📚", label: "Buku Digital", desc: "Buku dengan format Q&A interaktif" },
-  { icon: "🗺️", label: "Roadmap Belajar", desc: "Jalur pembelajaran terstruktur" },
+  {
+    icon: "📰",
+    label: "Berita & Artikel",
+    desc: "Informasi terkini dari berbagai topik",
+  },
+  {
+    icon: "🎓",
+    label: "Tutorial Interaktif",
+    desc: "Panduan langkah demi langkah",
+  },
+  {
+    icon: "🔬",
+    label: "Riset & Analisis",
+    desc: "Konten mendalam berbasis data",
+  },
+  {
+    icon: "📚",
+    label: "Buku Digital",
+    desc: "Buku dengan format Q&A interaktif",
+  },
+  {
+    icon: "🗺️",
+    label: "Roadmap Belajar",
+    desc: "Jalur pembelajaran terstruktur",
+  },
   { icon: "🛒", label: "Toko Produk", desc: "Produk digital & merchandise" },
 ];
 
@@ -142,11 +235,35 @@ export const PARTNERS = [
 ];
 
 export const TEAMS = [
-  { label: "Nama Perusahaan", value: "Narzza Media Digital", icon: "🏢" },
-  { label: "Tahun Berdiri", value: "2024", icon: "📅" },
-  { label: "Fokus Bisnis", value: "Media Digital & Informasi", icon: "🎯" },
-  { label: "Model Bisnis", value: "Content + E-commerce", icon: "💼" },
-  { label: "Tim", value: "4 Orang", icon: "👥" },
-  { label: "Lokasi", value: "Remote-first, Indonesia", icon: "🌏" },
+  {
+    label: "Nama Perusahaan",
+    value: "Narzza Media Digital",
+    icon: HiOfficeBuilding,
+    color: "#60A5FA",
+  },
+  {
+    label: "Tahun Berdiri",
+    value: "2026",
+    icon: BsCalendarFill,
+    color: "#34D399",
+  },
+  {
+    label: "Fokus Bisnis",
+    value: "Media Digital & Informasi",
+    icon: MdTrackChanges,
+    color: "#F472B6",
+  },
+  {
+    label: "Model Bisnis",
+    value: "Content + E-commerce",
+    icon: BsBriefcaseFill,
+    color: "#FBBF24",
+  },
+  { label: "Tim", value: "4 Orang", icon: FaUsers, color: "#A78BFA" },
+  {
+    label: "Lokasi",
+    value: "Remote-first, Indonesia",
+    icon: FaGlobe,
+    color: "#2DD4BF",
+  },
 ];
-

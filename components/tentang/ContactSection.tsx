@@ -1,9 +1,12 @@
- import { CONTACT_INFO } from "@/constants/about";
+import { CONTACT_INFO } from "@/constants/about";
 
 const ContactSection = () => {
   return (
     <section className="glass-panel rounded-2xl p-6 ring-1 ring-black/5 dark:ring-white/5">
-      <h2 className="mb-2 text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
+      <h2
+        className="mb-2 text-2xl font-bold"
+        style={{ color: "var(--text-primary)" }}
+      >
         Hubungi Kami
       </h2>
       <p className="mb-5 text-sm" style={{ color: "var(--text-secondary)" }}>
@@ -12,16 +15,19 @@ const ContactSection = () => {
       </p>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {CONTACT_INFO.map((item) => (
-          <div
+          <a
             key={item.label}
-            className="rounded-xl border p-4 transition-colors"
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-xl border p-4 transition-colors hover:opacity-80 block"
             style={{
               borderColor: "var(--surface-border)",
               background: "var(--surface)",
             }}
           >
             <div className="mb-2 flex items-center gap-2">
-              <span className="text-lg">{item.icon}</span>
+              <item.icon className="text-xl" style={{ color: item.color }} />
               <p
                 className="text-xs font-bold uppercase tracking-widest"
                 style={{ color: "var(--text-secondary)" }}
@@ -35,7 +41,7 @@ const ContactSection = () => {
             >
               {item.value}
             </p>
-          </div>
+          </a>
         ))}
       </div>
     </section>
