@@ -5,6 +5,8 @@ import { FeedPage } from "@/components/feedpages/FeedPage";
 import { createPageMeta } from "@/lib/metadata";
 import { getCategoryFeeds } from "@/lib/data/feed-fetching/feed-page";
 
+export const revalidate = 1800; // ISR: rerender background setiap 30 menit
+
 export const metadata: Metadata = createPageMeta({
   title: "Berita Terkini",
   description:

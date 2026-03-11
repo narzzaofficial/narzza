@@ -14,6 +14,8 @@ import {
 import type { Metadata } from "next";
 import { createPageMeta } from "@/lib/metadata";
 
+export const revalidate = 3600; // ISR: tentang jarang berubah, cukup 1 jam
+
 export const metadata: Metadata = createPageMeta({
   title: "Tentang Kami",
   description:

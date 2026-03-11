@@ -3,6 +3,8 @@ import { BookCard } from "@/components/books/book-card";
 import { createPageMeta } from "@/lib/metadata";
 import { getBooks } from "@/lib/data";
 
+export const revalidate = 1800; // ISR: rerender background setiap 30 menit
+
 export const metadata: Metadata = createPageMeta({
   title: "Buku Q&A Interaktif",
   description:

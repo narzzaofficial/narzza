@@ -6,6 +6,8 @@ import Link from "next/link";
 import { getRoadmaps } from "@/lib/data";
 import { createPageMeta } from "@/lib/metadata";
 
+export const revalidate = 1800; // ISR: rerender background setiap 30 menit
+
 export const metadata: Metadata = createPageMeta({
   title: "Roadmap Belajar Programming",
   description:
