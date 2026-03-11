@@ -10,9 +10,11 @@ import {
   BASE_URL,
   SITE_DESCRIPTION,
   SITE_LOGO,
+  SITE_OG_IMAGE,
   SITE_OG_IMAGE_WIDTH,
   SITE_OG_IMAGE_HEIGHT,
   SITE_LOCALE,
+  SITE_EMAIL,
 } from "@/lib/site-config";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
@@ -45,7 +47,7 @@ export const metadata: Metadata = {
     url: BASE_URL,
     images: [
       {
-        url: "/logo.png",
+        url: SITE_OG_IMAGE, // absolute URL via site-config
         width: SITE_OG_IMAGE_WIDTH,
         height: SITE_OG_IMAGE_HEIGHT,
         alt: SITE_NAME,
@@ -56,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
-    images: ["/logo.png"],
+    images: [SITE_OG_IMAGE],
   },
   robots: {
     index: true,
@@ -108,8 +110,11 @@ export default function RootLayout({
             "@type": "WebSite",
             name: SITE_NAME,
             url: BASE_URL,
+            description: SITE_DESCRIPTION,
+            inLanguage: "id",
             potentialAction: {
               "@type": "SearchAction",
+              // target harus match route yang benar-benar ada
               target: `${BASE_URL}/search?q={search_term_string}`,
               "query-input": "required name=search_term_string",
             },
@@ -121,8 +126,16 @@ export default function RootLayout({
             "@type": "Organization",
             name: SITE_NAME,
             url: BASE_URL,
-            logo: SITE_LOGO,
-            sameAs: [],
+            logo: {
+              "@type": "ImageObject",
+              url: SITE_LOGO,
+            },
+            email: SITE_EMAIL,
+            sameAs: [
+              // Tambah URL sosmed yang aktif di sini
+              // "https://twitter.com/narzzaofficial",
+              // "https://instagram.com/narzzaofficial",
+            ],
           }}
         />
       </head>

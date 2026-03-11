@@ -3,6 +3,7 @@ import {
   SITE_NAME,
   SITE_DESCRIPTION,
   SITE_LOCALE,
+  SITE_OG_IMAGE,
   SITE_OG_IMAGE_WIDTH,
   SITE_OG_IMAGE_HEIGHT,
   BASE_URL,
@@ -27,7 +28,7 @@ export function createPageMeta({
   title,
   description = SITE_DESCRIPTION,
   path,
-  image = "/logo.png",
+  image = SITE_OG_IMAGE, // absolute URL — tidak perlu metadataBase
 }: PageMetaInput): Metadata {
   const ogTitle = `${title} — ${SITE_NAME}`;
   return {
@@ -36,7 +37,7 @@ export function createPageMeta({
     openGraph: {
       title: ogTitle,
       description,
-      url: path,
+      url: `${BASE_URL}${path}`, // selalu absolute
       type: "website",
       siteName: SITE_NAME,
       locale: SITE_LOCALE,

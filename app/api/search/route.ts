@@ -4,12 +4,18 @@ import { FeedModel } from "@/lib/models/Feed";
 import { BookModel } from "@/lib/models/Book";
 import { RoadmapModel } from "@/lib/models/Roadmap";
 import { sanitizeSearchQuery } from "@/lib/validate";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 const MAX_RESULTS = 5;
+/** Max 30 search requests per IP per minute — $text search berat di MongoDB */
+const SEARCH_RATE_LIMIT = { max: 30, windowMs: 60_000 };
 
 export async function GET(request: NextRequest) {
+  const rateLimitRes = rateLimit(request, "search", SEARCH_RATE_LIMIT);
+  if (rateLimitRes) return rateLimitRes;
+
   const q = sanitizeSearchQuery(request.nextUrl.searchParams.get("q"));
 
   if (!q || q.trim().length < 2) {

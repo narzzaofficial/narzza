@@ -11,6 +11,7 @@ import { ReadArticleHeader } from "@/components/reads/read-article-header";
 import { ReadArticleBody } from "@/components/reads/read-article-body";
 import { SimilarFeedsSection } from "@/components/reads/similar-feeds-section";
 import { StorePreviewSection } from "@/components/reads/store-preview-section";
+import { ViewTracker } from "@/components/reads/view-tracker";
 import { JsonLd } from "@/components/JsonLd";
 import {
   SITE_NAME,
@@ -50,6 +51,15 @@ export async function generateMetadata({
   return {
     title: feed.title,
     description: feed.takeaway,
+    keywords: [
+      feed.category,
+      feed.author || "Narzza",
+      // Ambil kata-kata kunci dari takeaway (max 5 kata pertama)
+      ...feed.takeaway
+        .split(/\s+/)
+        .filter((w) => w.length > 4)
+        .slice(0, 5),
+    ],
     authors: [{ name: feed.author || SITE_NAME, url: BASE_URL }],
     openGraph: {
       title: feed.title,
@@ -74,7 +84,7 @@ export async function generateMetadata({
       images: [feed.image],
     },
     alternates: {
-      canonical: `/read/${feed.slug}`,
+      canonical: `${BASE_URL}/read/${feed.slug}`,
       types: { "application/rss+xml": `${BASE_URL}/rss.xml` },
     },
   };
@@ -168,6 +178,7 @@ export default async function ReadPage({ params }: PageProps) {
         }}
       />
       {faqSchema && <JsonLd data={faqSchema} />}
+      <ViewTracker feedId={feed.id} />
       <ReadArticleHeader title={feed.title} category={feed.category} />
       <ReadArticleBody feed={feed} />
       <CommentSection feedId={feed.id} />

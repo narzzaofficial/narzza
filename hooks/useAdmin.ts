@@ -4,7 +4,7 @@ import { Category, Product } from "@/types/products";
 import { Roadmap } from "@/types/roadmaps";
 import type { Message } from "@/types/messages";
 
-type DataKey = "feeds" | "stories" | "books" | "roadmaps" | "products" | "categories" | "messages";
+export type DataKey = "feeds" | "stories" | "books" | "roadmaps" | "products" | "categories" | "messages";
 
 const ENDPOINTS: Record<DataKey, string> = {
   feeds: "/api/feeds",
@@ -16,17 +16,32 @@ const ENDPOINTS: Record<DataKey, string> = {
   messages: "/api/messages",
 };
 
-export function useAdmin() {
-  const [data, setData] = useState({
-    feeds: [] as Feed[],
-    stories: [] as Story[],
-    books: [] as Book[],
-    roadmaps: [] as Roadmap[],
-    products: [] as Product[],
-    categories: [] as Category[],
-    messages: [] as Message[],
-  });
-  const [loading, setLoading] = useState(true);
+type AdminData = {
+  feeds: Feed[];
+  stories: Story[];
+  books: Book[];
+  roadmaps: Roadmap[];
+  products: Product[];
+  categories: Category[];
+  messages: Message[];
+};
+
+const EMPTY_DATA: AdminData = {
+  feeds: [],
+  stories: [],
+  books: [],
+  roadmaps: [],
+  products: [],
+  categories: [],
+  messages: [],
+};
+
+export function useAdmin(initialTab: DataKey = "feeds") {
+  const [data, setData] = useState<AdminData>(EMPTY_DATA);
+  const [activeTab, setActiveTab] = useState<DataKey>(initialTab);
+  /** Kumpulan tab yang sudah di-load minimal sekali */
+  const [loadedTabs, setLoadedTabs] = useState<Set<DataKey>>(new Set());
+  const [loadingTab, setLoadingTab] = useState<DataKey | null>(null);
   const [seeding, setSeeding] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -35,46 +50,59 @@ export function useAdmin() {
     setTimeout(() => setMessage(""), 3000);
   }, []);
 
-  /** Fetch all endpoints in parallel (initial load / seed) */
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [feedsRes, storiesRes, booksRes, roadmapsRes, productsRes, categoriesRes, messagesRes] =
-        await Promise.all(Object.values(ENDPOINTS).map((url) => fetch(url)));
-
-      setData({
-        feeds: feedsRes.ok
-          ? (await feedsRes.json()).sort((a: Feed, b: Feed) => b.createdAt - a.createdAt)
-          : [],
-        stories: storiesRes.ok ? await storiesRes.json() : [],
-        books: booksRes.ok ? await booksRes.json() : [],
-        roadmaps: roadmapsRes.ok ? await roadmapsRes.json() : [],
-        products: productsRes.ok ? await productsRes.json() : [],
-        categories: categoriesRes.ok ? await categoriesRes.json() : [],
-        messages: messagesRes.ok ? await messagesRes.json() : [],
-      });
-    } catch (err) {
-      console.error("Fetch error:", err);
-    }
-    setLoading(false);
-  }, []);
-
-  /** Re-fetch only one entity endpoint */
-  const refreshEntity = useCallback(async (key: DataKey) => {
+  /** Fetch satu tab saja — hanya kalau belum pernah di-load */
+  const loadTab = useCallback(async (key: DataKey) => {
+    if (loadedTabs.has(key)) return; // sudah di-cache di state
+    setLoadingTab(key);
     try {
       const res = await fetch(ENDPOINTS[key]);
       if (!res.ok) return;
       const json = await res.json();
       setData((prev) => ({
         ...prev,
-        [key]:
-          key === "feeds"
-            ? json.sort((a: Feed, b: Feed) => b.createdAt - a.createdAt)
-            : json,
+        [key]: key === "feeds"
+          ? (json as Feed[]).sort((a, b) => b.createdAt - a.createdAt)
+          : json,
       }));
+      setLoadedTabs((prev) => new Set(prev).add(key));
+    } catch (err) {
+      console.error(`loadTab(${key}) error:`, err);
+    } finally {
+      setLoadingTab(null);
+    }
+  }, [loadedTabs]);
+
+  /** Re-fetch satu tab, abaikan cache (misalnya setelah delete/create) */
+  const refreshEntity = useCallback(async (key: DataKey) => {
+    setLoadingTab(key);
+    try {
+      const res = await fetch(ENDPOINTS[key]);
+      if (!res.ok) return;
+      const json = await res.json();
+      setData((prev) => ({
+        ...prev,
+        [key]: key === "feeds"
+          ? (json as Feed[]).sort((a: Feed, b: Feed) => b.createdAt - a.createdAt)
+          : json,
+      }));
+      // Pastikan tab ini ditandai sudah loaded
+      setLoadedTabs((prev) => new Set(prev).add(key));
     } catch (err) {
       console.error(`refreshEntity(${key}) error:`, err);
+    } finally {
+      setLoadingTab(null);
     }
+  }, []);
+
+  /** Load tab aktif saat pertama kali dipilih */
+  useEffect(() => {
+    loadTab(activeTab);
+  }, [activeTab, loadTab]);
+
+  /** Ganti tab + trigger load jika belum loaded */
+  const switchTab = useCallback((key: DataKey) => {
+    setActiveTab(key);
+    // loadTab akan dipanggil otomatis via useEffect di atas
   }, []);
 
   /** Optimistically remove an item from state, then DELETE via API */
@@ -95,7 +123,6 @@ export function useAdmin() {
         if (res.ok) {
           flash("✅ Item dihapus");
         } else {
-          // Revert on failure
           flash("❌ Gagal menghapus item");
           refreshEntity(endpoint);
         }
@@ -133,10 +160,6 @@ export function useAdmin() {
     [flash, refreshEntity]
   );
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
   const handleSeed = async () => {
     if (
       !confirm(
@@ -152,8 +175,10 @@ export function useAdmin() {
         flash(
           `✅ Migrasi berhasil! ${resData.feedsInserted} feeds, ${resData.storiesInserted} stories, ${resData.booksInserted} books.`
         );
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        fetchData();
+        // Reset semua cache dan reload tab aktif
+        setLoadedTabs(new Set());
+        setData(EMPTY_DATA);
+        await loadTab(activeTab);
       } else flash(`❌ Seed gagal: ${resData.error}`);
     } catch {
       flash("❌ Seed gagal: network error");
@@ -161,16 +186,23 @@ export function useAdmin() {
     setSeeding(false);
   };
 
+  /** loading = true hanya untuk tab yang sedang aktif */
+  const loading = loadingTab === activeTab;
+
   return {
     data,
     loading,
     seeding,
     message,
+    activeTab,
+    loadedTabs,
     flash,
     handleSeed,
-    fetchData,
     refreshEntity,
     deleteItem,
     deleteRoadmapItem,
+    switchTab,
+    // Backward compat: fetchData sekarang reload tab aktif
+    fetchData: () => refreshEntity(activeTab),
   };
 }

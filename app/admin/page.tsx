@@ -11,20 +11,22 @@ import { FeedTab } from "./_components/feedTab";
 import { StoryTab } from "./_components/story-tab";
 import { BookTab } from "./_components/book-tab";
 import { useAdmin } from "@/hooks/useAdmin";
+import type { DataKey } from "@/hooks/useAdmin";
 import { RoadmapTab, ProductTab, CategoryTab } from "./_components/simple-tab";
 import { MessageTab } from "./_components/message-tab";
 
 export default function AdminPage() {
-  const [tab, setTab] = useState<AdminTab>("feeds");
   const {
     data,
     loading,
     message,
+    activeTab,
     flash,
     refreshEntity,
     deleteItem,
     deleteRoadmapItem,
-  } = useAdmin();
+    switchTab,
+  } = useAdmin("feeds");
 
   return (
     <div className="admin-main-page bg-canvas min-h-screen px-4 py-8 text-slate-100">
@@ -54,8 +56,8 @@ export default function AdminPage() {
         )}
 
         <AdminTabBar
-          tab={tab}
-          setTab={setTab}
+          tab={activeTab as AdminTab}
+          setTab={(t) => switchTab(t as DataKey)}
           counts={{
             feeds: data.feeds.length,
             stories: data.stories.length,
@@ -75,7 +77,7 @@ export default function AdminPage() {
           </div>
         ) : (
           <main className="mt-6">
-            {tab === "feeds" && (
+            {activeTab === "feeds" && (
               <FeedTab
                 feeds={data.feeds}
                 onRefresh={() => refreshEntity("feeds")}
@@ -83,7 +85,7 @@ export default function AdminPage() {
                 flash={flash}
               />
             )}
-            {tab === "stories" && (
+            {activeTab === "stories" && (
               <StoryTab
                 stories={data.stories}
                 onRefresh={() => refreshEntity("stories")}
@@ -91,7 +93,7 @@ export default function AdminPage() {
                 flash={flash}
               />
             )}
-            {tab === "books" && (
+            {activeTab === "books" && (
               <BookTab
                 books={data.books}
                 onRefresh={() => refreshEntity("books")}
@@ -99,17 +101,17 @@ export default function AdminPage() {
                 flash={flash}
               />
             )}
-            {tab === "roadmaps" && (
+            {activeTab === "roadmaps" && (
               <RoadmapTab
                 roadmaps={data.roadmaps}
                 onDelete={deleteRoadmapItem}
               />
             )}
-            {tab === "products" && <ProductTab products={data.products} />}
-            {tab === "categories" && (
+            {activeTab === "products" && <ProductTab products={data.products} />}
+            {activeTab === "categories" && (
               <CategoryTab categories={data.categories} />
             )}
-            {tab === "messages" && (
+            {activeTab === "messages" && (
               <MessageTab
                 messages={data.messages}
                 onRefresh={() => refreshEntity("messages")}
