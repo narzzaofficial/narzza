@@ -9,6 +9,7 @@ import {
   validationErrorResponse,
   invalidIdResponse,
 } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +58,8 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 
 // PUT /api/books/[id] — updates an existing book (all fields optional)
 export async function PUT(request: NextRequest, context: RouteContext) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { id } = await context.params;
     const bookId = Number(id);
@@ -93,6 +96,8 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
 // DELETE /api/books/[id] — deletes a book
 export async function DELETE(_request: NextRequest, context: RouteContext) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { id } = await context.params;
     const bookId = Number(id);

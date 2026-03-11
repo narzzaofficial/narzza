@@ -5,6 +5,7 @@ import {
   SITE_LOCALE,
   SITE_OG_IMAGE_WIDTH,
   SITE_OG_IMAGE_HEIGHT,
+  BASE_URL,
 } from "./site-config";
 
 type PageMetaInput = {
@@ -54,6 +55,6 @@ export function createPageMeta({
       description,
       images: [image],
     },
-    alternates: { canonical: path },
+    alternates: { canonical: `${BASE_URL}${path}` },
   };
 }

@@ -8,6 +8,7 @@ import {
   dbUnavailableResponse,
   validationErrorResponse,
 } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 
 function productToJson(doc: IProduct) {
   return {
@@ -55,6 +56,8 @@ export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { id } = await params;
     const conn = await connectDB();
@@ -88,6 +91,8 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { id } = await params;
     const conn = await connectDB();

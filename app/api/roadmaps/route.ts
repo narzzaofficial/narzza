@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import { RoadmapModel } from "@/lib/models/Roadmap";
 import type { IRoadmap } from "@/lib/models/Roadmap";
 import { dbUnavailableResponse, cachedJson } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 import { slugifyBase } from "@/lib/slugify";
 import { sanitizeSearchQuery } from "@/lib/validate";
 
@@ -70,6 +71,8 @@ export async function GET(request: NextRequest) {
 // ─── POST /api/roadmaps ───────────────────────────────────────────────────────
 
 export async function POST(request: NextRequest) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const body = await request.json();
     const conn = await connectDB();

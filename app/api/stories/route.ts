@@ -7,6 +7,7 @@ import {
   dbUnavailableResponse,
   validationErrorResponse,
 } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,8 @@ export async function GET() {
 
 // POST create story
 export async function POST(req: NextRequest) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();

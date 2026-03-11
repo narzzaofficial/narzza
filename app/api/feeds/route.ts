@@ -9,6 +9,7 @@ import {
   validationErrorResponse,
   cachedJson,
 } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 import { slugify } from "@/lib/slugify";
 import {
   INDEXNOW_KEY,
@@ -87,6 +88,8 @@ export async function GET(req: NextRequest) {
 // ─── POST /api/feeds ──────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();

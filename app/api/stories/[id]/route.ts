@@ -3,6 +3,7 @@ import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { StoryModel } from "@/lib/models/Story";
 import { dbUnavailableResponse, invalidIdResponse } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +46,8 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 
 // PUT update story
 export async function PUT(req: NextRequest, context: RouteContext) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { id } = await context.params;
     const storyId = Number(id);
@@ -88,6 +91,8 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 
 // DELETE story
 export async function DELETE(_req: NextRequest, context: RouteContext) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { id } = await context.params;
     const storyId = Number(id);

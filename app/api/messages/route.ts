@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { MessageModel } from "@/lib/models/Message";
 import { dbUnavailableResponse } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 import type { MessageCreatePayload } from "@/types/messages";
 
 export const dynamic = "force-dynamic";
 
 // GET /api/messages — list all (admin only)
 export async function GET(req: NextRequest) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();

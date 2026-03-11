@@ -8,6 +8,7 @@ import {
   dbUnavailableResponse,
   validationErrorResponse,
 } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 
 function productToJson(doc: IProduct) {
   return {
@@ -41,6 +42,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();

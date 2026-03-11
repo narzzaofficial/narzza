@@ -6,6 +6,7 @@ import {
   dbUnavailableResponse,
   validationErrorResponse,
 } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const raw = await request.json();
     const parsed = categorySchema.safeParse(raw);

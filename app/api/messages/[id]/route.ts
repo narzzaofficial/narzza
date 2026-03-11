@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { MessageModel } from "@/lib/models/Message";
 import { dbUnavailableResponse } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,8 @@ type RouteContext = { params: Promise<{ id: string }> };
 
 // PATCH /api/messages/:id — update status
 export async function PATCH(req: NextRequest, context: RouteContext) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { id } = await context.params;
     const body = await req.json();
@@ -38,6 +41,8 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
 // DELETE /api/messages/:id
 export async function DELETE(_req: NextRequest, context: RouteContext) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { id } = await context.params;
     const conn = await connectDB();

@@ -3,6 +3,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/rate-limit";
 import { presignedUrlSchema } from "@/lib/validate";
+import { requireAdmin } from "@/lib/api-auth";
 
 /** Max 10 presigned URL per IP per menit — lindungi object storage dari spam */
 const UPLOAD_RATE_LIMIT = { max: 10, windowMs: 60_000 };
@@ -29,6 +30,9 @@ const s3Client = new S3Client({
 });
 
 export async function POST(request: NextRequest) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+
   const rateLimitRes = rateLimit(request, "upload", UPLOAD_RATE_LIMIT);
   if (rateLimitRes) return rateLimitRes;
 

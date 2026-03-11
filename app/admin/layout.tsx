@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import AdminUserButton from "./_components/AdminUserButton";
+
+// Prevent all /admin/* pages from being indexed by search engines
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: { index: false, follow: false },
+  },
+};
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "";
 

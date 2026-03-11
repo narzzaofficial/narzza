@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import { RoadmapModel } from "@/lib/models/Roadmap";
 import type { IRoadmap } from "@/lib/models/Roadmap";
 import { dbUnavailableResponse } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -65,6 +66,8 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 // ─── PUT /api/roadmaps/[slug] ─────────────────────────────────────────────────
 
 export async function PUT(request: NextRequest, context: RouteContext) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { slug } = await context.params;
     const body = await request.json();
@@ -105,6 +108,8 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 // ─── DELETE /api/roadmaps/[slug] ──────────────────────────────────────────────
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { slug } = await context.params;
     const conn = await connectDB();

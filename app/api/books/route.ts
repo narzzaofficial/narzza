@@ -9,6 +9,7 @@ import {
   validationErrorResponse,
   cachedJson,
 } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +54,8 @@ export async function GET(request: NextRequest) {
 
 // POST /api/books — create a new book
 export async function POST(request: NextRequest) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();

@@ -9,6 +9,7 @@ import {
   validationErrorResponse,
   invalidIdResponse,
 } from "@/lib/api-helpers";
+import { requireAdmin } from "@/lib/api-auth";
 import { slugify } from "@/lib/slugify";
 
 export const dynamic = "force-dynamic";
@@ -84,6 +85,8 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 // ─── PUT /api/feeds/[id] ──────────────────────────────────────────────────────
 
 export async function PUT(req: NextRequest, context: RouteContext) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { id } = await context.params;
     const feedId = Number(id);
@@ -128,6 +131,8 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 // ─── DELETE /api/feeds/[id] ───────────────────────────────────────────────────
 
 export async function DELETE(_req: NextRequest, context: RouteContext) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   try {
     const { id } = await context.params;
     const feedId = Number(id);

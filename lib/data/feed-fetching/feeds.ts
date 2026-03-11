@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { FeedModel } from "@/lib/models/Feed";
@@ -131,7 +132,12 @@ export const getSimilarFeeds = unstable_cache(
 
 // ─── Non-cached (per-request) ─────────────────────────────────────────────────
 
-export async function getFeedBySlug(slug: string): Promise<Feed | null> {
+/**
+ * Per-request memo: jika layout.tsx DAN page.tsx keduanya memanggil
+ * getFeedBySlug dengan slug yang sama dalam 1 request, DB hanya di-hit sekali.
+ * React.cache() di-reset otomatis di setiap request baru.
+ */
+export const getFeedBySlug = cache(async (slug: string): Promise<Feed | null> => {
   try {
     const conn = await connectDB();
     if (!conn) return null;
@@ -150,7 +156,7 @@ export async function getFeedBySlug(slug: string): Promise<Feed | null> {
     console.error("❌ getFeedBySlug error:", error);
     return null;
   }
-}
+});
 
 export async function getFeedSlugs(): Promise<string[]> {
   try {
